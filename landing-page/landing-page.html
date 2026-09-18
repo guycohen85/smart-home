@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OneHome | הבית שחושב צעד אחד לפניך</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        body { font-family: 'Heebo', sans-serif; background-color: #0d1117; color: #f0f6fc; }
+        .glass-card { background: rgba(22, 27, 34, 0.75); backdrop-filter: blur(12px); border: 1px solid #30363d; }
+        .neon-glow { box-shadow: 0 0 25px rgba(46, 160, 67, 0.35); }
+    </style>
+</head>
+<body class="antialiased selection:bg-emerald-500 selection:text-white">
+
+    <!-- Header -->
+    <header class="w-full border-b border-slate-800 bg-slate-950/80 fixed top-0 z-50 backdrop-blur-md">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <span class="text-3xl font-extrabold tracking-tight text-white">One<span class="text-emerald-500">Home</span></span>
+                <span class="hidden md:inline-block bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 text-xs px-4 py-1.5 rounded-full font-semibold">
+                    <i class="fa-solid fa-rocket ml-1"></i> השקה מתוכננת: Q2 2026
+                </span>
+            </div>
+            <a href="#waitlist-form" class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold px-5 py-2.5 rounded-xl transition duration-200 shadow-lg shadow-emerald-500/20 text-sm">
+                שריין מקום בהשקה
+            </a>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="pt-36 pb-20 px-6 max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-center relative">
+        <div class="lg:col-span-7 space-y-6">
+            <div class="inline-flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/30 px-4 py-2 rounded-full text-emerald-400 text-sm font-semibold">
+                <i class="fa-solid fa-fire text-orange-400"></i> רק 15 מקומות פנויים במחזור ההשקה הראשוני!
+            </div>
+            <h1 class="text-4xl sm:text-6xl font-black text-white leading-tight">
+                תפסיקו לשלוט בבית.<br>
+                <span class="text-transparent bg-clip-text bg-gradient-to-l from-emerald-400 to-cyan-400">תתחילו לחיות בו.</span>
+            </h1>
+            <p class="text-slate-400 text-lg sm:text-xl leading-relaxed">
+                בלי 10 אפליקציות שונות, בלי תלות באינטרנט ובלי לפגוע בפרטיות שלכם.<br>
+                OneHome הופכת את הבית שלך למערכת אוטונומית שחושבת צעד אחד לפניך.
+            </p>
+
+            <div class="pt-4 grid grid-cols-3 gap-4 border-t border-slate-800 text-center sm:text-right">
+                <div>
+                    <div class="text-2xl font-bold text-white">100%</div>
+                    <div class="text-xs text-slate-400">פרטיות מקומית</div>
+                </div>
+                <div>
+                    <div class="text-2xl font-bold text-emerald-400">₪1,200+</div>
+                    <div class="text-xs text-slate-400">חיסכון שנתי בחשמל</div>
+                </div>
+                <div>
+                    <div class="text-2xl font-bold text-cyan-400">3 שניות</div>
+                    <div class="text-xs text-slate-400">תגובת חירום מנזילות</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Form Card -->
+        <div id="waitlist-form" class="lg:col-span-5 glass-card p-8 rounded-3xl border border-slate-700 neon-glow relative">
+            <div class="mb-6">
+                <span class="bg-emerald-500/20 text-emerald-400 text-xs font-bold px-3 py-1 rounded-full uppercase">הטבת Early-Bird</span>
+                <h3 class="text-2xl font-bold text-white mt-2">הירשמו לגישת VIP מוקדמת</h3>
+                <p class="text-slate-400 text-sm mt-1">הרשמו עכשיו וקבלו <strong class="text-white">20% הנחה על ההתקנה</strong> + חודש שירות פרימיום במתנה ביום ההשקה.</p>
+            </div>
+
+            <form onsubmit="handleFormSubmit(event)" id="mainForm" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">שם מלא</label>
+                    <input type="text" required placeholder="ישראל ישראלי" class="w-full bg-slate-900/90 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-emerald-500 transition">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">מספר טלפון (WhatsApp)</label>
+                    <input type="tel" required placeholder="050-0000000" class="w-full bg-slate-900/90 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-emerald-500 transition">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">דואר אלקטרוני</label>
+                    <input type="email" required placeholder="your@email.com" class="w-full bg-slate-900/90 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-emerald-500 transition">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">סוג הנכס</label>
+                    <select required class="w-full bg-slate-900/90 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-emerald-500 transition appearance-none">
+                        <option value="" disabled selected>בחר/י סוג נכס...</option>
+                        <option>דירת מגורים (3-5 חדרים)</option>
+                        <option>בית פרטי / וילה</option>
+                        <option>נכס בבנייה / שיפוץ</option>
+                    </select>
+                </div>
+                <button type="submit" class="w-full bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-400 hover:to-cyan-400 text-slate-950 font-extrabold py-4 rounded-xl text-lg transition duration-200 shadow-lg shadow-emerald-500/25">
+                    <i class="fa-solid fa-paper-plane ml-2"></i> שריין לי מקום בהשקה
+                </button>
+                <div id="toast" class="hidden bg-emerald-500/20 border border-emerald-500/50 text-emerald-400 text-sm font-bold text-center p-3 rounded-xl mt-3">
+                    🎉 הרשמתך נקלטה בהצלחה! ניצור איתך קשר בקרוב.
+                </div>
+                <p class="text-center text-xs text-slate-500"><i class="fa-solid fa-lock ml-1"></i> המידע שלכם שמור ומאובטח באופן הרמטי. ללא ספאם.</p>
+            </form>
+        </div>
+    </section>
+
+    <!-- Pillars Section -->
+    <section class="py-20 bg-slate-900/50 border-t border-slate-800">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center max-w-3xl mx-auto mb-16 space-y-4">
+                <h2 class="text-3xl sm:text-4xl font-black text-white">למה OneHome שונה מכל מה שהכרתם?</h2>
+                <p class="text-slate-400 text-lg">אנחנו לא מוכרים גאדג'טים - אנחנו מקימים תשתית אוטונומית לבית.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="glass-card p-8 rounded-3xl hover:border-emerald-500/50 transition transform hover:-translate-y-1">
+                    <div class="text-4xl text-emerald-400 mb-4"><i class="fa-solid fa-shield-halved"></i></div>
+                    <h3 class="text-xl font-bold text-white mb-3">פרטיות הרמטית (Local First)</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed">
+                        הנתונים שלכם, המצלמות וההרגלים שלכם לא עוזבים את גבולות הבית. כל הנתונים מעובדים בלעדית על בקר מקומי (Home Assistant Green) ללא שרתים בסין.
+                    </p>
+                </div>
+                <div class="glass-card p-8 rounded-3xl hover:border-cyan-500/50 transition transform hover:-translate-y-1">
+                    <div class="text-4xl text-cyan-400 mb-4"><i class="fa-solid fa-bolt"></i></div>
+                    <h3 class="text-xl font-bold text-white mb-3">חיסכון בחשמל (HEMS)</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed">
+                        המערכת מנטרת את תעריפי החשמל בזמן אמת, מסיטה עומסים לשעות זולות וחוסכת עד 30% בחשבון החשמל החודשי – החזר השקעה מהיר ומוכח.
+                    </p>
+                </div>
+                <div class="glass-card p-8 rounded-3xl hover:border-blue-500/50 transition transform hover:-translate-y-1">
+                    <div class="text-4xl text-blue-400 mb-4"><i class="fa-solid fa-faucet-drip"></i></div>
+                    <h3 class="text-xl font-bold text-white mb-3">הגנה אקטיבית מנזקים</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed">
+                        לא רק התראה לטלפון: מנוע שיבר חכם סוגר את המים הראשיים בתוך 3 שניות מזיהוי הצפה, ומפסקי לוח מנתקים עומסים בזיהוי עשן.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- WOW Devices & Features -->
+    <section class="py-20 border-t border-slate-800">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center max-w-3xl mx-auto mb-16 space-y-4">
+                <span class="text-emerald-400 font-semibold text-sm tracking-wider uppercase">חוויית המגורים של המחר</span>
+                <h2 class="text-3xl sm:text-5xl font-black text-white">הקסם שמתרחש בבית שלכם</h2>
+                <p class="text-slate-400">פתרונות חכמים שנבחרו במיוחד כדי להעניק לכם שקט נפשי, נוחות מקסימלית ואפס חיכוך ביום-יום.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Feature 1 -->
+                <div class="glass-card p-8 rounded-3xl space-y-4 hover:border-emerald-500/50 transition group">
+                    <div class="w-14 h-14 bg-emerald-500/10 rounded-2xl flex items-center justify-center text-2xl border border-emerald-500/20 text-emerald-400 group-hover:scale-110 transition">🔘</div>
+                    <h3 class="text-xl font-bold text-white">לחצן "יציאה מהבית" (Master Off)</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed">
+                        כפתור פיזי מעוצב ליד הדלת. לחיצה אחת ארוכה – וכל האורות בבית כבים, המזגנים נסגרים, הדוד מבוטל, והמנעול החכם ננעל אוטומטית.
+                    </p>
+                </div>
+
+                <!-- Feature 2 -->
+                <div class="glass-card p-8 rounded-3xl space-y-4 hover:border-cyan-500/50 transition group">
+                    <div class="w-14 h-14 bg-cyan-500/10 rounded-2xl flex items-center justify-center text-2xl border border-cyan-500/20 text-cyan-400 group-hover:scale-110 transition">💧</div>
+                    <h3 class="text-xl font-bold text-white">סגירת מים אוטונומית</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed">
+                        חיישן הצפה מזהה נזילה? בתוך 3 שניות מנוע חכם סוגר את ברז המים הראשי (השיבר) ושולח התראה לנייד.
+                    </p>
+                </div>
+
+                <!-- Feature 3 -->
+                <div class="glass-card p-8 rounded-3xl space-y-4 hover:border-purple-500/50 transition group">
+                    <div class="w-14 h-14 bg-purple-500/10 rounded-2xl flex items-center justify-center text-2xl border border-purple-500/20 text-purple-400 group-hover:scale-110 transition">📡</div>
+                    <h3 class="text-xl font-bold text-white">תאורה מבוססת רדאר (mmWave)</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed">
+                        חיישני רדאר מתקדמים מזהים את הנוכחות שלכם גם ללא תנועה ומותירים את האורות והמיזוג פועלים בדיוק כשצריך.
+                    </p>
+                </div>
+
+                <!-- Feature 4 -->
+                <div class="glass-card p-8 rounded-3xl space-y-4 hover:border-blue-500/50 transition group">
+                    <div class="w-14 h-14 bg-blue-500/10 rounded-2xl flex items-center justify-center text-2xl border border-blue-500/20 text-blue-400 group-hover:scale-110 transition">💨</div>
+                    <h3 class="text-xl font-bold text-white">אוורור מקלחת אוטומטי</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed">
+                        חיישני לחות מפעילים את הוונטה באופן אוטומטי בזמן מקלחת ומכבים כשהלחות יורדת – מניעה מוחלטת של עובש וריחות.
+                    </p>
+                </div>
+
+                <!-- Feature 5 -->
+                <div class="glass-card p-8 rounded-3xl space-y-4 hover:border-red-500/50 transition group">
+                    <div class="w-14 h-14 bg-red-500/10 rounded-2xl flex items-center justify-center text-2xl border border-red-500/20 text-red-400 group-hover:scale-110 transition">🚨</div>
+                    <h3 class="text-xl font-bold text-white">מנורת אזהרה שקטה</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed">
+                        נורה מעוצבת במסדרון משנה צבע לאדום קבוע רק כשנדרשת תחזוקה. שקט נפשי במבט חטוף ללא צפצופים מציקים.
+                    </p>
+                </div>
+
+                <!-- Feature 6 -->
+                <div class="glass-card p-8 rounded-3xl space-y-4 hover:border-amber-500/50 transition group">
+                    <div class="w-14 h-14 bg-amber-500/10 rounded-2xl flex items-center justify-center text-2xl border border-amber-500/20 text-amber-400 group-hover:scale-110 transition">⚡</div>
+                    <h3 class="text-xl font-bold text-white">ניהול צרכנים חכם</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed">
+                        העברת הפעלת צרכנים כבדים (טעינת רכב חשמלי, דוד, מדיח) לשעות השפל הזולות ביותר ביום באופן אוטונומי.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Comparison Section (Converted to Bullet Points) -->
+    <section class="py-20 bg-slate-900/40 border-t border-slate-800">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center max-w-3xl mx-auto mb-16 space-y-4">
+                <h2 class="text-3xl sm:text-4xl font-black text-white">השוואת פתרונות בית חכם</h2>
+                <p class="text-slate-400 text-lg">ראו כיצד OneHome ניצבת מול החלופות בשוק</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Competitor 1 -->
+                <div class="glass-card p-8 rounded-3xl opacity-80">
+                    <h3 class="text-xl font-bold text-white mb-6 border-b border-slate-700 pb-4">אפליקציות DIY (תויא/שיאומי)</h3>
+                    <ul class="space-y-4 text-slate-400 text-sm">
+                        <li><strong class="text-slate-300">רמת פרטיות:</strong> נמוכה (שרתים בסין)</li>
+                        <li><strong class="text-slate-300">עבודה ללא אינטרנט:</strong> ❌ לא פועל</li>
+                        <li><strong class="text-slate-300">חיסכון בחשמל (HEMS):</strong> ❌ אין</li>
+                        <li><strong class="text-slate-300">גמישות ציוד ומכשירים:</strong> מוגבלת למותג אחד</li>
+                        <li><strong class="text-slate-300">עלות התקנה ראשונית:</strong> זולה (ללא גב מקצועי)</li>
+                    </ul>
+                </div>
+
+                <!-- Competitor 2 -->
+                <div class="glass-card p-8 rounded-3xl opacity-80">
+                    <h3 class="text-xl font-bold text-white mb-6 border-b border-slate-700 pb-4">מערכות יוקרה (Control4)</h3>
+                    <ul class="space-y-4 text-slate-400 text-sm">
+                        <li><strong class="text-slate-300">רמת פרטיות:</strong> בינונית</li>
+                        <li><strong class="text-slate-300">עבודה ללא אינטרנט:</strong> חלקית</li>
+                        <li><strong class="text-slate-300">חיסכון בחשמל (HEMS):</strong> בתוספת תשלום יקרה</li>
+                        <li><strong class="text-slate-300">גמישות ציוד ומכשירים:</strong> גן סגור ויקר מאוד</li>
+                        <li><strong class="text-slate-300">עלות התקנה ראשונית:</strong> ₪50,000 - ₪100,000+</li>
+                    </ul>
+                </div>
+
+                <!-- OneHome Highlight -->
+                <div class="glass-card p-8 rounded-3xl border-emerald-500/50 bg-emerald-900/10 relative transform md:-translate-y-4 neon-glow">
+                    <div class="absolute top-0 right-8 -mt-3 bg-emerald-500 text-slate-950 text-xs font-bold px-3 py-1 rounded-full">הבחירה החכמה</div>
+                    <h3 class="text-2xl font-bold text-emerald-400 mb-6 border-b border-emerald-500/30 pb-4">המערכת של OneHome</h3>
+                    <ul class="space-y-4 text-slate-300 text-sm">
+                        <li><strong class="text-white">רמת פרטיות:</strong> הרמטית (100% מקומי)</li>
+                        <li><strong class="text-white">עבודה ללא אינטרנט:</strong> ✅ עבודה מקומית מלאה</li>
+                        <li><strong class="text-white">חיסכון בחשמל (HEMS):</strong> ✅ מובנה (עד 30% חיסכון)</li>
+                        <li><strong class="text-white">גמישות ציוד ומכשירים:</strong> פתוחה לכל הציוד (Matter/Zigbee)</li>
+                        <li><strong class="text-white">עלות התקנה ראשונית:</strong> נגישה (מ-₪7,500)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="py-20 border-t border-slate-800">
+        <div class="max-w-4xl mx-auto px-6">
+            <div class="text-center mb-12 space-y-2">
+                <h2 class="text-3xl font-black text-white">שאלות נפוצות</h2>
+                <p class="text-slate-400">כל מה שרציתם לדעת לקראת ההשקה</p>
+            </div>
+
+            <div class="space-y-4">
+                <div class="glass-card p-6 rounded-2xl">
+                    <h4 class="text-lg font-bold text-cyan-400 mb-2">מה קורה אם האינטרנט הביתי מתנתק?</h4>
+                    <p class="text-slate-400 text-sm">כל האוטומציות, המפסקים, והחיישנים בבית ממשיכים לעבוד כרגיל! מכיוון ש-OneHome מתבססת על עיבוד מקומי (Home Assistant Green), הבית שלכם אינו תלוי בחיבור האינטרנט החיצוני.</p>
+                </div>
+                <div class="glass-card p-6 rounded-2xl">
+                    <h4 class="text-lg font-bold text-cyan-400 mb-2">האם צריך לשבור קירות או לעשות שיפוץ?</h4>
+                    <p class="text-slate-400 text-sm">בשום אופן לא. המערכת מותקנת מאחורי המפסקים הקיימים בביתכם (Shelly/Aqara) או על גבי הלוח הקיים, ללא הרס וללא צורך בחיווט מחדש.</p>
+                </div>
+                <div class="glass-card p-6 rounded-2xl">
+                    <h4 class="text-lg font-bold text-cyan-400 mb-2">מה כולל השירות המנוהל (Retainer)?</h4>
+                    <p class="text-slate-400 text-sm">השירות כולל ניטור פרואקטיבי (Watchman) לתקינות הסוללות והרכיבים, גיבויים אוטומטיים לענן מוצפן, עדכוני אבטחה שוטפים ותמיכת AI בוואטסאפ 24/7.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-8 border-t border-slate-800 text-center text-slate-500 text-sm bg-slate-950/80">
+        <p>OneHome © 2026 | Cognitive Home Orchestration. הבית החכם שבאמת עובד בשבילך.</p>
+    </footer>
+
+    <script>
+        function handleFormSubmit(event) {
+            event.preventDefault();
+            const form = document.getElementById('mainForm');
+            const toast = document.getElementById('toast');
+
+            toast.classList.remove('hidden');
+            form.reset();
+
+            setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 5000);
+        }
+    </script>
+</body>
+</html>

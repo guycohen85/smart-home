@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>רשימת מוצרים מורחבת — OneHome</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0f172a;
+    --ink-soft: #475569;
+    --muted: #64748b;
+    --bg: #f8fafc;
+    --card-bg: #ffffff;
+    --border: #e2e8f0;
+    --brand-blue: #0284c7;
+    --brand-green: #059669;
+    --crit-bg: #fef2f2; --crit-fg: #b91c1c; --crit-bd:#fecaca;
+    --rec-bg: #ecfdf5; --rec-fg: #047857; --rec-bd:#a7f3d0;
+    --alt-bg: #f1f5f9; --alt-fg: #475569; --alt-bd:#e2e8f0;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin:0; background: var(--bg); color: var(--ink);
+    font-family: 'Heebo', sans-serif; line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; }
+  header.top {
+    background: linear-gradient(135deg, #0f172a 0%, #0c4a6e 100%);
+    color: #fff; padding: 48px 24px 40px;
+  }
+  .top-inner { max-width: 1000px; margin: 0 auto; }
+  .eyebrow {
+    display:inline-flex; align-items:center; gap:8px;
+    background: rgba(255,255,255,0.12); border:1px solid rgba(255,255,255,0.25);
+    padding:6px 14px; border-radius:20px; font-size:13px; font-weight:600; margin-bottom:16px;
+  }
+  h1.page-title { font-size: 34px; font-weight:800; margin: 0 0 10px; }
+  .page-sub { color: #cbd5e1; font-size: 16px; max-width: 720px; margin:0; }
+
+  nav.chipnav {
+    position: sticky; top:58px; z-index:50;
+    background: rgba(248,250,252,0.92); backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border);
+    padding: 12px 24px; overflow-x:auto; white-space:nowrap;
+  }
+  nav.chipnav .chipnav-inner { max-width:1000px; margin:0 auto; display:flex; gap:8px; }
+  .chip {
+    display:inline-flex; align-items:center; gap:6px; text-decoration:none;
+    font-size:13px; font-weight:600; color: var(--ink-soft);
+    background:#fff; border:1px solid var(--border); border-radius:20px;
+    padding:7px 14px; flex:0 0 auto; transition: all .15s ease;
+  }
+  .chip:hover { border-color: var(--brand-blue); color: var(--brand-blue); }
+
+  main { max-width: 1000px; margin: 0 auto; padding: 36px 24px 80px; }
+  .intro { background:#fff; border:1px solid var(--border); border-radius:16px; padding:22px 26px; margin-bottom:36px; color: var(--ink-soft); font-size:15px; }
+
+  .cat-section { margin-bottom: 48px; scroll-margin-top: 90px; }
+  .cat-header { display:flex; gap:16px; align-items:flex-start; margin-bottom:18px; }
+  .cat-icon {
+    flex:0 0 auto; width:48px; height:48px; border-radius:14px;
+    background: linear-gradient(135deg, var(--brand-blue), var(--brand-green));
+    color:#fff; display:flex; align-items:center; justify-content:center; font-size:20px;
+  }
+  .cat-eng { font-size:12px; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); font-weight:700; }
+  .cat-header h2 { margin: 2px 0 6px; font-size:21px; font-weight:800; }
+  .cat-subtitle { margin:0; color: var(--muted); font-size:14.5px; }
+
+  .card-grid { display:grid; grid-template-columns: 1fr; gap:12px; }
+  .card {
+    background: var(--card-bg); border:1px solid var(--border); border-radius:14px;
+    padding:16px 20px;
+  }
+  .card-head { display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; }
+  .card-head h3 { margin:0; font-size:16px; font-weight:700; }
+  .badge { font-size:11.5px; font-weight:700; padding:3px 10px; border-radius:20px; white-space:nowrap; border:1px solid; }
+  .badge-crit { background:var(--crit-bg); color:var(--crit-fg); border-color:var(--crit-bd); }
+  .badge-rec { background:var(--rec-bg); color:var(--rec-fg); border-color:var(--rec-bd); }
+  .badge-alt { background:var(--alt-bg); color:var(--alt-fg); border-color:var(--alt-bd); }
+  .card-role { margin:8px 0 4px; font-size:14.5px; color: var(--ink); }
+  .card-note { margin:0; font-size:13.5px; color: var(--muted); }
+
+  .mvp {
+    margin-top: 56px; background: linear-gradient(135deg,#ecfdf5,#eff6ff);
+    border:1px solid #bbf7d0; border-radius:18px; padding:28px 30px;
+  }
+  .mvp h2 { margin:0 0 8px; font-size:20px; display:flex; align-items:center; gap:10px; }
+  .mvp p.lead { color: var(--ink-soft); margin: 0 0 16px; font-size:14.5px; }
+  .mvp ul { margin:0; padding-inline-start: 22px; }
+  .mvp li { margin-bottom:10px; font-size:14.5px; }
+
+  footer { text-align:center; color: var(--muted); font-size:12.5px; padding: 30px 24px 50px; }
+
+  @media (max-width: 640px) {
+    h1.page-title { font-size:26px; }
+    .cat-header h2 { font-size:18px; }
+  }
+
+  .sitebar { position:sticky; top:0; z-index:60; background:#020617; border-bottom:1px solid #1e293b; }
+  .sitebar-inner { max-width: 1000px; margin:0 auto; padding: 10px 24px; display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap; }
+  .sitebar-logo { font-weight:800; font-size:15px; color:#f8fafc; text-decoration:none; display:flex; align-items:center; gap:8px; }
+  .sitebar-logo span { color:#5eead4; }
+  .sitebar-logo small { font-weight:500; color:#94a3b8; font-size:11.5px; }
+  .sitebar-links { display:flex; gap:4px; }
+  .sitebar-links a {
+    text-decoration:none; color:#cbd5e1; font-size:13.5px; font-weight:600;
+    padding:7px 14px; border-radius:8px; transition: background .15s ease, color .15s ease;
+  }
+  .sitebar-links a:hover { background: rgba(255,255,255,0.08); color:#fff; }
+  .sitebar-links a.active { background: rgba(94,234,212,0.15); color:#5eead4; }
+</style>
+</head>
+<body>
+<div class="sitebar"><div class="sitebar-inner">
+  <a href="index.html" class="sitebar-logo">One<span>Home</span> <small>· אתר פנימי</small></a>
+  <div class="sitebar-links">
+    <a href="index.html" class="">בית</a>
+    <a href="vision.html" class="">חזון העסק</a>
+    <a href="products.html" class="active">רשימת מוצרים</a>
+    <a href="competitors.html" class="">מתחרים</a>
+    <a href="prds.html" class="">PRD-ים</a>
+    <a href="kb.html">ידע טכני</a>
+    <a href="automations.html">רעיונות לאוטומציות</a>
+    <a href="nabu-casa.html">Nabu Casa</a>
+    <a href="ohf.html">Open Home Foundation</a>
+  </div>
+</div></div>
+
+
+<header class="top">
+  <div class="top-inner">
+    <span class="eyebrow">🔒 מסמך פנימי — לא ללקוח</span>
+    <h1 class="page-title">🛒 רשימת מוצרים מורחבת ומלאה</h1>
+    <p class="page-sub">OneHome — Smart Home Orchestration. כל הרכיבים שנשקלו לאורך האפיון, מחולקים ל-9 קטגוריות מקצועיות, לעזרה בהחלטה אילו מוצרים לרכוש בשלב ה-Sandbox/Showroom ואילו להוסיף בהמשך.</p>
+  </div>
+</header>
+
+<nav class="chipnav"><div class="chipnav-inner">
+  <a href="#cat-1" class="chip"><span>🧠</span><span>בקר מרכזי, קישוריות ושרתים</span></a><a href="#cat-2" class="chip"><span>👁️</span><span>חיישני נוכחות ותנועה</span></a><a href="#cat-3" class="chip"><span>🍃</span><span>חיישני אקלים, איכות אוויר ובריאות</span></a><a href="#cat-4" class="chip"><span>🚨</span><span>בטיחות, הצפה והגנה אקטיבית</span></a><a href="#cat-5" class="chip"><span>⚡</span><span>ניהול אנרגיה, דוד ורכב חשמלי</span></a><a href="#cat-6" class="chip"><span>🔌</span><span>מפסקים, עמעמים ובקרי תריסים</span></a><a href="#cat-7" class="chip"><span>🔐</span><span>בקרת כניסה, דלתות וחלונות</span></a><a href="#cat-8" class="chip"><span>🚦</span><span>חיווי ויזואלי, תאורה וכפתורי משימות</span></a><a href="#cat-9" class="chip"><span>📱</span><span>מסכי Kiosk ושילוב מכשירים חכמים</span></a>
+  <a href="#mvp" class="chip"><span>⭐</span><span>המלצת MVP</span></a>
+</div></nav>
+
+<main>
+
+    <section id="cat-1" class="cat-section">
+      <div class="cat-header">
+        <div class="cat-icon">🧠</div>
+        <div>
+          <div class="cat-eng">Core Infrastructure</div>
+          <h2>1. בקר מרכזי, קישוריות ושרתים</h2>
+          <p class="cat-subtitle">המוח והתשתית הפיזית של הבית – עבודה מקומית ללא תלות בענן.</p>
+        </div>
+      </div>
+      <div class="card-grid">
+
+        <article class="card">
+          <div class="card-head">
+            <h3>Home Assistant Green</h3>
+            <span class="badge badge-rec">מומלץ</span>
+          </div>
+          <p class="card-role">הבקר המרכזי הרישמי. יציב, ייעודי ופשוט לתחזוקה.</p>
+          <p class="card-note">מומלץ ביותר להתחלה. פתרון Plug-and-Play נקי עבור Showroom ולקוחות.</p>
+        </article>
+        <article class="card">
+          <div class="card-head">
+            <h3>Home Assistant SkyConnect</h3>
+            <span class="badge badge-crit">חובה</span>
+          </div>
+          <p class="card-role">דונגל USB לתמיכה ב-Zigbee, Thread ו-Matter.</p>
+          <p class="card-note">חובה. מאפשר חיבור ישיר של כל חיישני ה-Zigbee וה-Matter בבית.</p>
+        </article>
+        <article class="card">
+          <div class="card-head">
+            <h3>Mini PC (Intel N100) / Raspberry Pi 5</h3>
+            <span class="badge badge-alt">חלופה</span>
+          </div>
+          <p class="card-role">חלופה לבקר מרכזי עוצמתי יותר (להרצת מצלמות/Local AI).</p>
+          <p class="card-note">חלופה. מתאים אם תרצה להריץ עיבוד וידאו מקומי כבד (Frigate/Coral AI).</p>
+        </article>
+        <article class="card">
+          <div class="card-head">
+            <h3>Home Assistant Voice PE / Satellite</h3>
+            <span class="badge badge-rec">מומלץ</span>
+          </div>
+          <p class="card-role">בקר קולי מקומי (Local Voice Control) ללא שרתי גוגל/אמזון.</p>
+          <p class="card-note">מומלץ לפרימיום. מתאים ללקוחות שדורשים שליטה קולית ללא חדירה לפרטיות.</p>
+        </article>
+        <article class="card">
+          <div class="card-head">
+            <h3>Nabu Casa (Home Assistant Cloud)</h3>
+            <span class="badge badge-rec">מומלץ — תוספת אופציונלית ללקוח</span>
+          </div>
+          <p class="card-role">גישה מרחוק מוצפנת מקצה לקצה + חיבור לגוגל הום/אלקסה + גיבוי ענן.</p>
+          <p class="card-note">עודכן 17/09: ברירת המחדל בכל התקנה היא גישה מרשת פנימית בלבד (התראות Push ממשיכות לעבוד גם ללא זה — ראו decision-network-access.md). Nabu Casa היא תוספת בתשלום כשהלקוח רוצה גם לשלוט/לצפות מרחוק: 6.50$ לחודש או 65$ לשנה (מחיר רשמי, נבדק 17/09), כולל גם חיבור Alexa/Google וגם גיבוי ענן (של הגיבוי האחרון בלבד — לא היסטוריית גיבויים). Cloudflare Tunnel הוסר כאופציה לצד הלקוח (מסיים TLS אצל צד שלישי, פחות פרטי) — נשאר אופציה פנימית בלבד לגיא אם בכלל.</p>
+        </article>
+      </div>
+    </section>
+    <section id="cat-2" class="cat-section">
+      <div class="cat-header">
+        <div class="cat-icon">👁️</div>
+        <div>
+          <div class="cat-eng">Presence &amp; Motion</div>
+          <h2>2. חיישני נוכחות ותנועה</h2>
+          <p class="cat-subtitle">הרכיבים שמייצרים את קונספט “הבית השקוף” (Invisible UX).</p>
+        </div>
+      </div>
+      <div class="card-grid">
+
+        <article class="card">
+          <div class="card-head">
+            <h3>Aqara FP2 (mmWave Radar)</h3>
+            <span class="badge badge-crit">חובה לקונספט</span>
+          </div>
+          <p class="card-role">חיישן נוכחות מבוסס רדאר. מזהה אדם גם בישיבה, קריאה או שינה.</p>
+          <p class="card-note">חובה לקונספט. מונע את הבעיה הקלאסית שאורות נכבים כשיושבים ללא תנועה.</p>
+        </article>
+        <article class="card">
+          <div class="card-head">
+            <h3>חיישן תנועה PIR רגיל (Aqara / Tuya Zigbee)</h3>
+            <span class="badge badge-rec">מומלץ</span>
+          </div>
+          <p class="card-role">זיהוי תנועה מהיר במעברים, מדרגות ומחסנים.</p>
+          <p class="card-note">מומלץ. זול ומהיר מאוד לתגובה ראשונית במעברים (Thoroughfare zones).</p>
+        </article>
+      </div>
+    </section>
+    <section id="cat-3" class="cat-section">
+      <div class="cat-header">
+        <div class="cat-icon">🍃</div>
+        <div>
+          <div class="cat-eng">Climate, Air Quality &amp; Wellness</div>
+          <h2>3. חיישני אקלים, איכות אוויר ובריאות</h2>
+          <p class="cat-subtitle">בקרת אקלים דינמית, ניהול איוורור ומניעת עובש.</p>
+        </div>
+      </div>
+      <div class="card-grid">
+
+        <article class="card">
+          <div class="card-head">
+            <h3>IKEA VINDSTYRKA</h3>
+            <span class="badge badge-rec">מומלץ מאוד</span>
+          </div>
+          <p class="card-role">חיישן איכות אוויר חכם (PM2.5, VOC, טמפרטורה ולחות).</p>
+          <p class="card-note">מומלץ מאוד לסלון/חדרי שינה. עובד ב-Zigbee, מעולה לאוטומציות טיהור אוויר.</p>
+        </article>
+        <article class="card">
+          <div class="card-head">
+            <h3>Aqara TVOC / Temp &amp; Humidity Sensor</h3>
+            <span class="badge badge-crit">חובה</span>
+          </div>
+          <p class="card-role">חיישן טמפרטורה, לחות וזיהום אוויר קומפקטי.</p>
+          <p class="card-note">חובה. קטן, זול, סוללה לשנתיים. קריטי לאוטומציית מקלחת ולמיזוג.</p>
+        </article>
+        <article class="card">
+          <div class="card-head">
+            <h3>Broadlink RM4 Mini / Pro (IR Blaster)</h3>
+            <span class="badge badge-crit">חובה</span>
+          </div>
+          <p class="card-role">עינית אינפרא-אדום חכמה לשליטה במזגנים קיימים וטלוויזיות.</p>
+          <p class="card-note">חובה למזגנים. מאפשר לשלוט בכל מזגן עילי/פיצול בבית ללא צורך במתאם יקר.</p>
+        </article>
+        <article class="card">
+          <div class="card-head">
+            <h3>Sensibo Sky / Air</h3>
+            <span class="badge badge-alt">חלופה</span>
+          </div>
+          <p class="card-role">בקר מזגן ייעודי (WiFi) עם חיישן אקלים מובנה.</p>
+          <p class="card-note">חלופה. פתרון מוכן ועשיר, אך דורש תיווך ענן (אלא אם עובדים דרך HomeKit Local).</p>
+        </article>
+      </div>
+    </section>
+    <section id="cat-4" class="cat-section">
+      <div class="cat-header">
+        <div class="cat-icon">🚨</div>
+        <div>
+          <div class="cat-eng">Active Defense &amp; Safety</div>
+          <h2>4. בטיחות, הצפה והגנה אקטיבית</h2>
+          <p class="cat-subtitle">הרכיבים שעוצרים אסונות בזמן אמת ולא רק שולחים התראה.</p>
+        </div>
+      </div>
+      <div class="card-grid">
+
+        <article class="card">
+          <div class="card-head">
+            <h3>חיישן הצפה/נזילת מים (Aqara Leak Sensor)</h3>
+            <span class="badge badge-crit">חובה</span>
+          </div>
+          <p class="card-role">זיהוי מים על הרצפה במטבח, במקלחת או ליד מכונת הכביסה.</p>
+          <p class="card-note">חובה. זול, מציל מנזקי מים כבדים של אלפי שקלים.</p>
+        </article>
+        <article class="card">
+          <div class="card-head">
+            <h3>מנוע זרוע לברז שיבר (Smart Water Valve - Zigbee)</h3>
+            <span class="badge badge-crit">חובה</span>
+          </div>
+          <p class="card-role">מתלבש על ידית ברז הכדור הראשי (השיבר) וסוגר את המים פיזית.</p>
+          <p class="card-note">חובה לחבילת Active Defense. מגיב אוטומטית לחיישן ההצפה וסוגר מים ב-3 שניות. (בהמתנה לפי ההחלטה שלך לדחות לשלב מאוחר יותר)</p>
+        </article>
+        <article class="card">
+          <div class="card-head">
+            <h3>גלאי עשן חכם (Aqara / Shelly Smoke Detector)</h3>
+            <span class="badge badge-crit">חובה</span>
+          </div>
+          <p class="card-role">זיהוי עשן וטמפרטורה חריגה בבית.</p>
+          <p class="card-note">חובה. מפעיל את מנורת ה-Alarm ומנתק חשמל זולל בלוח.</p>
+        </article>
+        <article class="card">
+          <div class="card-head">
+            <h3>מפסקי לוח Shelly Pro (DIN-Rail)</h3>
+            <span class="badge badge-rec">מומלץ</span>
+          </div>
+          <p class="card-role">מפסקים חכמים להתקנה רשמית בלוח החשמל על פס הדין.</p>
+          <p class="card-note">מומלץ לפרימיום. מנתק מעגלי כוח (תנור/מדיח/כיריים) בזיהוי עשן או קצר.</p>
+        </article>
+      </div>
+    </section>
+    <section id="cat-5" class="cat-section">
+      <div class="cat-header">
+        <div class="cat-icon">⚡</div>
+        <div>
+          <div class="cat-eng">HEMS &amp; Power Management</div>
+          <h2>5. ניהול אנרגיה, דוד ורכב חשמלי</h2>
+          <p class="cat-subtitle">הרכיבים שמייצרים את החיסכון הכספי (ROI) ומממנים את הריטיינר.</p>
+        </div>
+      </div>
+      <div class="card-grid">
+
+        <article class="card">
+          <div class="card-head">
+            <h3>Shelly EM + צבת מדידה (Current Clamp)</h3>
+            <span class="badge badge-crit">חובה</span>
+          </div>
+          <p class="card-role">מדידת צריכת חשמל בזמן אמת בלוח החשמל (חד-פאזי).</p>
+          <p class="card-note">חובה ל-HEMS. מאפשר להציג עלויות בשקלים ולהסיט עומסים לשעות שפל.</p>
+        </article>
+        <article class="card">
+          <div class="card-head">
+            <h3>Shelly Pro 3EM</h3>
+            <span class="badge badge-rec">מומלץ</span>
+          </div>
+          <p class="card-role">רכיב ניטור צריכת חשמל תלת-פאזי ללוחות חשמל גדולים/וילות.</p>
+          <p class="card-note">מומלץ לבתים גדולים. מעקב מדויק אחרי 3 הפאזות בבית.</p>
+        </article>
+        <article class="card">
+          <div class="card-head">
+            <h3>Switcher V4 / Switcher Mini</h3>
+            <span class="badge badge-crit">חובה</span>
+          </div>
+          <p class="card-role">בקר חכם ייעודי לדוד השמש/חשמל עם מדידת צריכה.</p>
+          <p class="card-note">חובה. מאפשר תזמון חכם, חימום לפי מקלחות וחיסכון ישיר בחשמל.</p>
+        </article>
+        <article class="card">
+          <div class="card-head">
+            <h3>מטען רכב חשמלי חכם / עומס מבוקר</h3>
+            <span class="badge badge-rec">מומלץ</span>
+          </div>
+          <p class="card-role">ניהול טעינת EV בשעות הלילה הזולות בלבד.</p>
+          <p class="card-note">מומלץ. חוסך מאות שקלים בשנה לבעלי רכב חשמלי.</p>
+        </article>
+      </div>
+    </section>
+    <section id="cat-6" class="cat-section">
+      <div class="cat-header">
+        <div class="cat-icon">🔌</div>
+        <div>
+          <div class="cat-eng">In-Wall Hardware</div>
+          <h2>6. מפסקים, עמעמים ובקרי תריסים</h2>
+          <p class="cat-subtitle">שמירה על ה-WAF (שימוש פיזי למשפחה) והתאמה לקופסאות גוויס.</p>
+        </div>
+      </div>
+      <div class="card-grid">
+
+        <article class="card">
+          <div class="card-head">
+            <h3>Shelly Plus 1 / Plus 1PM</h3>
+            <span class="badge badge-crit">חובה</span>
+          </div>
+          <p class="card-role">ממסרים חכמים להתקנה מאחורי המפסקים הקיימים (כולל מדידת הספק ב-1PM).</p>
+          <p class="card-note">חובה. שומר על המתג הפיזי הקיים בבית (High WAF) ומוסיף שליטה חכמה.</p>
+        </article>
+        <article class="card">
+          <div class="card-head">
+            <h3>Shelly Plus 2PM</h3>
+            <span class="badge badge-crit">חובה</span>
+          </div>
+          <p class="card-role">בקר כפול המתאים גם לשליטה במנועי תריסים חשמליים/וילונות.</p>
+          <p class="card-note">חובה לתריסים. מאפשר פתיחה/סגירה יחסית באחוזים (למשל 30% תריס פתוח).</p>
+        </article>
+        <article class="card">
+          <div class="card-head">
+            <h3>Shelly Dimmer 2</h3>
+            <span class="badge badge-rec">מומלץ</span>
+          </div>
+          <p class="card-role">עמעם חכם המותקן מאחורי המתג לעמעום תאורה רכה.</p>
+          <p class="card-note">מומלץ. מעולה ליצירת סצנות תאורה עמומות בלילה (כניסה לשירותים בלי להסתנוור).</p>
+        </article>
+        <article class="card">
+          <div class="card-head">
+            <h3>מנוע וילון חכם (Aqara Curtain Driver)</h3>
+            <span class="badge badge-alt">תוספת</span>
+          </div>
+          <p class="card-role">מנוע אלחוטי המתלבש על מסילת וילון קיימת.</p>
+          <p class="card-note">תוספת. מתאים לחדרי שינה/סלון ללא הכנת חשמל מוקדמת לתריס.</p>
+        </article>
+      </div>
+    </section>
+    <section id="cat-7" class="cat-section">
+      <div class="cat-header">
+        <div class="cat-icon">🔐</div>
+        <div>
+          <div class="cat-eng">Access Control &amp; Security</div>
+          <h2>7. בקרת כניסה, דלתות וחלונות</h2>
+          <p class="cat-subtitle">ניהול הכניסה לבית והרגשת הביטחון.</p>
+        </div>
+      </div>
+      <div class="card-grid">
+
+        <article class="card">
+          <div class="card-head">
+            <h3>Nuki Smart Lock (3.0 / 4.0 Pro)</h3>
+            <span class="badge badge-rec">מומלץ מאוד</span>
+          </div>
+          <p class="card-role">מנעול חכם לדלת הכניסה (פתיחה בביומטרי/קוד/נייד/אוטומטית).</p>
+          <p class="card-note">מומלץ מאוד. עובד מעולה מקומית, מאפשר נעילה אוטומטית בשינה/יציאה.</p>
+        </article>
+        <article class="card">
+          <div class="card-head">
+            <h3>עינית וידאו / פעמון דלת חכם (Matter / Zigbee / WiFi)</h3>
+            <span class="badge badge-rec">מומלץ</span>
+          </div>
+          <p class="card-role">מצלמת עינית לדלת הכניסה עם זיהוי תנועה.</p>
+          <p class="card-note">מומלץ. משלים את חבילת האבטחה ללא תלות בעננים חיצוניים.</p>
+        </article>
+        <article class="card">
+          <div class="card-head">
+            <h3>חיישן פתיחה/סגירה (Aqara Door/Window Sensor)</h3>
+            <span class="badge badge-crit">חובה</span>
+          </div>
+          <p class="card-role">זיהוי מצב דלת כניסה, חלונות או מרפסת.</p>
+          <p class="card-note">חובה. משמש לאבטחה ולכיבוי מזגן כשהחלון פתוח מעל 2 דקות.</p>
+        </article>
+      </div>
+    </section>
+    <section id="cat-8" class="cat-section">
+      <div class="cat-header">
+        <div class="cat-icon">🚦</div>
+        <div>
+          <div class="cat-eng">Ambient UX</div>
+          <h2>8. חיווי ויזואלי, תאורה וכפתורי משימות</h2>
+          <p class="cat-subtitle">החלפת הדשבורדים המסובכים באינדיקציה ויזואלית עדינה.</p>
+        </div>
+      </div>
+      <div class="card-grid">
+
+        <article class="card">
+          <div class="card-head">
+            <h3>מנורות RGB חכמות / פסי לדים (Shelly RGBW2 / Zigbee Bulbs)</h3>
+            <span class="badge badge-crit">חובה לקונספט</span>
+          </div>
+          <p class="card-role">משמשות כמנורות סטטוס, מנורות משימות, מחיר חשמל ומנורת Alarm.</p>
+          <p class="card-note">חובה לקונספט. מאפשרות תאורה היקפית (אדום = Alarm/הצפה, כתום = דוד, סגול = רובוט).</p>
+        </article>
+        <article class="card">
+          <div class="card-head">
+            <h3>כפתור לחצן אלחוטי (Aqara Wireless Mini Button)</h3>
+            <span class="badge badge-crit">חובה לקונספט</span>
+          </div>
+          <p class="card-role">כפתור פיזי קטן שמודבק ליד מנורות המשימות.</p>
+          <p class="card-note">חובה לקונספט. לחיצה עליו מכבה את מנורת המשימה (השקיית עציצים/רובוט) ומעדכנת סטטוס.</p>
+        </article>
+        <article class="card">
+          <div class="card-head">
+            <h3>מנורת אזהרה ייעודית (Alarm Indicator - Red Light)</h3>
+            <span class="badge badge-crit">חובה לקונספט</span>
+          </div>
+          <p class="card-role">מנורת לדים ייעודית להתראות חירום ותחזוקה.</p>
+          <p class="card-note">חובה לקונספט. אדום מהבהב = אירוע קריטי (הצפה/עשן), אדום קבוע = סוללה חלשה בנכס.</p>
+        </article>
+      </div>
+    </section>
+    <section id="cat-9" class="cat-section">
+      <div class="cat-header">
+        <div class="cat-icon">📱</div>
+        <div>
+          <div class="cat-eng">Display &amp; Appliances</div>
+          <h2>9. מסכי Kiosk ושילוב מכשירים חכמים</h2>
+          <p class="cat-subtitle">תצוגת Admin היקפית וחיבור מכשירים גדולים.</p>
+        </div>
+      </div>
+      <div class="card-grid">
+
+        <article class="card">
+          <div class="card-head">
+            <h3>טאבלט קיר Android (10 אינץ' / Fire HD) + Fully Kiosk App</h3>
+            <span class="badge badge-rec">מומלץ</span>
+          </div>
+          <p class="card-role">מסך דשבורד מרכזי לקיר עבור מצבי קצה וניטור Admin.</p>
+          <p class="card-note">מומלץ ל-Showroom. תצוגה מעוצבת למצב אורחים, סטטיסטיקות אנרגיה ומפות.</p>
+        </article>
+        <article class="card">
+          <div class="card-head">
+            <h3>אינטגרציית שואב רובוטי (Roborock / Dreame)</h3>
+            <span class="badge badge-alt">תוכנה</span>
+          </div>
+          <p class="card-role">חיבור השואב הרובוטי לאוטומציות הבית.</p>
+          <p class="card-note">תוכנה. מפעיל את השואב כשהבית ריק, ומדליק מנורת משימה ביום הניקוי.</p>
+        </article>
+      </div>
+    </section>
+
+  <section id="mvp" class="mvp">
+    <h2>⭐ המלצה לקנייה ראשונית (ה-Sandbox של גיא)</h2>
+    <p class="lead">אם אתה רוצה להקים את ה-Showroom האישי בביתך בתקציב מדורג ומאוזן שיציג את כל הקונספטים, הנה ה-MVP שמומלץ להזמין ראשון:</p>
+    <ul><li><strong>ליבה וקישוריות:</strong> Home Assistant Green + SkyConnect.</li><li><strong>אנרגיה ומיזוג:</strong> Shelly EM אחד + Shelly Plus 1 + עינית Broadlink RM4 Mini.</li><li><strong>נוכחות ואקלים:</strong> חיישן Aqara FP2 אחד (לסלון) + חיישן טמפ'/לחות Aqara (למקלחת) + חיישן IKEA VINDSTYRKA.</li><li><strong>אבטחה והגנה אקטיבית:</strong> חיישן הצפה Aqara + מנוע זרוע לברז השיבר + חיישן דלת/חלון Aqara.</li><li><strong>Ambient UX:</strong> מנורת RGB חכמה אחת (לסטטוס/Alarm/מחיר חשמל) + כפתור Aqara Mini אחד.</li></ul>
+  </section>
+</main>
+
+<footer>נבנה מתוך מסמך "רשימת מוצרים מורחבת ומקיפה להתלבטות וקנייה - OneHome" · עודכן 17/09/2026</footer>
+
+</body>
+</html>

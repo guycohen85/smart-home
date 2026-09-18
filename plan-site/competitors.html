@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ניתוח מתחרים — OneHome</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0f172a; --ink-soft: #475569; --muted: #64748b;
+    --bg: #f8fafc; --card-bg: #ffffff; --border: #e2e8f0;
+    --brand-blue: #0284c7; --brand-green: #059669;
+    --crit-bg: #fef2f2; --crit-fg: #b91c1c; --crit-bd:#fecaca;
+    --rec-bg: #ecfdf5; --rec-fg: #047857; --rec-bd:#a7f3d0;
+    --alt-bg: #f1f5f9; --alt-fg: #475569; --alt-bd:#e2e8f0;
+    --amber-bg:#fffbeb; --amber-fg:#92400e; --amber-bd:#fde68a;
+  }
+  * { box-sizing: border-box; }
+  body { margin:0; background: var(--bg); color: var(--ink); font-family:'Heebo',sans-serif; line-height:1.65; -webkit-font-smoothing:antialiased; }
+  a { color: inherit; }
+
+  .sitebar { position:sticky; top:0; z-index:60; background:#020617; border-bottom:1px solid #1e293b; }
+  .sitebar-inner { max-width: 1080px; margin:0 auto; padding: 10px 24px; display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap; }
+  .sitebar-logo { font-weight:800; font-size:15px; color:#f8fafc; text-decoration:none; display:flex; align-items:center; gap:8px; }
+  .sitebar-logo span { color:#5eead4; }
+  .sitebar-logo small { font-weight:500; color:#94a3b8; font-size:11.5px; }
+  .sitebar-links { display:flex; gap:4px; }
+  .sitebar-links a { text-decoration:none; color:#cbd5e1; font-size:13.5px; font-weight:600; padding:7px 14px; border-radius:8px; transition: background .15s ease, color .15s ease; }
+  .sitebar-links a:hover { background: rgba(255,255,255,0.08); color:#fff; }
+  .sitebar-links a.active { background: rgba(94,234,212,0.15); color:#5eead4; }
+
+  header.top { background: linear-gradient(135deg, #0f172a 0%, #0c4a6e 100%); color: #fff; padding: 48px 24px 40px; }
+  .top-inner { max-width: 1080px; margin: 0 auto; }
+  .eyebrow { display:inline-flex; align-items:center; gap:8px; background: rgba(255,255,255,0.12); border:1px solid rgba(255,255,255,0.25); padding:6px 14px; border-radius:20px; font-size:13px; font-weight:600; margin-bottom:16px; }
+  h1.page-title { font-size: 32px; font-weight:800; margin: 0 0 10px; }
+  .page-sub { color: #cbd5e1; font-size: 15.5px; max-width: 760px; margin:0; }
+
+  nav.chipnav { position: sticky; top:58px; z-index:50; background: rgba(248,250,252,0.92); backdrop-filter: blur(8px); border-bottom: 1px solid var(--border); padding: 12px 24px; overflow-x:auto; white-space:nowrap; }
+  nav.chipnav .chipnav-inner { max-width:1080px; margin:0 auto; display:flex; gap:8px; }
+  .chip { display:inline-flex; align-items:center; gap:6px; text-decoration:none; font-size:13px; font-weight:600; color: var(--ink-soft); background:#fff; border:1px solid var(--border); border-radius:20px; padding:7px 14px; flex:0 0 auto; }
+  .chip:hover { border-color: var(--brand-blue); color: var(--brand-blue); }
+
+  main { max-width: 1080px; margin: 0 auto; padding: 36px 24px 80px; }
+
+  .insight-box { background: linear-gradient(135deg,#0f172a,#0c4a6e); color:#fff; border-radius:18px; padding:28px 30px; margin-bottom:40px; }
+  .insight-box .tag { font-size:12px; letter-spacing:.06em; text-transform:uppercase; color:#5eead4; font-weight:700; margin-bottom:10px; }
+  .insight-box p { margin:0; font-size:17px; font-weight:600; line-height:1.6; color:#f1f5f9; }
+  .insight-box .src { display:block; margin-top:12px; font-size:12.5px; font-weight:500; color:#94a3b8; }
+  .insight-box .src a { color:#7dd3fc; text-decoration:underline; }
+
+  .section-title-row { display:flex; align-items:baseline; gap:10px; margin: 44px 0 6px; scroll-margin-top: 130px; }
+  .section-title-row h2 { margin:0; font-size:22px; font-weight:800; }
+  .section-sub { color: var(--muted); font-size:14px; margin: 0 0 18px; }
+
+  .comp-grid { display:grid; grid-template-columns: 1fr; gap:14px; }
+  @media (min-width: 720px) { .comp-grid { grid-template-columns: 1fr 1fr; } }
+
+  .comp-card, .complaint-card { background: var(--card-bg); border:1px solid var(--border); border-radius:16px; padding:18px 20px; }
+  .comp-head { display:flex; align-items:flex-start; justify-content:space-between; gap:10px; margin-bottom:10px; flex-wrap:wrap; }
+  .comp-head h3 { margin:0; font-size:16.5px; font-weight:800; }
+
+  .badge { font-size:11px; font-weight:700; padding:3px 10px; border-radius:20px; white-space:nowrap; border:1px solid; }
+  .badge-model { background: var(--alt-bg); color: var(--alt-fg); border-color: var(--alt-bd); }
+  .solve-yes { background: var(--rec-bg); color: var(--rec-fg); border-color: var(--rec-bd); }
+  .solve-partial { background: var(--amber-bg); color: var(--amber-fg); border-color: var(--amber-bd); }
+  .solve-no { background: var(--alt-bg); color: var(--alt-fg); border-color: var(--alt-bd); }
+
+  .comp-row { display:flex; gap:8px; font-size:13.5px; margin-bottom:6px; align-items:flex-start; }
+  .comp-label { flex:0 0 auto; min-width:64px; font-weight:700; color: var(--muted); font-size:12px; padding-top:1px; }
+  .comp-strength span:last-child { color: var(--rec-fg); }
+  .comp-weakness span:last-child { color: var(--crit-fg); }
+  .comp-flag { margin-top:8px; background:var(--amber-bg); border:1px solid var(--amber-bd); color:var(--amber-fg); border-radius:10px; padding:8px 12px; font-size:12.5px; font-weight:700; }
+  .comp-source { display:inline-block; margin-top:12px; font-size:12px; font-weight:700; color: var(--brand-blue); text-decoration:none; }
+  .comp-source:hover { text-decoration:underline; }
+
+  .trend-box { background:#fff; border:1px solid var(--border); border-radius:16px; padding:22px 26px; margin: 14px 0 10px; }
+  .trend-box ul { margin:0; padding-inline-start:20px; }
+  .trend-box li { margin-bottom:10px; font-size:14.5px; color: var(--ink-soft); }
+  .trend-box li strong { color: var(--ink); }
+
+  .compare-wrap { overflow-x:auto; border:1px solid var(--border); border-radius:16px; background:#fff; margin: 14px 0 10px; }
+  table.compare-table { width:100%; border-collapse:collapse; font-size:13.5px; min-width:680px; }
+  .compare-table th { text-align:right; background:var(--alt-bg); color:var(--ink-soft); font-weight:800; font-size:12px; padding:12px 14px; border-bottom:1px solid var(--border); white-space:nowrap; }
+  .compare-table td { padding:12px 14px; border-bottom:1px solid var(--border); vertical-align:top; }
+  .compare-table tr:last-child td { border-bottom:none; }
+  .compare-table td.comp-name { font-weight:800; white-space:nowrap; }
+  .compare-table .adv { color: var(--rec-fg); }
+  .compare-table .dis { color: var(--crit-fg); }
+  .cat-badge { font-size:10.5px; font-weight:700; padding:2px 8px; border-radius:12px; background:var(--alt-bg); color:var(--alt-fg); border:1px solid var(--alt-bd); white-space:nowrap; }
+  .compare-table .th-sub { display:block; font-weight:500; font-size:10.5px; color:var(--muted); margin-top:3px; text-transform:none; letter-spacing:normal; }
+  .compare-table th.col-onehome, .compare-table td.col-onehome { background: var(--rec-bg); }
+  .compare-table th.col-onehome { color: var(--rec-fg); }
+
+  .complaint-card { margin-bottom:14px; }
+  .complaint-desc { margin:0 0 8px; font-size:14px; color: var(--ink-soft); }
+  .complaint-example { margin:0 0 8px; font-size:13.5px; color: var(--muted); background: var(--bg); border-radius:10px; padding:10px 12px; }
+  .complaint-note { margin:0 0 8px; font-size:12.5px; color: var(--amber-fg); background: var(--amber-bg); border:1px solid var(--amber-bd); border-radius:10px; padding:8px 12px; }
+
+  .conclusions { background: linear-gradient(135deg,#ecfdf5,#eff6ff); border:1px solid #bbf7d0; border-radius:18px; padding:26px 28px; margin-top:10px; }
+  .conclusions h2 { margin:0 0 14px; font-size:20px; }
+  .conclusions ol { margin:0; padding-inline-start:22px; }
+  .conclusions li { margin-bottom:12px; font-size:14.5px; color: var(--ink-soft); }
+  .conclusions li strong { color: var(--ink); }
+
+  .sources-box { margin-top:44px; background:#fff; border:1px dashed var(--border); border-radius:14px; padding:20px 24px; }
+  .sources-box h3 { margin:0 0 10px; font-size:13px; color: var(--muted); font-weight:800; text-transform:uppercase; letter-spacing:.04em; }
+  .sources-box ul { margin:0; padding-inline-start:20px; columns: 1; font-size:12px; }
+  @media (min-width:720px) { .sources-box ul { columns: 2; } }
+  .sources-box li { margin-bottom:8px; word-break: break-all; }
+  .sources-box a { color: var(--brand-blue); text-decoration:none; }
+  .sources-box a:hover { text-decoration:underline; }
+
+  footer { text-align:center; color: var(--muted); font-size:12.5px; padding: 30px 24px 50px; }
+
+  @media (max-width: 640px) { h1.page-title { font-size:24px; } }
+</style>
+</head>
+<body>
+
+<div class="sitebar"><div class="sitebar-inner">
+  <a href="index.html" class="sitebar-logo">One<span>Home</span> <small>· אתר פנימי</small></a>
+  <div class="sitebar-links">
+    <a href="index.html">בית</a>
+    <a href="vision.html">חזון העסק</a>
+    <a href="products.html">רשימת מוצרים</a>
+    <a href="competitors.html" class="active">מתחרים</a>
+    <a href="prds.html">PRD-ים</a>
+    <a href="kb.html">ידע טכני</a>
+    <a href="automations.html">רעיונות לאוטומציות</a>
+    <a href="nabu-casa.html">Nabu Casa</a>
+    <a href="ohf.html">Open Home Foundation</a>
+  </div>
+</div></div>
+
+<header class="top">
+  <div class="top-inner">
+    <span class="eyebrow">🔍 מחקר מתחרים · ספטמבר 2026</span>
+    <h1 class="page-title">ניתוח מתחרים ותלונות משתמשים</h1>
+    <p class="page-sub">סריקת שוק בישראל ובעולם, מגמות 2026, ותלונות משתמשים מתועדות — כדי להבין איפה OneHome באמת עדיפה, ואיפה צריך להיזהר.</p>
+  </div>
+</header>
+
+<nav class="chipnav"><div class="chipnav-inner">
+  <a href="#insight" class="chip"><span>💡</span><span>תובנת מפתח</span></a>
+  <a href="#il" class="chip"><span>🇮🇱</span><span>מתחרים בישראל</span></a>
+  <a href="#global" class="chip"><span>🌍</span><span>מתחרים בעולם</span></a>
+  <a href="#compare" class="chip"><span>⚖️</span><span>טבלת השוואה</span></a>
+  <a href="#trend" class="chip"><span>📈</span><span>מגמת 2026</span></a>
+  <a href="#complaints" class="chip"><span>😤</span><span>תלונות משתמשים</span></a>
+  <a href="#conclusions" class="chip"><span>🎯</span><span>מסקנות</span></a>
+</div></nav>
+
+<main>
+
+  <div id="insight" class="insight-box">
+    <div class="tag">תובנת המפתח מהמחקר</div>
+    <p>אף מתחרה ישראלי — לא Vitrea, לא Accorto, לא Homeii — לא מציע מודל ריטיינר/מנוי מנוהל. מדריך מחירים ישראלי מ-2026 קובע במפורש: "מערכות בית חכם מקצועיות לא דורשות מנוי חודשי". זהו בדיוק החלון הפתוח שעליו OneHome בנויה — אבל Homeii כבר בונה מיצוב טכני כמעט זהה, בלי הריטיינר.</p>
+    <span class="src">מקור: <a href="https://adardigital.co.il/%D7%9B%D7%9E%D7%94-%D7%A2%D7%95%D7%9C%D7%94-%D7%91%D7%99%D7%AA-%D7%97%D7%9B%D7%9D-%D7%9E%D7%97%D7%99%D7%A8%D7%99%D7%9D-2026/" target="_blank" rel="noopener">adardigital.co.il — כמה עולה בית חכם 2026 ↗</a></span>
+  </div>
+
+  <div id="il" class="section-title-row"><h2>🇮🇱 מתחרים בישראל</h2></div>
+  <p class="section-sub">כולם עובדים במודל התקנה חד-פעמית. אף אחד לא מציע ניטור/תחזוקה כשירות בתשלום מתמשך.</p>
+  <div class="comp-grid">
+    <article class="comp-card">
+      <div class="comp-head">
+        <h3>Vitrea</h3>
+        <span class="badge badge-model">חד-פעמי</span>
+      </div>
+      <div class="comp-row"><span class="comp-label">קהל יעד</span><span>בתים בינוניים-גבוהים, מותג ותיק (25+ שנה)</span></div>
+      <div class="comp-row"><span class="comp-label">מחיר</span><span>לא מפורסם</span></div>
+      <div class="comp-row comp-strength"><span class="comp-label">חוזקה</span><span>מותג מבוסס, בקרים קנייניים (VTouch/VMax), רשת מפיצים</span></div>
+      <div class="comp-row comp-weakness"><span class="comp-label">חולשה</span><span>אין שקיפות מחיר, אין הצעת שירות מתמשך גלויה</span></div>
+      
+      <a class="comp-source" href="https://www.vitrea-sh.com/about/" target="_blank" rel="noopener">מקור ↗</a>
+    </article>
+    <article class="comp-card">
+      <div class="comp-head">
+        <h3>Accorto</h3>
+        <span class="badge badge-model">חד-פעמי</span>
+      </div>
+      <div class="comp-row"><span class="comp-label">קהל יעד</span><span>בנייה חדשה/שיפוצים</span></div>
+      <div class="comp-row"><span class="comp-label">מחיר</span><span>אלחוטי בסיסי ~15,000 ₪ · KNX מלא 80,000–150,000 ₪</span></div>
+      <div class="comp-row comp-strength"><span class="comp-label">חוזקה</span><span>שירות מתכנון עד פיקוח, עבודה עם ABB/Legrand/Schneider</span></div>
+      <div class="comp-row comp-weakness"><span class="comp-label">חולשה</span><span>תמיכה “עד שזה עובד” לא פורמלית — לא ריטיינר משולם ומובנה</span></div>
+      
+      <a class="comp-source" href="https://accorto.co.il/" target="_blank" rel="noopener">מקור ↗</a>
+    </article>
+    <article class="comp-card">
+      <div class="comp-head">
+        <h3>HomeLink</h3>
+        <span class="badge badge-model">חד-פעמי</span>
+      </div>
+      <div class="comp-row"><span class="comp-label">קהל יעד</span><span>בעלי בתים DIY-עד-בינוני</span></div>
+      <div class="comp-row"><span class="comp-label">מחיר</span><span>ברמת מוצר (חיישני Aqara וכו')</span></div>
+      <div class="comp-row comp-strength"><span class="comp-label">חוזקה</span><span>קטלוג רחב כולל Apple HomeKit</span></div>
+      <div class="comp-row comp-weakness"><span class="comp-label">חולשה</span><span>יותר קמעונאי מאשר אינטגרטור מנוהל</span></div>
+      
+      <a class="comp-source" href="https://www.homelink.co.il" target="_blank" rel="noopener">מקור ↗</a>
+    </article>
+    <article class="comp-card">
+      <div class="comp-head">
+        <h3>BSwitch (Semicom)</h3>
+        <span class="badge badge-model">חד-פעמי</span>
+      </div>
+      <div class="comp-row"><span class="comp-label">קהל יעד</span><span>שוכרים/דירות בלי חוט ניוטרל</span></div>
+      <div class="comp-row"><span class="comp-label">מחיר</span><span>לפי הצעת מחיר</span></div>
+      <div class="comp-row comp-strength"><span class="comp-label">חוזקה</span><span>פתרון ישראלי לבעיה חשמלית ספציפית (בלי ניוטרל), פיתוח ותמיכה מקומיים</span></div>
+      <div class="comp-row comp-weakness"><span class="comp-label">חולשה</span><span>מערכת קניינית/סגורה, לא מבוססת Home Assistant</span></div>
+      
+      <a class="comp-source" href="https://www.bswitch.semicom.co.il/" target="_blank" rel="noopener">מקור ↗</a>
+    </article>
+    <article class="comp-card">
+      <div class="comp-head">
+        <h3>Litvinov (LSS)</h3>
+        <span class="badge badge-model">חד-פעמי</span>
+      </div>
+      <div class="comp-row"><span class="comp-label">קהל יעד</span><span>וילות פרימיום</span></div>
+      <div class="comp-row"><span class="comp-label">מחיר</span><span>לא מפורסם</span></div>
+      <div class="comp-row comp-strength"><span class="comp-label">חוזקה</span><span>מערכות בוטיק בהתאמה אישית</span></div>
+      <div class="comp-row comp-weakness"><span class="comp-label">חולשה</span><span>נראות/תיעוד נמוכים ברשת</span></div>
+      
+      <a class="comp-source" href="http://litvinovsmart.com/smart-home/en" target="_blank" rel="noopener">מקור ↗</a>
+    </article>
+    <article class="comp-card">
+      <div class="comp-head">
+        <h3>Homeii</h3>
+        <span class="badge badge-model">חד-פעמי — נגד מנוי בפירוש</span>
+      </div>
+      <div class="comp-row"><span class="comp-label">קהל יעד</span><span>לקוחות שמעריכים פרטיות ושליטה מקומית</span></div>
+      <div class="comp-row"><span class="comp-label">מחיר</span><span>לפי הצעת מחיר</span></div>
+      <div class="comp-row comp-strength"><span class="comp-label">חוזקה</span><span>Local-first, תמיכה ב-2,000+ מכשירים/פרוטוקולים (MQTT/Zigbee/Z-Wave/KNX), AI קולי בעברית</span></div>
+      <div class="comp-row comp-weakness"><span class="comp-label">חולשה</span><span>ממתגים “בלי דמי מנוי” — מיצוב כמעט זהה טכנית ל-OneHome, פחות הריטיינר</span></div>
+      <div class="comp-flag">⚑ הכי קרוב אליך טכנולוגית — לעקוב מקרוב</div>
+      <a class="comp-source" href="https://homeii.co.il/" target="_blank" rel="noopener">מקור ↗</a>
+    </article>
+    <article class="comp-card">
+      <div class="comp-head">
+        <h3>TLV-Elec (“חשמלאי עכשיו”)</h3>
+        <span class="badge badge-model">חד-פעמי</span>
+      </div>
+      <div class="comp-row"><span class="comp-label">קהל יעד</span><span>משקי בית שצריכים חשמלאי</span></div>
+      <div class="comp-row"><span class="comp-label">מחיר</span><span>לפי עבודה</span></div>
+      <div class="comp-row comp-strength"><span class="comp-label">חוזקה</span><span>שירות תיאום חשמלאים נגיש</span></div>
+      <div class="comp-row comp-weakness"><span class="comp-label">חולשה</span><span>חשמלאים כלליים, לא מומחי בית חכם, אין ניטור שוטף</span></div>
+      
+      <a class="comp-source" href="https://tlv-elec.co.il/" target="_blank" rel="noopener">מקור ↗</a>
+    </article></div>
+
+  <div id="global" class="section-title-row"><h2>🌍 מתחרים בעולם</h2></div>
+  <p class="section-sub">בעולם המגמה כבר מתחילה לזוז לכיוון מנוי/שירות מנוהל — בישראל עדיין לא.</p>
+  <div class="comp-grid">
+    <article class="comp-card">
+      <div class="comp-head">
+        <h3>Control4</h3>
+        <span class="badge badge-model">חד-פעמי + מנוי אופציונלי</span>
+      </div>
+      <div class="comp-row"><span class="comp-label">קהל יעד</span><span>בתים יוקרתיים, דרך משווקים מורשים</span></div>
+      <div class="comp-row"><span class="comp-label">מחיר</span><span>לפי משווק</span></div>
+      <div class="comp-row comp-strength"><span class="comp-label">חוזקה</span><span>אקוסיסטם בוגר, רשת משווקים</span></div>
+      <div class="comp-row comp-weakness"><span class="comp-label">חולשה</span><span>מנעולי משווק — נעילת סיסמה על המערכת, ~250$/חודש רק לגישה, 200–500$ לכל קריאת שירות</span></div>
+      
+      <a class="comp-source" href="https://bocatech.com/does-control4-have-a-monthly-fee/" target="_blank" rel="noopener">מקור ↗</a>
+    </article>
+    <article class="comp-card">
+      <div class="comp-head">
+        <h3>Loxone</h3>
+        <span class="badge badge-model">חד-פעמי</span>
+      </div>
+      <div class="comp-row"><span class="comp-label">קהל יעד</span><span>וילות פרימיום אירופאיות</span></div>
+      <div class="comp-row"><span class="comp-label">מחיר</span><span>~€15,000 טיפוסי</span></div>
+      <div class="comp-row comp-strength"><span class="comp-label">חוזקה</span><span>Local-first ללא תלות בענן — הכי קרוב פילוסופית ל-OneHome</span></div>
+      <div class="comp-row comp-weakness"><span class="comp-label">חולשה</span><span>אין מוצר ניטור/תחזוקה חודשי ארוז</span></div>
+      
+      <a class="comp-source" href="https://www.nexxteq.com/en/explain/loxone-vs-home-assistant" target="_blank" rel="noopener">מקור ↗</a>
+    </article>
+    <article class="comp-card">
+      <div class="comp-head">
+        <h3>Samsung SmartThings</h3>
+        <span class="badge badge-model">פלטפורמת ענן</span>
+      </div>
+      <div class="comp-row"><span class="comp-label">קהל יעד</span><span>המונים, אקוסיסטם Samsung</span></div>
+      <div class="comp-row"><span class="comp-label">מחיר</span><span>החל מאוק' 2026: 4.99$/חודש לגישת API</span></div>
+      <div class="comp-row comp-strength"><span class="comp-label">חוזקה</span><span>אקוסיסטם ענק</span></div>
+      <div class="comp-row comp-weakness"><span class="comp-label">חולשה</span><span>עמלת API חדשה פוגעת בתאימות ל-Home Assistant — מוכיחה את הסיכון בתלות בענן</span></div>
+      
+      <a class="comp-source" href="https://www.androidheadlines.com/2026/06/samsung-smartthings-api-monthly-fees-home-assistant.html" target="_blank" rel="noopener">מקור ↗</a>
+    </article>
+    <article class="comp-card">
+      <div class="comp-head">
+        <h3>Google Home Premium</h3>
+        <span class="badge badge-model">מנוי ענן ($10–20/חודש)</span>
+      </div>
+      <div class="comp-row"><span class="comp-label">קהל יעד</span><span>משקי בית עם Google/Nest</span></div>
+      <div class="comp-row"><span class="comp-label">מחיר</span><span>Standard 10$ · Advanced 20$</span></div>
+      <div class="comp-row comp-strength"><span class="comp-label">חוזקה</span><span>הוספת אוטומציה מבוססת AI (Gemini)</span></div>
+      <div class="comp-row comp-weakness"><span class="comp-label">חולשה</span><span>תלות בענן; סקר משתמשים: 54% דיווחו על תקלות תכופות, 17% “כמעט בלתי שמיש”</span></div>
+      
+      <a class="comp-source" href="https://www.androidauthority.com/google-home-speakers-hubs-issues-3579553/" target="_blank" rel="noopener">מקור ↗</a>
+    </article>
+    <article class="comp-card">
+      <div class="comp-head">
+        <h3>Vivint</h3>
+        <span class="badge badge-model">חומרה + מנוי חודשי חובה בפועל</span>
+      </div>
+      <div class="comp-row"><span class="comp-label">קהל יעד</span><span>שוק אבטחה ביתית אמריקאי</span></div>
+      <div class="comp-row"><span class="comp-label">מחיר</span><span>ציוד 199–1,200$+ · ניטור 24.99–49.99$/חודש</span></div>
+      <div class="comp-row comp-strength"><span class="comp-label">חוזקה</span><span>הוכחת היתכנות אמיתית למודל ריטיינר בקנה מידה</span></div>
+      <div class="comp-row comp-weakness"><span class="comp-label">חולשה</span><span>ממוקד אבטחה, לא ניהול בית חכם מלא, חוזים ארוכים</span></div>
+      
+      <a class="comp-source" href="https://www.security.org/home-security-systems/vivint/" target="_blank" rel="noopener">מקור ↗</a>
+    </article>
+    <article class="comp-card">
+      <div class="comp-head">
+        <h3>Brilliant Max</h3>
+        <span class="badge badge-model">מנוי concierge מנוהל — חדש 2026</span>
+      </div>
+      <div class="comp-row"><span class="comp-label">קהל יעד</span><span>בתים חכמים קיימים בארה"ב</span></div>
+      <div class="comp-row"><span class="comp-label">מחיר</span><span>לא פורסם</span></div>
+      <div class="comp-row comp-strength"><span class="comp-label">חוזקה</span><span>השחקן הראשון שמעתיק את בדיוק המודל שאתה מציע</span></div>
+      <div class="comp-row comp-weakness"><span class="comp-label">חולשה</span><span>ארה"ב בלבד, לא מוכח, ארכיטקטורת ענן/מקומי לא גלויה</span></div>
+      <div class="comp-flag">⚑ המתחרה העולמי הכי דומה למודל שלך — סימן שהשוק בשל</div>
+      <a class="comp-source" href="https://www.cepro.com/news/brilliant-launches-subscription-service-for-managed-smart-home-automation/627749/" target="_blank" rel="noopener">מקור ↗</a>
+    </article>
+    <article class="comp-card">
+      <div class="comp-head">
+        <h3>Hubitat</h3>
+        <span class="badge badge-model">חד-פעמי (~100$) — נגד מנוי</span>
+      </div>
+      <div class="comp-row"><span class="comp-label">קהל יעד</span><span>קהל DIY טכני</span></div>
+      <div class="comp-row"><span class="comp-label">מחיר</span><span>~100$</span></div>
+      <div class="comp-row comp-strength"><span class="comp-label">חוזקה</span><span>מותג “בלי ענן בלי מנוי” חזק, קרוב לקהל Home Assistant</span></div>
+      <div class="comp-row comp-weakness"><span class="comp-label">חולשה</span><span>DIY בלבד, אין שכבת שירות מנוהל</span></div>
+      
+      <a class="comp-source" href="https://www.techhive.com/article/579824/hubitat-elevation-review.html" target="_blank" rel="noopener">מקור ↗</a>
+    </article>
+    <article class="comp-card">
+      <div class="comp-head">
+        <h3>Josh.ai</h3>
+        <span class="badge badge-model">מנוי לשכבת התוכנה עצמה</span>
+      </div>
+      <div class="comp-row"><span class="comp-label">קהל יעד</span><span>בתים פרימיום</span></div>
+      <div class="comp-row"><span class="comp-label">מחיר</span><span>10–30$+/חודש</span></div>
+      <div class="comp-row comp-strength"><span class="comp-label">חוזקה</span><span>מוכיח שמשקי בית פרימיום כן משלמים מנוי על שכבת בקרה</span></div>
+      <div class="comp-row comp-weakness"><span class="comp-label">חולשה</span><span>מכסה רק שכבת קול/תוכנה, לא ניטור בריאות הבית המלא</span></div>
+      
+      <a class="comp-source" href="https://joshdotai.medium.com/josh-ai-debuts-scalable-software-plans-for-every-project-ab65e33f9cfd" target="_blank" rel="noopener">מקור ↗</a>
+    </article></div>
+
+  <div id="compare" class="section-title-row"><h2>⚖️ טבלה כללית — שלוש קטגוריות בשוק</h2></div>
+  <p class="section-sub">לא השוואה מול מתחרה בודד, אלא מול שלוש הגישות שקיימות היום בשוק הישראלי: אפליקציות DIY זולות, מערכות יוקרה קנייניות, ו-OneHome באמצע.</p>
+  <div class="compare-wrap">
+    <table class="compare-table category-table">
+      <thead>
+        <tr>
+          <th>קריטריון</th>
+          <th>אפליקציות DIY<span class="th-sub">Tuya / שיאומי</span></th>
+          <th>מערכות יוקרה<span class="th-sub">Vitrea / Control4 / Loxone</span></th>
+          <th class="col-onehome">OneHome</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="comp-name">טווח מחיר</td>
+          <td>נמוך מאוד — עשרות עד מאות ₪ למכשיר בודד</td>
+          <td>גבוה מאוד — עשרות עד מאות אלפי ₪ (KNX מלא: 80,000–150,000 ₪)</td>
+          <td class="col-onehome">בינוני ושקוף מראש</td>
+        </tr>
+        <tr>
+          <td class="comp-name">מודל תשלום</td>
+          <td>חד-פעמי למכשיר, בלי מנוי גלוי — אך תלות מלאה בשרת היצרן</td>
+          <td>חד-פעמי גדול; חלקן (Control4) עם מנוי נסתר של כ-250$/חודש רק לגישה</td>
+          <td class="col-onehome">התקנה חד-פעמית + ריטיינר חודשי שקוף לניטור ותחזוקה</td>
+        </tr>
+        <tr>
+          <td class="comp-name">התקנה</td>
+          <td>DIY עצמאי דרך אפליקציה, בלי איש מקצוע</td>
+          <td>אינטגרטור/חשמלאי מוסמך, תכנון וחיווט מראש</td>
+          <td class="col-onehome">מותקן ומוגדר ע"י אינטגרטור מקצועי</td>
+        </tr>
+        <tr>
+          <td class="comp-name">תלות בענן ופרטיות</td>
+          <td>תלות מלאה בשרתי היצרן (בד"כ בסין), איסוף נתוני שימוש נרחב</td>
+          <td>Loxone Local-first; Control4/Crestron סגורים ומנוהלים ע"י משווק</td>
+          <td class="col-onehome">Local-first על Home Assistant — בלי תלות בשרת חיצוני קריטי</td>
+        </tr>
+        <tr>
+          <td class="comp-name">אמינות וזמן תגובה</td>
+          <td>איטי יחסית (Tuya: כ-150–2000ms) ונופל כשהאינטרנט/השרת נופל</td>
+          <td>גבוהה, אך כל שינוי דורש קריאת שירות יקרה (200–500$)</td>
+          <td class="col-onehome">ניטור פרואקטיבי — בעיה מזוהה ומטופלת לפני שהמשתמש שם לב</td>
+        </tr>
+        <tr>
+          <td class="comp-name">מגוון מכשירים</td>
+          <td>קטלוג ענק וזול, אך אקוסיסטמים סגורים שלא תמיד מדברים ביניהם</td>
+          <td>מצומצם וקנייני — נעילת ספק (Vendor lock-in)</td>
+          <td class="col-onehome">פתוח — אלפי מכשירים/פרוטוקולים (Zigbee/Z-Wave/MQTT/KNX) בלי נעילה</td>
+        </tr>
+        <tr>
+          <td class="comp-name">תמיכה שוטפת</td>
+          <td>אין תמיכה אנושית — עצמי או פורומים</td>
+          <td>משווק מורשה יחיד, יקר ולא גמיש</td>
+          <td class="col-onehome">ריטיינר כולל תמיכה אנושית שוטפת, לא רק כשמשהו נשבר</td>
+        </tr>
+        <tr>
+          <td class="comp-name">קהל יעד</td>
+          <td>משתמשים טכניים שמוכנים "להתעסק" כדי לחסוך</td>
+          <td>וילות ובתים פרימיום עם תקציב גבוה</td>
+          <td class="col-onehome">בתים שרוצים רצינות מקצועית בלי המחיר והנעילה של היוקרה</td>
+        </tr>
+        <tr>
+          <td class="comp-name">הסיכון העיקרי</td>
+          <td>היצרן סוגר שרת/API (כמו Insteon 2022, Revolv 2016) — המכשירים הופכים לדבר מת</td>
+          <td>נעילה למשווק יחיד ותחזוקה יקרה ולא שקופה</td>
+          <td class="col-onehome">להסביר ללקוח שהריטיינר הוא שירות אנושי אמיתי — לא "עוד מנוי"</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="complaint-note" style="margin-top:10px;">מקורות לנתוני DIY: <a href="https://homecore.tech/en/home-assistant-vs-commercial-hubs-tuya-xiaomi-smartthings-the-ultimate-2026-guide/" target="_blank" rel="noopener" style="color:inherit; text-decoration:underline;">homecore.tech — Home Assistant vs Tuya/Xiaomi/SmartThings (2026) ↗</a></p>
+
+  <div id="trend" class="section-title-row"><h2>📈 מגמת 2026 — מודלים מנוהלים נכנסים לזרם המרכזי</h2></div>
+  <div class="trend-box">
+    <ul><li><strong>Brilliant Max</strong> — יולי 2026 — מנוי concierge מלא, המקביל העולמי הכי קרוב ל-OneHome.</li><li><strong>Hint (גיבוי Martha Stewart)</strong> — סטארטאפ AI לניהול בית פרואקטיבי, גיוס Seed קיץ 2026 — אך ממוקד ניהול נכסים/ביטוח, לא התקנות.</li><li><strong>Google Home Premium</strong> — מיתוג מחדש עם אוטומציית Gemini — הענקיות הופכות את התחזוקה השוטפת למקור הכנסה חוזרת.</li><li><strong>Samsung SmartThings API fee</strong> — עמלה חודשית חדשה על גישת מפתחים — יוצרת חיכוך בדיוק עבור אינטגרטורים פתוחים כמו Home Assistant.</li></ul>
+  </div>
+
+  <div id="complaints" class="section-title-row"><h2>😤 תלונות משתמשים מרכזיות (עם מקורות)</h2></div>
+  <p class="section-sub">מאפליקציות הענק ועד מקרי "ריסוק" חומרה מתועדים — הראיות הכי חזקות למיצוב Local-First.</p>
+  
+    <article class="complaint-card">
+      <div class="comp-head">
+        <h3>קריסת אמינות באפליקציית Google Home</h3>
+        <span class="badge solve-yes">פותר ישירות</span>
+      </div>
+      <p class="complaint-desc">תקלות תכופות, פקודות קוליות שנכשלות, תגובות לעיר הלא נכונה.</p>
+      <p class="complaint-example">סקר משתמשים: 54% דיווחו על תקלות תכופות, 17% הגדירו את המכשירים “כמעט בלתי שמישים”, ורק 5% דיווחו שהכל עובד. מקרה מתועד: בקשה לכבות מאוורר כיבתה את כל האורות בבית.</p>
+      
+      <a class="comp-source" href="https://www.androidauthority.com/google-home-speakers-hubs-issues-3579553/" target="_blank" rel="noopener">מקור ↗</a>
+    </article>
+    <article class="complaint-card">
+      <div class="comp-head">
+        <h3>אפליקציית Alexa מסורבלת ולא אמינה</h3>
+        <span class="badge solve-yes">פותר ישירות</span>
+      </div>
+      <p class="complaint-desc">ביקורת Consumer Reports מתארת ממשק “מסורבל ואיטי” ביחס למתחרות.</p>
+      <p class="complaint-example">וילון ממונע לא זוהה במשך שבועות; תכונת העלאת מסמכים לא עבדה בהשקה; מתכון שהאסיסטנט זכר פעם אחת נשכח כעבור שבועיים.</p>
+      
+      <a class="comp-source" href="https://www.consumerreports.org/electronics/digital-assistants/amazon-alexa-plus-ai-assistant-review-a1667486499/" target="_blank" rel="noopener">מקור ↗</a>
+    </article>
+    <article class="complaint-card">
+      <div class="comp-head">
+        <h3>אוטומציות ב-SmartThings נכשלות בשקט</h3>
+        <span class="badge solve-partial">פותר חלקית</span>
+      </div>
+      <p class="complaint-desc">טיימרים וטריגרים לא מתבצעים כמתוכנן, בלי שום הודעת שגיאה.</p>
+      <p class="complaint-example">מאוורר שהיה אמור לכבות 5 דקות אחרי ירידת לחות רץ יותר משעתיים ברצף — בלי שום לוג שגיאה.</p>
+      
+      <a class="comp-source" href="https://community.smartthings.com/t/issues-with-custom-automations-and-timers-in-new-smartthings-app/170073" target="_blank" rel="noopener">מקור ↗</a>
+    </article>
+    <article class="complaint-card">
+      <div class="comp-head">
+        <h3>Revolv — Google מכבה לצמיתות מוצר ששילמת עליו (2016)</h3>
+        <span class="badge solve-yes">פותר ישירות</span>
+      </div>
+      <p class="complaint-desc">Nest/Google רכשו את Revolv וכיבו את השרתים שלו לצמיתות — בקרים בשווי 300–400$ הפכו לאשפה אלקטרונית.</p>
+      <p class="complaint-example">לקוח מוצהר: “הלסת שלי נפלה”, ושאל בפומבי “איזו חומרה גוגל תבחר לרסק בכוונה הבאה?” — נשבע לא לקנות מוצר Nest שוב.</p>
+      
+      <a class="comp-source" href="https://www.cbc.ca/news/science/revolv-bricked-1.3521927" target="_blank" rel="noopener">מקור ↗</a>
+    </article>
+    <article class="complaint-card">
+      <div class="comp-head">
+        <h3>Insteon — קריסת שרתים פתאומית (2022)</h3>
+        <span class="badge solve-yes">פותר ישירות</span>
+      </div>
+      <p class="complaint-desc">חברת Insteon כיבתה את השרתים שלה ללא כל התראה — כל בית שהסתמך על הענן שלה איבד פונקציונליות בן לילה.</p>
+      <p class="complaint-example">בכירים הסירו את Insteon מהפרופיל שלהם ב-LinkedIn עוד לפני שהסגירה פורסמה. לקוחות נאלצו לעבור בבהילות ל-Home Assistant/HomeBridge כדי להציל את החומרה שלהם.</p>
+      
+      <a class="comp-source" href="https://hackaday.com/2022/04/25/insteon-abruptly-shuts-down-users-left-smart-home-less/" target="_blank" rel="noopener">מקור ↗</a>
+    </article>
+    <article class="complaint-card">
+      <div class="comp-head">
+        <h3>נעילת ספק ב-Control4/Crestron</h3>
+        <span class="badge solve-partial">פותר חלקית</span>
+      </div>
+      <p class="complaint-desc">מערכות קנייניות יוקרתיות נועלות את הלקוח למשווק יחיד לכל שינוי, ולו הקטן ביותר.</p>
+      <p class="complaint-example">בקרוב ל-250$/חודש רק לשמור על גישה למערכת שרכשת; 200–500$ לכל קריאת שירות. מערכת נעולה בסיסמה כך שהבעלים “לא יכול בכלל להיכנס למערכת שלו”.</p>
+      <p class="complaint-note">⚠ זהירות: מודל ריטיינר בלי שקיפות עלול להיתפס באותו אופן — צריך תיעוד פתוח ומחירון הוגן.</p>
+      <a class="comp-source" href="https://www.trustpilot.com/review/control4.com" target="_blank" rel="noopener">מקור ↗</a>
+    </article>
+    <article class="complaint-card">
+      <div class="comp-head">
+        <h3>מחקר NIST: פערי הבנה בסיכוני פרטיות לפי סוג מכשיר</h3>
+        <span class="badge solve-yes">פותר ישירות</span>
+      </div>
+      <p class="complaint-desc">רמת האמון של משתמשים משתנה מאוד לפי קטגוריית מכשיר, וחומרי הדרכה גנריים לא מכסים את הפערים.</p>
+      <p class="complaint-example">עוזרים קוליים זכו לרמת האמון הנמוכה ביותר מבין קטגוריות המכשירים שנבדקו; החוקרים המליצו על הדרכה ספציפית לכל סוג מכשיר, לא חומר גנרי.</p>
+      
+      <a class="comp-source" href="https://www.nist.gov/publications/smart-home-users-security-and-privacy-perceptions-and-actions-differ-device-category" target="_blank" rel="noopener">מקור ↗</a>
+    </article>
+    <article class="complaint-card">
+      <div class="comp-head">
+        <h3>חוסן בהפסקות חשמל (מקור ישראלי)</h3>
+        <span class="badge solve-yes">פותר ישירות</span>
+      </div>
+      <p class="complaint-desc">דיון בפורום ישראלי: מה קורה לבית אוטומטי בהפסקת חשמל — מערכות חוזרות למצב ברירת מחדל או למצב אחרון (מסוכן אם מכשיר תקול גרם להפסקה).</p>
+      <p class="complaint-example">ממליצים על UPS קטן על מעגל לוח הבקרה — תובנה תפעולית ישירה: להפוך UPS לחלק סטנדרטי בכל התקנה.</p>
+      
+      <a class="comp-source" href="https://www.saf.co.il/forums/threads/msg_64712" target="_blank" rel="noopener">מקור ↗</a>
+    </article>
+
+  <div id="conclusions" class="conclusions">
+    <h2>🎯 מסקנות אסטרטגיות</h2>
+    <ol>
+      <li><strong>הסיפור השיווקי הכי חזק שלך:</strong> מקרי Revolv (2016) ו-Insteon (2022) — לקוחות ששילמו על חומרה וגילו שהיא הפכה לחרס כשהחברה כיבתה שרתים. זו ההוכחה הכי מוחשית ל"בעלות אמיתית" מול תלות בענן.</li>
+      <li><strong>Homeii הוא המתחרה הכי מסוכן:</strong> טכנולוגית כמעט זהה (Local-First, ריבוי פרוטוקולים), אבל ממתג את עצמו נגד מנויים. חובה לנסח בבירור למה ריטיינר הוא לא "עוד מנוי" אלא שירות אנושי אמיתי.</li>
+      <li><strong>זהירות ממלכודת Control4:</strong> תלונות הנעילה והמחירים הגבוהים של Control4/Crestron יכולות להיתפס דומה לריטיינר שלך אם לא תהיה שקוף — תיעוד פתוח, קונפיגורציה ניתנת לייצוא, ומחירון הוגן לקריאות שירות הם לא Nice-to-have, הם חייבים להיות חלק מהמסר.</li>
+      <li><strong>העולם כבר מאמת את המודל:</strong> Brilliant Max, Vivint, Josh.ai מוכיחים שלקוחות פרימיום כבר משלמים על שכבת ניהול/תוכנה מתמשכת — ישראל פשוט עוד לא שם. יתרון First-Mover אמיתי.</li>
+      <li><strong>תובנה תפעולית קטנה אך אמיתית:</strong> דיון בפורום ישראלי על הפסקות חשמל מצביע שכדאי לכלול UPS קטן ללוח הבקרה כחלק סטנדרטי מכל התקנה — לא רק פיצ'ר שיווקי, גם מפחית קריאות שירות.</li>
+    </ol>
+  </div>
+
+  <div class="sources-box">
+    <h3>כל המקורות</h3>
+    <ul><li><a href="http://litvinovsmart.com/smart-home/en" target="_blank" rel="noopener">http://litvinovsmart.com/smart-home/en</a></li><li><a href="https://accorto.co.il/" target="_blank" rel="noopener">https://accorto.co.il/</a></li><li><a href="https://adardigital.co.il/%D7%9B%D7%9E%D7%94-%D7%A2%D7%95%D7%9C%D7%94-%D7%91%D7%99%D7%AA-%D7%97%D7%9B%D7%9D-%D7%9E%D7%97%D7%99%D7%A8%D7%99%D7%9D-2026/" target="_blank" rel="noopener">https://adardigital.co.il/%D7%9B%D7%9E%D7%94-%D7%A2%D7%95%D7%9C%D7%94-%D7%91%D7%99%D7%AA-%D7%97%D7%9B%D7%9D-%D7%9E%D7%97%D7%99%D7%A8%D7%99%D7%9D-2026/</a></li><li><a href="https://bocatech.com/does-control4-have-a-monthly-fee/" target="_blank" rel="noopener">https://bocatech.com/does-control4-have-a-monthly-fee/</a></li><li><a href="https://community.smartthings.com/t/issues-with-custom-automations-and-timers-in-new-smartthings-app/170073" target="_blank" rel="noopener">https://community.smartthings.com/t/issues-with-custom-automations-and-timers-in-new-smartthings-app/170073</a></li><li><a href="https://fortune.com/2026/05/13/exclusive-martha-stewart-ai-startup-hint-seed-funding-slow-ventures/" target="_blank" rel="noopener">https://fortune.com/2026/05/13/exclusive-martha-stewart-ai-startup-hint-seed-funding-slow-ventures/</a></li><li><a href="https://hackaday.com/2022/04/25/insteon-abruptly-shuts-down-users-left-smart-home-less/" target="_blank" rel="noopener">https://hackaday.com/2022/04/25/insteon-abruptly-shuts-down-users-left-smart-home-less/</a></li><li><a href="https://homeii.co.il/" target="_blank" rel="noopener">https://homeii.co.il/</a></li><li><a href="https://joshdotai.medium.com/josh-ai-debuts-scalable-software-plans-for-every-project-ab65e33f9cfd" target="_blank" rel="noopener">https://joshdotai.medium.com/josh-ai-debuts-scalable-software-plans-for-every-project-ab65e33f9cfd</a></li><li><a href="https://tlv-elec.co.il/" target="_blank" rel="noopener">https://tlv-elec.co.il/</a></li><li><a href="https://www.androidauthority.com/google-home-speakers-hubs-issues-3579553/" target="_blank" rel="noopener">https://www.androidauthority.com/google-home-speakers-hubs-issues-3579553/</a></li><li><a href="https://www.androidheadlines.com/2026/06/samsung-smartthings-api-monthly-fees-home-assistant.html" target="_blank" rel="noopener">https://www.androidheadlines.com/2026/06/samsung-smartthings-api-monthly-fees-home-assistant.html</a></li><li><a href="https://www.bswitch.semicom.co.il/" target="_blank" rel="noopener">https://www.bswitch.semicom.co.il/</a></li><li><a href="https://www.cbc.ca/news/science/revolv-bricked-1.3521927" target="_blank" rel="noopener">https://www.cbc.ca/news/science/revolv-bricked-1.3521927</a></li><li><a href="https://www.cepro.com/news/brilliant-launches-subscription-service-for-managed-smart-home-automation/627749/" target="_blank" rel="noopener">https://www.cepro.com/news/brilliant-launches-subscription-service-for-managed-smart-home-automation/627749/</a></li><li><a href="https://www.consumerreports.org/electronics/digital-assistants/amazon-alexa-plus-ai-assistant-review-a1667486499/" target="_blank" rel="noopener">https://www.consumerreports.org/electronics/digital-assistants/amazon-alexa-plus-ai-assistant-review-a1667486499/</a></li><li><a href="https://www.homelink.co.il" target="_blank" rel="noopener">https://www.homelink.co.il</a></li><li><a href="https://www.israelhayom.co.il/viralai/article/18618878" target="_blank" rel="noopener">https://www.israelhayom.co.il/viralai/article/18618878</a></li><li><a href="https://www.nexxteq.com/en/explain/loxone-vs-home-assistant" target="_blank" rel="noopener">https://www.nexxteq.com/en/explain/loxone-vs-home-assistant</a></li><li><a href="https://www.nist.gov/publications/smart-home-users-security-and-privacy-perceptions-and-actions-differ-device-category" target="_blank" rel="noopener">https://www.nist.gov/publications/smart-home-users-security-and-privacy-perceptions-and-actions-differ-device-category</a></li><li><a href="https://www.saf.co.il/forums/threads/msg_64712" target="_blank" rel="noopener">https://www.saf.co.il/forums/threads/msg_64712</a></li><li><a href="https://www.security.org/home-security-systems/vivint/" target="_blank" rel="noopener">https://www.security.org/home-security-systems/vivint/</a></li><li><a href="https://www.techhive.com/article/579824/hubitat-elevation-review.html" target="_blank" rel="noopener">https://www.techhive.com/article/579824/hubitat-elevation-review.html</a></li><li><a href="https://www.trustpilot.com/review/control4.com" target="_blank" rel="noopener">https://www.trustpilot.com/review/control4.com</a></li><li><a href="https://www.vitrea-sh.com/about/" target="_blank" rel="noopener">https://www.vitrea-sh.com/about/</a></li><li><a href="https://www.ynet.co.il/articles/0,7340,L-5553061,00.html" target="_blank" rel="noopener">https://www.ynet.co.il/articles/0,7340,L-5553061,00.html</a></li></ul>
+  </div>
+
+</main>
+
+<footer>מחקר שוק שבוצע ע"י Claude, 15/09/2026 · יש לאמת נתוני מחיר/תחרות מול המציאות בשטח לפני שימוש שיווקי</footer>
+
+</body>
+</html>

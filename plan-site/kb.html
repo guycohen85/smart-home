@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ידע טכני — OneHome</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0f172a; --ink-soft: #475569; --muted: #64748b; --bg: #f8fafc;
+    --card-bg: #ffffff; --border: #e2e8f0; --brand-blue: #0284c7; --brand-green: #059669;
+    --draft-bg: #fffbeb; --draft-fg: #92400e; --draft-bd: #fde68a;
+    --done-bg: #ecfdf5; --done-fg: #047857; --done-bd: #a7f3d0;
+    --empty-bg: #f1f5f9; --empty-fg: #64748b; --empty-bd: #e2e8f0;
+  }
+  * { box-sizing: border-box; }
+  body { margin:0; background: var(--bg); color: var(--ink); font-family: 'Heebo', sans-serif; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+  a { color: inherit; }
+  header.top { background: linear-gradient(135deg, #0f172a 0%, #0c4a6e 100%); color: #fff; padding: 64px 24px 56px; text-align:center; }
+  .top-inner { max-width: 720px; margin: 0 auto; }
+  .eyebrow { display:inline-flex; align-items:center; gap:8px; background: rgba(255,255,255,0.12); border:1px solid rgba(255,255,255,0.25); padding:6px 14px; border-radius:20px; font-size:13px; font-weight:600; margin-bottom:18px; }
+  h1.page-title { font-size: 38px; font-weight:800; margin: 0 0 12px; }
+  h1.page-title span { color:#5eead4; }
+  .page-sub { color: #cbd5e1; font-size: 16px; margin:0; }
+  main { max-width: 880px; margin: 0 auto; padding: 40px 24px 80px; }
+  .intro-note { background:#fff; border:1px solid var(--border); border-radius:14px; padding:18px 22px; margin-bottom:26px; font-size:14.5px; color: var(--ink-soft); }
+  .intro-note strong { color: var(--ink); }
+  section.block { background:#fff; border:1px solid var(--border); border-radius:18px; padding: 28px 30px; margin-bottom: 22px; }
+  .block-head { display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:14px; }
+  .block-head-left { display:flex; align-items:center; gap:14px; }
+  .letter-badge { flex:0 0 auto; width:42px; height:42px; border-radius:12px; background: linear-gradient(135deg, var(--brand-blue), var(--brand-green)); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:19px; }
+  .block-head h2 { margin:0; font-size:20px; font-weight:800; }
+  .status { font-size:11.5px; font-weight:700; padding:4px 12px; border-radius:20px; border:1px solid; white-space:nowrap; }
+  .status-draft { background: var(--draft-bg); color: var(--draft-fg); border-color: var(--draft-bd); }
+  .status-done { background: var(--done-bg); color: var(--done-fg); border-color: var(--done-bd); }
+  .block p { margin: 0 0 10px; color: var(--ink-soft); font-size:15px; }
+  .block ul { margin: 8px 0 0; padding-inline-start: 22px; }
+  .block li { margin-bottom: 9px; font-size:15px; color: var(--ink-soft); }
+  .block li strong { color: var(--ink); }
+  .idea-box { background: var(--bg); border:1px dashed var(--border); border-radius:14px; padding:18px 22px; margin-top:8px; }
+  .idea-box h3 { margin:0 0 8px; font-size:14px; color: var(--brand-blue); font-weight:800; }
+  .idea-box.reject { border-color:#fecaca; }
+  .idea-box.reject h3 { color:#b91c1c; }
+  footer { text-align:center; color: var(--muted); font-size:12.5px; padding: 10px 24px 50px; }
+  .sitebar { position:sticky; top:0; z-index:60; background:#020617; border-bottom:1px solid #1e293b; }
+  .sitebar-inner { max-width: 1000px; margin:0 auto; padding: 10px 24px; display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap; }
+  .sitebar-logo { font-weight:800; font-size:15px; color:#f8fafc; text-decoration:none; display:flex; align-items:center; gap:8px; }
+  .sitebar-logo span { color:#5eead4; }
+  .sitebar-logo small { font-weight:500; color:#94a3b8; font-size:11.5px; }
+  .sitebar-links { display:flex; gap:4px; }
+  .sitebar-links a { text-decoration:none; color:#cbd5e1; font-size:13.5px; font-weight:600; padding:7px 14px; border-radius:8px; transition: background .15s ease, color .15s ease; }
+  .sitebar-links a:hover { background: rgba(255,255,255,0.08); color:#fff; }
+  .sitebar-links a.active { background: rgba(94,234,212,0.15); color:#5eead4; }
+  @media (max-width: 640px) { h1.page-title { font-size:28px; } }
+</style>
+</head>
+<body>
+<div class="sitebar"><div class="sitebar-inner">
+  <a href="index.html" class="sitebar-logo">One<span>Home</span> <small>· אתר פנימי</small></a>
+  <div class="sitebar-links">
+    <a href="index.html">בית</a>
+    <a href="vision.html">חזון העסק</a>
+    <a href="products.html">רשימת מוצרים</a>
+    <a href="competitors.html">מתחרים</a>
+    <a href="prds.html">PRD-ים</a>
+    <a href="kb.html" class="active">ידע טכני</a>
+    <a href="automations.html">רעיונות לאוטומציות</a>
+    <a href="nabu-casa.html">Nabu Casa</a>
+    <a href="ohf.html">Open Home Foundation</a>
+  </div>
+</div></div>
+
+<header class="top">
+  <div class="top-inner">
+    <span class="eyebrow">🛠️ מאגר ידע מתפתח — נבנה לפי ניסיון בפועל אצל לקוחות</span>
+    <h1 class="page-title">ידע <span>טכני</span></h1>
+    <p class="page-sub">תקלות שחזרו על עצמן (או שצפויות לחזור), ואיך פתרנו אותן — כדי שבפעם הבאה שזה קורה, אצל אותו לקוח או אצל לקוח אחר, הפתרון כבר מוכן ולא צריך לחשוב מהתחלה.</p>
+  </div>
+</header>
+
+<main>
+
+  <div class="intro-note">
+    <strong>איך זה שונה מ-PRD 3 (Onboarding)?</strong> PRD 3 יגדיר את ה-SOP הקבוע של תהליך ההתקנה — סדר עבודה, checklist, מסירה ללקוח. הדף הזה הוא ההפך: מאגר פתוח שגדל לאורך זמן, בלי מבנה קבוע מראש — כל פעם שנתקלים בבעיה טכנית ופותרים אותה בפועל, מתעדים אותה כאן. חלק מהפתרונות שנצברים כאן יסתננו בסוף כ-checklist item בתוך PRD 3; חלק יישארו כאן כידע לשעת הצורך (דיבוג בשטח, תמיכה טלפונית).
+  </div>
+
+  <section class="block">
+    <div class="block-head">
+      <div class="block-head-left"><div class="letter-badge">1</div><h2>הגישה המקומית ל-Home Assistant לא עובדת (homeassistant.local / IP)</h2></div>
+      <span class="status status-draft">✎ הוחלט — טרם אומת בהתקנה אצל לקוח אמיתי</span>
+    </div>
+    <p><strong>הבעיה:</strong> ה-onboarding הרשמי של Home Assistant מציע גישה דרך <code>homeassistant.local</code> או ה-IP שהאפליקציה מזהה אוטומטית. אצל חלק מהלקוחות זה פשוט לא עובד.</p>
+    <p><strong>סיבות נפוצות:</strong> mDNS (שעליו מבוסס ה-hostname .local) נחסם כשרשת ה-WiFi מוגדרת כ-Public ולא Private (ברירת מחדל ב-Windows Firewall), כשיש AP/Client Isolation מופעל בראוטר, או כשיש הפרדת VLAN בלי mDNS reflector.</p>
+    <div class="idea-box">
+      <h3>הפתרון — שתי שכבות נפרדות</h3>
+      <p><strong>צד הטכנאי (גיא), לתחזוקה מקומית:</strong> DHCP Reservation בראוטר לפי MAC address של ה-HA (לא static IP בתוך המכשיר עצמו) — כתובת קבועה שלא תלויה ב-mDNS, מתועדת לצד פרטי ההתקנה של הלקוח.</p>
+      <p><strong>צד הלקוח, לשימוש יומיומי:</strong> ברירת המחדל בכל התקנה היא גישה מרשת פנימית בלבד (כתובת ה-IP הקבועה) — התראות Push ממשיכות לעבוד גם בלעדיה. אם הלקוח רוצה גם לשלוט/לצפות מרחוק, זו תוספת אופציונלית בתשלום דרך Nabu Casa (מוצפן מקצה לקצה) — כתובת קבועה שעובדת מכל רשת, בלי שהלקוח צריך לדעת מה זה IP או hostname בכלל. Cloudflare Tunnel הוסר כאופציה לצד הלקוח (מסיים TLS אצל צד שלישי, פחות פרטי) — סוכם בתיעוד ההחלטות בפרויקט Claude (השוואת אבטחה/הצפנה מול Cloudflare Tunnel וניתוח GDPR).</p>
+      <p style="margin:0"><strong>כדי לא לצאת מיותר לאינטרנט כשבבית:</strong> מגדירים בהגדרות המערכת גם Internal URL (ה-IP הקבוע) וגם, אם נרכשה תוספת הגישה מרחוק, External URL (Nabu Casa). אפליקציית ה-Companion מזהה אוטומטית לפי SSID של רשת ה-WiFi — בבית משתמשת ב-Internal URL (ישיר, מהיר, בלי תלות באינטרנט), בחוץ עוברת ל-External URL (אם קיים). שקוף לגמרי ללקוח. חשוב: האוטומציות והחיישנים תמיד רצים מקומית על ה-HA בלי קשר לגישה מרחוק — גם בלי אינטרנט הבית ממשיך לתפקד, רק השליטה מרחוק נפגעת. <strong>עודכן 18/09:</strong> המודל הנוכחי (כל לקוח פותח ומשלם על המנוי בעצמו) זמני — תוכנית מתקינים של Nabu Casa בפיתוח, לפי Andy Gill (Business Development), עדיין בלי תאריכים ובלי תמחור.</p>
+    </div>
+    <div class="idea-box reject">
+      <h3>נדחה במפורש — hosts file</h3>
+      <p style="margin:0">טכנית עובד, אבל לא scalable: לא קיים על מובייל, נשבר בשקט אם ה-IP המקומי משתנה, ודורש תחזוקה ידנית בכל מכשיר של הלקוח. לא מתאים לשירות מנוהל.</p>
+    </div>
+    <div class="idea-box">
+      <h3>מה באמת קריטי לבדוק, ומה פחות (עודכן 17/09)</h3>
+      <p><strong>קריטי — AP/Client Isolation בראוטר:</strong> זו ההגדרה שבאמת חוסמת גישה מקומית, הן ל-hostname והן ל-IP קבוע, כי היא מונעת תקשורת בין מכשירים באותה רשת (לא רק multicast). משפיעה גם על תקשורת בין חיישני Zigbee/Matter/Thread. יש לוודא שהיא כבויה בכל התקנה.</p>
+      <p style="margin:0"><strong>משני — פרופיל הרשת ב-Windows (Private/Public):</strong> משפיע רק על יכולת מחשב הלקוח לפתור <code>.local</code> hostname (mDNS) — לא על גישה ב-IP קבוע, כי חיבור TCP יוצא מותר כברירת מחדל גם ברשת Public. ברגע שיש Internal URL עם IP קבוע, זה כבר לא רלוונטי לגישה היומיומית. עדיין שווה לתקן כהרגל טוב, כי זה משפיע על גילוי אוטומטי (mDNS/SSDP) של מכשירים חדשים שיתווספו בעתיד (Chromecast, ESPHome, Sonos וכו').</p>
+    </div>
+    <ul style="margin-top:14px">
+      <li><strong>תוספת ל-checklist ההתקנה:</strong> לוודא שאין AP/Client Isolation בראוטר; להעדיף רשת שטוחה אחת ולא VLAN מופרד בשלב הנוכחי של העסק; להגדיר בכל התקנה Internal URL קבוע, ואם נרכשה תוספת הגישה מרחוק — גם External URL (Nabu Casa) — ולוודא שהאפליקציה מזהה נכון את ה-SSID הביתי.</li>
+    </ul>
+  </section>
+
+</main>
+
+<footer>עודכן 17/09/2026 · דף מתעדכן בכל פעם שנתקלים בתקלה חדשה</footer>
+
+</body>
+</html>

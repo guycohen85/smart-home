@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OneHome — אתר פנימי</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0f172a;
+    --ink-soft: #475569;
+    --muted: #64748b;
+    --bg: #f8fafc;
+    --card-bg: #ffffff;
+    --border: #e2e8f0;
+    --brand-blue: #0284c7;
+    --brand-green: #059669;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin:0; background: var(--bg); color: var(--ink);
+    font-family: 'Heebo', sans-serif; line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; }
+
+  .sitebar { position:sticky; top:0; z-index:60; background:#020617; border-bottom:1px solid #1e293b; }
+  .sitebar-inner { max-width: 1000px; margin:0 auto; padding: 10px 24px; display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap; }
+  .sitebar-logo { font-weight:800; font-size:15px; color:#f8fafc; text-decoration:none; display:flex; align-items:center; gap:8px; }
+  .sitebar-logo span { color:#5eead4; }
+  .sitebar-logo small { font-weight:500; color:#94a3b8; font-size:11.5px; }
+  .sitebar-links { display:flex; gap:4px; }
+  .sitebar-links a {
+    text-decoration:none; color:#cbd5e1; font-size:13.5px; font-weight:600;
+    padding:7px 14px; border-radius:8px; transition: background .15s ease, color .15s ease;
+  }
+  .sitebar-links a:hover { background: rgba(255,255,255,0.08); color:#fff; }
+  .sitebar-links a.active { background: rgba(94,234,212,0.15); color:#5eead4; }
+
+  header.top {
+    background: linear-gradient(135deg, #0f172a 0%, #0c4a6e 100%);
+    color: #fff; padding: 64px 24px 56px; text-align:center;
+  }
+  .top-inner { max-width: 720px; margin: 0 auto; }
+  .eyebrow {
+    display:inline-flex; align-items:center; gap:8px;
+    background: rgba(255,255,255,0.12); border:1px solid rgba(255,255,255,0.25);
+    padding:6px 14px; border-radius:20px; font-size:13px; font-weight:600; margin-bottom:18px;
+  }
+  h1.page-title { font-size: 38px; font-weight:800; margin: 0 0 12px; }
+  h1.page-title span { color:#5eead4; }
+  .page-sub { color: #cbd5e1; font-size: 16px; margin:0; }
+
+  main { max-width: 880px; margin: 0 auto; padding: 44px 24px 80px; }
+
+  .grid { display:grid; grid-template-columns: 1fr; gap:16px; }
+  @media (min-width: 640px) { .grid { grid-template-columns: 1fr 1fr; } }
+
+  .page-card {
+    display:block; text-decoration:none; color:inherit;
+    background: var(--card-bg); border:1px solid var(--border); border-radius:18px;
+    padding: 26px 28px; transition: transform .15s ease, border-color .15s ease, box-shadow .15s ease;
+  }
+  .page-card:hover { transform: translateY(-3px); border-color: var(--brand-blue); box-shadow: 0 12px 28px -8px rgba(2,132,199,0.25); }
+  .page-card .icon {
+    width:46px; height:46px; border-radius:13px; display:flex; align-items:center; justify-content:center;
+    font-size:22px; background: linear-gradient(135deg, var(--brand-blue), var(--brand-green)); margin-bottom:16px;
+  }
+  .page-card h2 { margin:0 0 8px; font-size:19px; font-weight:800; }
+  .page-card p { margin:0 0 14px; font-size:14px; color: var(--ink-soft); }
+  .page-card .go { font-size:13px; font-weight:700; color: var(--brand-blue); }
+
+  .page-card.soon { cursor:default; border-style:dashed; opacity:.7; }
+  .page-card.soon:hover { transform:none; box-shadow:none; border-color:var(--border); }
+  .page-card.soon .icon { background: #e2e8f0; color:#94a3b8; }
+  .page-card.soon .go { color: var(--muted); }
+
+  footer { text-align:center; color: var(--muted); font-size:12.5px; padding: 10px 24px 50px; }
+
+  @media (max-width: 640px) {
+    h1.page-title { font-size:28px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="sitebar"><div class="sitebar-inner">
+  <a href="index.html" class="sitebar-logo">One<span>Home</span> <small>· אתר פנימי</small></a>
+  <div class="sitebar-links">
+    <a href="index.html" class="active">בית</a>
+    <a href="vision.html">חזון העסק</a>
+    <a href="products.html">רשימת מוצרים</a>
+    <a href="competitors.html">מתחרים</a>
+    <a href="prds.html">PRD-ים</a>
+    <a href="kb.html">ידע טכני</a>
+    <a href="automations.html">רעיונות לאוטומציות</a>
+    <a href="nabu-casa.html">Nabu Casa</a>
+    <a href="ohf.html">Open Home Foundation</a>
+  </div>
+</div></div>
+
+<header class="top">
+  <div class="top-inner">
+    <span class="eyebrow">🔒 מסמכי עבודה פנימיים — לא ללקוח</span>
+    <h1 class="page-title">One<span>Home</span> — אתר פנימי</h1>
+    <p class="page-sub">מרכז המסמכים לבניית העסק: חזון, קטלוג מוצרים, תמחור ותוכנית עבודה — הכל במקום אחד, מתעדכן תוך כדי עבודה.</p>
+  </div>
+</header>
+
+<main>
+  <div class="grid">
+
+    <a href="vision.html" class="page-card">
+      <div class="icon">🧭</div>
+      <h2>חזון העסק</h2>
+      <p>מי הלקוח, מה המוצר, למה בנינו את זה, ציר הזמן והדיפרנציאטור הטכנולוגי — לפי מסגרת Who/What/Why/When/Where/How.</p>
+      <div class="go">לחזון ←</div>
+    </a>
+
+    <a href="products.html" class="page-card">
+      <div class="icon">🛒</div>
+      <h2>רשימת מוצרים מורחבת</h2>
+      <p>קטלוג מלא של 9 קטגוריות רכיבים — תשתית, חיישנים, בטיחות, אנרגיה ועוד — עם המלצת MVP לשלב ה-Sandbox.</p>
+      <div class="go">לרשימה ←</div>
+    </a>
+
+    <a href="competitors.html" class="page-card">
+      <div class="icon">🎯</div>
+      <h2>מתחרים</h2>
+      <p>ניתוח חוזקות וחולשות של 15 מתחרים בארץ ובעולם, מגמות 2026 וסריקת תלונות משתמשים ברשתות ובחנויות האפליקציות.</p>
+      <div class="go">לניתוח ←</div>
+    </a>
+
+    <a href="prds.html" class="page-card">
+      <div class="icon">📋</div>
+      <h2>PRD-ים — דרישות מוצר</h2>
+      <p>אפיון מפורט לכל רכיב: שירות הליבה (התקנה + ריטיינר), חוויית לקוח, Onboarding וכלי ניהול פנימי.</p>
+      <div class="go">ל-PRD-ים ←</div>
+    </a>
+
+    <a href="kb.html" class="page-card">
+      <div class="icon">🛠️</div>
+      <h2>ידע טכני</h2>
+      <p>תקלות שחזרו על עצמן אצל לקוחות ואיך פתרנו אותן — מאגר ידע מתפתח, נבנה תוך כדי עבודה בשטח.</p>
+      <div class="go">לידע הטכני ←</div>
+    </a>
+
+    <a href="automations.html" class="page-card">
+      <div class="icon">⚡</div>
+      <h2>רעיונות לאוטומציות</h2>
+      <p>קטלוג רעיונות לאוטומציות אמיתיות ל-Home Assistant — אנרגיה, בטיחות, אבטחה, תאורה ואיכות אוויר — עם החיישנים הנדרשים לכל רעיון.</p>
+      <div class="go">לרעיונות ←</div>
+    </a>
+
+    <a href="nabu-casa.html" class="page-card">
+      <div class="icon">☁️</div>
+      <h2>Nabu Casa — השוואת שירותים</h2>
+      <p>7 השירותים שבמנוי Home Assistant Cloud, יתרון מול חיסרון לכל אחד, ומה מומלץ כברירת מחדל מול מה שנשאר תוספת מוצהרת.</p>
+      <div class="go">להשוואה ←</div>
+    </a>
+
+    <a href="ohf.html" class="page-card">
+      <div class="icon">🏛️</div>
+      <h2>Open Home Foundation</h2>
+      <p>העמותה הלא-מסחרית שמפעילה את Home Assistant, ESPHome ועוד 250+ פרויקטים — מי זה, למה זה רלוונטי לעסק, ואילו פרויקטים נלווים שלה שווה להכיר.</p>
+      <div class="go">לדף ←</div>
+    </a>
+
+    <div class="page-card soon">
+      <div class="icon">💰</div>
+      <h2>מודל תמחור</h2>
+      <p>נוסף כקובץ Excel נפרד כרגע (OneHome_pricing_model.xlsx) — גרסת עמוד תתווסף כאן בהמשך.</p>
+      <div class="go">בקרוב</div>
+    </div>
+
+  </div>
+</main>
+
+<footer>עודכן 18/09/2026 · אתר עבודה פנימי, מתעדכן לפי החלטות גיא</footer>
+
+</body>
+</html>

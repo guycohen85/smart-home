@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>חזון העסק — OneHome</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0f172a;
+    --ink-soft: #475569;
+    --muted: #64748b;
+    --bg: #f8fafc;
+    --card-bg: #ffffff;
+    --border: #e2e8f0;
+    --brand-blue: #0284c7;
+    --brand-green: #059669;
+    --draft-bg: #fffbeb; --draft-fg: #92400e; --draft-bd: #fde68a;
+    --done-bg: #ecfdf5; --done-fg: #047857; --done-bd: #a7f3d0;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin:0; background: var(--bg); color: var(--ink);
+    font-family: 'Heebo', sans-serif; line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; }
+  header.top {
+    background: linear-gradient(135deg, #0f172a 0%, #0c4a6e 100%);
+    color: #fff; padding: 52px 24px 44px;
+  }
+  .top-inner { max-width: 880px; margin: 0 auto; }
+  .eyebrow {
+    display:inline-flex; align-items:center; gap:8px;
+    background: rgba(255,255,255,0.12); border:1px solid rgba(255,255,255,0.25);
+    padding:6px 14px; border-radius:20px; font-size:13px; font-weight:600; margin-bottom:16px;
+  }
+  h1.page-title { font-size: 36px; font-weight:800; margin: 0 0 10px; }
+  h1.page-title span { color:#5eead4; }
+  .page-sub { color: #cbd5e1; font-size: 15.5px; max-width: 640px; margin:0; }
+
+  nav.chipnav {
+    position: sticky; top:58px; z-index:50;
+    background: rgba(248,250,252,0.92); backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border);
+    padding: 12px 24px; overflow-x:auto; white-space:nowrap;
+  }
+  nav.chipnav .chipnav-inner { max-width:880px; margin:0 auto; display:flex; gap:8px; }
+  .chip {
+    display:inline-flex; align-items:center; gap:6px; text-decoration:none;
+    font-size:13px; font-weight:600; color: var(--ink-soft);
+    background:#fff; border:1px solid var(--border); border-radius:20px;
+    padding:7px 14px; flex:0 0 auto; transition: all .15s ease;
+  }
+  .chip:hover { border-color: var(--brand-blue); color: var(--brand-blue); }
+
+  main { max-width: 880px; margin: 0 auto; padding: 40px 24px 80px; }
+
+  section.block {
+    background:#fff; border:1px solid var(--border); border-radius:18px;
+    padding: 28px 30px; margin-bottom: 22px; scroll-margin-top: 90px;
+  }
+  .block-head { display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:14px; }
+  .block-head-left { display:flex; align-items:center; gap:14px; }
+  .letter-badge {
+    flex:0 0 auto; width:42px; height:42px; border-radius:12px;
+    background: linear-gradient(135deg, var(--brand-blue), var(--brand-green));
+    color:#fff; display:flex; align-items:center; justify-content:center;
+    font-weight:800; font-size:17px;
+  }
+  .block-head h2 { margin:0; font-size:20px; font-weight:800; }
+  .status {
+    font-size:11.5px; font-weight:700; padding:4px 12px; border-radius:20px; border:1px solid; white-space:nowrap;
+  }
+  .status-draft { background: var(--draft-bg); color: var(--draft-fg); border-color: var(--draft-bd); }
+  .status-done { background: var(--done-bg); color: var(--done-fg); border-color: var(--done-bd); }
+
+  .block p { margin: 0 0 10px; color: var(--ink-soft); font-size:15px; }
+  .block ul { margin: 8px 0 0; padding-inline-start: 22px; }
+  .block li { margin-bottom: 9px; font-size:15px; color: var(--ink-soft); }
+  .block li strong { color: var(--ink); }
+
+  .persona-grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(190px,1fr)); gap:12px; margin-top:14px; }
+  .persona-card {
+    background: var(--bg); border:1px solid var(--border); border-radius:12px; padding:14px 16px;
+  }
+  .persona-card .name { font-weight:800; font-size:14.5px; margin-bottom:4px; }
+  .persona-card .desc { font-size:13px; color: var(--muted); }
+
+  .why-split { display:grid; grid-template-columns: 1fr; gap:14px; }
+  @media (min-width: 640px) { .why-split { grid-template-columns: 1fr 1fr; } }
+  .why-card { background: var(--bg); border:1px solid var(--border); border-radius:12px; padding:16px 18px; }
+  .why-card .label { font-size:12px; font-weight:800; letter-spacing:.04em; text-transform:uppercase; color: var(--brand-blue); margin-bottom:6px; }
+
+  .timeline { position:relative; padding-inline-start: 34px; margin-top: 10px; }
+  .timeline::before { content:""; position:absolute; right:9px; top:6px; bottom:6px; width:2px; background: var(--border); }
+  .timeline-item { position:relative; padding-bottom: 20px; }
+  .timeline-item:last-child { padding-bottom:0; }
+  .timeline-item::before {
+    content:""; position:absolute; right:-27px; top:2px; width:16px; height:16px; border-radius:50%;
+    background:#fff; border:3px solid var(--brand-green); box-sizing:border-box;
+  }
+  .timeline-item .t-label { font-weight:800; font-size:14px; color: var(--ink); margin-bottom:2px; }
+  .timeline-item .t-desc { font-size:14px; color: var(--ink-soft); }
+
+  .vision-quote {
+    background: linear-gradient(135deg,#0f172a,#0c4a6e); color:#fff;
+    border-radius: 18px; padding: 34px 32px; text-align:center; margin: 30px 0 22px;
+  }
+  .vision-quote .q-label { font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:#5eead4; font-weight:700; margin-bottom:12px; }
+  .vision-quote p { color:#f1f5f9; font-size: 20px; font-weight:700; line-height:1.5; margin:0; }
+
+  .bg-note { background:#fff; border:1px dashed var(--border); border-radius:14px; padding:18px 22px; margin-top:8px; }
+  .bg-note h3 { margin:0 0 10px; font-size:14px; color: var(--muted); font-weight:800; text-transform:uppercase; letter-spacing:.04em; }
+  .bg-note ul { margin:0; padding-inline-start: 20px; }
+  .bg-note li { font-size:13.5px; color: var(--muted); margin-bottom:8px; }
+
+  footer { text-align:center; color: var(--muted); font-size:12.5px; padding: 10px 24px 50px; }
+
+  @media (max-width: 640px) {
+    h1.page-title { font-size:27px; }
+    .block-head h2 { font-size:17px; }
+    .vision-quote p { font-size:17px; }
+  }
+
+  .sitebar { position:sticky; top:0; z-index:60; background:#020617; border-bottom:1px solid #1e293b; }
+  .sitebar-inner { max-width: 1000px; margin:0 auto; padding: 10px 24px; display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap; }
+  .sitebar-logo { font-weight:800; font-size:15px; color:#f8fafc; text-decoration:none; display:flex; align-items:center; gap:8px; }
+  .sitebar-logo span { color:#5eead4; }
+  .sitebar-logo small { font-weight:500; color:#94a3b8; font-size:11.5px; }
+  .sitebar-links { display:flex; gap:4px; }
+  .sitebar-links a {
+    text-decoration:none; color:#cbd5e1; font-size:13.5px; font-weight:600;
+    padding:7px 14px; border-radius:8px; transition: background .15s ease, color .15s ease;
+  }
+  .sitebar-links a:hover { background: rgba(255,255,255,0.08); color:#fff; }
+  .sitebar-links a.active { background: rgba(94,234,212,0.15); color:#5eead4; }
+</style>
+</head>
+<body>
+<div class="sitebar"><div class="sitebar-inner">
+  <a href="index.html" class="sitebar-logo">One<span>Home</span> <small>· אתר פנימי</small></a>
+  <div class="sitebar-links">
+    <a href="index.html" class="">בית</a>
+    <a href="vision.html" class="active">חזון העסק</a>
+    <a href="products.html" class="">רשימת מוצרים</a>
+    <a href="competitors.html" class="">מתחרים</a>
+    <a href="prds.html" class="">PRD-ים</a>
+    <a href="kb.html">ידע טכני</a>
+    <a href="automations.html">רעיונות לאוטומציות</a>
+    <a href="nabu-casa.html">Nabu Casa</a>
+    <a href="ohf.html">Open Home Foundation</a>
+  </div>
+</div></div>
+
+
+<header class="top">
+  <div class="top-inner">
+    <span class="eyebrow">🧭 חזון עסקי — טיוטת עבודה</span>
+    <h1 class="page-title">חזון העסק — One<span>Home</span></h1>
+    <p class="page-sub">בית חכם מנוהל, מבוסס Home Assistant מקומי. המסמך נבנה בשיחה עם Claude ב-15/09/2026 לפי מסגרת Who / What / Why / When / Where / How.</p>
+  </div>
+</header>
+
+<nav class="chipnav"><div class="chipnav-inner">
+  <a href="#who" class="chip"><span>👥</span><span>Who</span></a>
+  <a href="#what" class="chip"><span>🏠</span><span>What</span></a>
+  <a href="#why" class="chip"><span>💛</span><span>Why</span></a>
+  <a href="#when" class="chip"><span>🗓️</span><span>When</span></a>
+  <a href="#where" class="chip"><span>📍</span><span>Where</span></a>
+  <a href="#how" class="chip"><span>⚙️</span><span>How</span></a>
+  <a href="#vision" class="chip"><span>⭐</span><span>משפט חזון</span></a>
+</div></nav>
+
+<main>
+
+  <section id="who" class="block">
+    <div class="block-head">
+      <div class="block-head-left"><div class="letter-badge">W</div><h2>Who — מי הלקוח</h2></div>
+      <span class="status status-done">✓ סגור</span>
+    </div>
+    <p>משפחות בדירות מגורים וגם בבתים פרטיים/וילות, שמחפשות נוחות ויעילות. הספקטרום הזה משתקף כבר בשלושת המסלולים הקיימים:</p>
+    <div class="persona-grid">
+      <div class="persona-card"><div class="name">🏢 EcoHome</div><div class="desc">דירות / עיר</div></div>
+      <div class="persona-card"><div class="name">👨‍👩‍👧 SafeHome</div><div class="desc">משפחות — דגש הגנה ושקט נפשי</div></div>
+      <div class="persona-card"><div class="name">🏡 EliteHome</div><div class="desc">וילות / פרימיום</div></div>
+    </div>
+  </section>
+
+  <section id="what" class="block">
+    <div class="block-head">
+      <div class="block-head-left"><div class="letter-badge">W</div><h2>What — מה המוצר</h2></div>
+      <span class="status status-done">✓ סגור</span>
+    </div>
+    <p>לא מכירת גאדג'טים חכמים — שירות בית חכם <strong>מנוהל</strong> (managed), מבוסס Home Assistant מקומי (Local-First), שכולל:</p>
+    <ul>
+      <li><strong>התקנה חד-פעמית</strong> — כרטיס הכניסה</li>
+      <li><strong>ריטיינר חודשי</strong> — ניטור פרואקטיבי (Watchman), גיבויים מוצפנים, עדכוני אבטחה, תמיכת AI/WhatsApp. זו הליבה האמיתית של המודל העסקי.</li>
+    </ul>
+  </section>
+
+  <section id="why" class="block">
+    <div class="block-head">
+      <div class="block-head-left"><div class="letter-badge">W</div><h2>Why — למה</h2></div>
+      <span class="status status-draft">✎ טיוטה — לאישור</span>
+    </div>
+    <div class="why-split">
+      <div class="why-card">
+        <div class="label">מבחינת הלקוח</div>
+        <p style="margin:0">נוחות, יעילות, שקט נפשי — בלי להתפשר על פרטיות.</p>
+      </div>
+      <div class="why-card">
+        <div class="label">מבחינת המייסד (טיוטה)</div>
+        <p style="margin:0">לסגור את הפער הקיים בשוק הישראלי בין מתקינים קלאסיים (חזקים בחומרה, חלשים ב-DevOps) לבין חובבי DIY (חזקים בתוכנה, בלי משמעת הנדסית) — ולהביא לבית הישראלי רמת אמינות ותחזוקה שכיום קיימת רק בעולם ה-Enterprise.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="when" class="block">
+    <div class="block-head">
+      <div class="block-head-left"><div class="letter-badge">W</div><h2>When — ציר זמן</h2></div>
+      <span class="status status-draft">✎ טיוטה</span>
+    </div>
+    <div class="timeline">
+      <div class="timeline-item"><div class="t-label">עכשיו — Q3–Q4 2026</div><div class="t-desc">בנייה ויישום בבית האישי (Sandbox / Showroom)</div></div>
+      <div class="timeline-item"><div class="t-label">טווח קצר</div><div class="t-desc">3 לקוחות ראשונים דרך רשת קשרים אישית — ללא שיווק/פרסום</div></div>
+      <div class="timeline-item"><div class="t-label">לאחר 3 לקוחות מרוצים</div><div class="t-desc">הפעלת דף הנחיתה, פתיחת הרשמה מסודרת</div></div>
+      <div class="timeline-item"><div class="t-label">~חודש 12</div><div class="t-desc">התקרבות לתקרת עוסק פטור (122,833 ₪ ל-2026) — נקודת החלטה למעבר לעוסק מורשה</div></div>
+      <div class="timeline-item"><div class="t-label">שנה 2–3 (טרם הוחלט)</div><div class="t-desc">בוטיק (מעט לקוחות, מחיר גבוה) מול בניית תשתית/SOPs להעברה לטכנאי שכיר</div></div>
+    </div>
+  </section>
+
+  <section id="where" class="block">
+    <div class="block-head">
+      <div class="block-head-left"><div class="letter-badge">W</div><h2>Where — היכן</h2></div>
+      <span class="status status-draft">✎ טיוטה — הכי פתוח לשינוי</span>
+    </div>
+    <p style="margin:0">הצעה: להתחיל ממוקד גיאוגרפית (מרכז הארץ / קרוב פיזית למייסד) לצורך ניהול התקנות ותמיכה פרונטלית לבד, ולהרחיב בהדרגה עם הקיבולת. טעון אישור מול הבסיס האמיתי של קשרים/רשת שיש לגיא.</p>
+  </section>
+
+  <section id="how" class="block">
+    <div class="block-head">
+      <div class="block-head-left"><div class="letter-badge">H</div><h2>How — איך</h2></div>
+      <span class="status status-done">✓ מבוסס</span>
+    </div>
+    <ul>
+      <li><strong>ארכיטקטורת Local-First</strong> — VLAN מבודד, כתובות סטטיות; גישה מרשת פנימית בלבד כברירת מחדל, כולל התראות Push שפועלות תמיד גם בלעדיה. גישה מרחוק היא תוספת אופציונלית בתשלום דרך Nabu Casa (מוצפן מקצה לקצה) — לא Cloudflare Tunnel. פירוט מלא ונימוקים בתיעוד ההחלטות בפרויקט Claude, והשוואת כל שירותי Nabu Casa ב-<a href="nabu-casa.html" style="color:inherit;text-decoration:underline">דף ההשוואה ←</a>.</li>
+      <li><strong>משמעת DevOps אמיתית</strong> — Watchman (ניטור פרואקטיבי), גיבויים מוצפנים אוטומטיים, Fail-Safe rules</li>
+      <li><strong>UX פרימיום שקט</strong> — תאורת סטטוס עדינה במקום דשבורד עמוס, כפתורי משימה פיזיים</li>
+    </ul>
+  </section>
+
+  <div id="vision" class="vision-quote">
+    <div class="q-label">משפט חזון מזוקק · טיוטה</div>
+    <p>"OneHome מביאה לבית הישראלי — דירה או וילה — רמת אמינות, פרטיות וחיסכון שעד היום היו שמורות לעולם ה-Enterprise, בלי לוותר על החום והפשטות של בית."</p>
+  </div>
+
+  <div class="bg-note">
+    <h3>רקע נוסף מהשיחה</h3>
+    <ul>
+      <li>ניתוח היתכנות ראשוני אישר: אין כרגע מתחרה ישראלי שמציע מודל ריטיינר/מנוי מנוהל מבוסס Home Assistant (Vitrea, HomeLink, Accorto, BSwitch, Litvinov — כולם במודל התקנה חד-פעמית).</li>
+      <li>שיבר המים החשמלי (Active Defense) נדחה במכוון עד שיהיה עסק פעיל — כל עבודה שדורשת חשמל תבוצע ע"י חשמלאי מוסמך שכיר-משנה.</li>
+      <li>מודל תמחור bottom-up (קובץ OneHome_pricing_model.xlsx), עודכן 16/09 לפי סגירת PRD 1: התקנה EcoHome/SafeHome/EliteHome = 5,700 / 8,700 / 13,150 ₪; ריטיינר חודשי = 160 / 220 / 350 ₪. המחיר עלה בעיקר ב-EcoHome (כי בטיחות בסיסית — הצפה/עשן/נוכחות — עברה להיות כלולה בכל מסלול), והריטיינר ירד בכולם (בוטלה עלות כלי AI/WhatsApp בתשלום וגיבוי ענן בתשלום — הוחלפו בפתרונות חינמיים). ראו <a href="prd1.html#requirements" style="color:inherit;text-decoration:underline">PRD 1 ←</a> לפירוט המלא.</li>
+      <li>עודכן 17/09: גישה מרחוק (Nabu Casa) הוצאה מהעלויות הקבועות שהריטיינר מממן, והפכה לתוספת אופציונלית (הרחבה בתיעוד ההחלטות בפרויקט Claude). יש כאן השפעה פוטנציאלית על מודל התמחור (הורדת ריטיינר / שיפור מרווח / הבדלה בין מסלולים) שטרם הוכרעה.</li>
+    </ul>
+  </div>
+
+</main>
+
+<footer>עודכן 18/09/2026 · חזון עבודה, מתעדכן לפי החלטות גיא</footer>
+
+</body>
+</html>

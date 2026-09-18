@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>מערכת הבית החכם OneHome | קטלוג אפשרויות מלא (פנימי)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        body { font-family: 'Heebo', sans-serif; background-color: #0d1117; color: #f0f6fc; }
+        .glass-card { background: rgba(22, 27, 34, 0.75); backdrop-filter: blur(12px); border: 1px solid #30363d; }
+    </style>
+</head>
+<body class="antialiased selection:bg-emerald-500 selection:text-white pb-20">
+
+    <!-- Header -->
+    <header class="w-full border-b border-slate-800 bg-slate-950/80 fixed top-0 z-50 backdrop-blur-md">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <span class="text-3xl font-extrabold tracking-tight text-white">מערכת <span class="text-emerald-500">OneHome</span></span>
+                <span class="bg-blue-500/10 text-blue-400 border border-blue-500/30 text-xs px-4 py-1.5 rounded-full font-semibold">
+                    גרסת מאסטר לבחירת פיצ'רים (לא ללקוח)
+                </span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Master List Section -->
+    <section class="pt-32 px-6 max-w-7xl mx-auto">
+        <div class="text-center mb-16 space-y-4">
+            <h1 class="text-4xl sm:text-5xl font-black text-white">קטלוג היכולות המלא של המערכת</h1>
+            <p class="text-slate-400 text-lg">בחר את הבלוקים שתרצה להציג בדף הסופי מתוך כלל המערכות האפשריות.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            
+            <!-- Category 1: Infrastructure & Network -->
+            <div class="glass-card p-8 rounded-3xl space-y-4 border-t-4 border-t-slate-500">
+                <div class="text-3xl text-slate-400 mb-2"><i class="fa-solid fa-server"></i></div>
+                <h3 class="text-2xl font-bold text-white mb-4">תשתית, רשת ובקרים</h3>
+                <ul class="space-y-4 text-slate-300 text-sm list-disc list-inside">
+                    <li><strong>בקר מרכזי מסוג Home Assistant Green:</strong> המוח הראשי המאפשר עבודה מקומית ללא תלות בענן[cite: 1, 2].</li>
+                    <li><strong>דונגל תקשורת מסוג SkyConnect:</strong> חיבור ישיר לחיישני רשתות מתקדמות כגון Zigbee, Matter, Thread[cite: 1, 2].</li>
+                    <li><strong>הפרדה מלאה של רכיבי הרשת באמצעות VLAN:</strong> יצירת רשת נפרדת למניעת עומס ואבטחה מירבית[cite: 1].</li>
+                    <li><strong>קיבוע כתובות ברמת הראוטר עם Static IP Lease:</strong> מונע אובדן תקשורת לממסרים כמו Shelly[cite: 1].</li>
+                    <li><strong>גישה מוצפנת מרחוק דרך Cloudflare Tunnel:</strong> אבטחה ללא פתיחת פורטים[cite: 1, 2].</li>
+                    <li><strong>מנגנון התאוששות עצמאי Fail-Safe Rule:</strong> טיפול אוטומטי בנפילות חשמל ואתחול[cite: 1].</li>
+                    <li><strong>בקר קולי מקומי Voice PE:</strong> שליטה קולית ללא חדירה לפרטיות של שרתי גוגל או אמזון[cite: 2].</li>
+                </ul>
+            </div>
+
+            <!-- Category 2: Active Defense -->
+            <div class="glass-card p-8 rounded-3xl space-y-4 border-t-4 border-t-red-500">
+                <div class="text-3xl text-red-400 mb-2"><i class="fa-solid fa-shield-halved"></i></div>
+                <h3 class="text-2xl font-bold text-white mb-4">הגנה אקטיבית ובטיחות</h3>
+                <ul class="space-y-4 text-slate-300 text-sm list-disc list-inside">
+                    <li><strong>מנוע חשמלי על השיבר הראשי מסוג Smart Water Valve:</strong> סוגר את המים בתוך 3 שניות מזיהוי הצפה[cite: 1, 2].</li>
+                    <li><strong>גלאי מים והצפה מסוג Aqara Leak Sensor:</strong> ממוקם מתחת לכיור ולמכונת הכביסה[cite: 2].</li>
+                    <li><strong>מפסקי לוח מתקדמים מסוג Shelly Pro:</strong> מנתקים עומסים קריטיים בזיהוי חום חריג או עשן[cite: 1, 2].</li>
+                    <li><strong>גלאי עשן חכם מבית Aqara או Shelly:</strong> מזהה עשן וטמפרטורה ומפעיל את מנורות החירום[cite: 2].</li>
+                </ul>
+            </div>
+
+            <!-- Category 3: Energy & HEMS -->
+            <div class="glass-card p-8 rounded-3xl space-y-4 border-t-4 border-t-emerald-500">
+                <div class="text-3xl text-emerald-400 mb-2"><i class="fa-solid fa-bolt"></i></div>
+                <h3 class="text-2xl font-bold text-white mb-4">ניהול אנרגיה וחיסכון</h3>
+                <ul class="space-y-4 text-slate-300 text-sm list-disc list-inside">
+                    <li><strong>מערכת ניהול HEMS מובנית:</strong> מבצעת הסטת עומסים וחוסכת כ-30% מעלות החשמל השנתית[cite: 1].</li>
+                    <li><strong>רכיב ניטור ראשי מסוג Shelly EM:</strong> מודד צריכת חשמל בזמן אמת בלוח ומציג עלויות בשקלים[cite: 2].</li>
+                    <li><strong>בקר דוד מים מסוג Switcher V4:</strong> מאפשר תזמון חכם וחימום מדויק לפי מספר המקלחות[cite: 2].</li>
+                    <li><strong>הדלקת דוד חכמה מבוססת Geofencing:</strong> חימום המים מופעל אוטומטית בהתבסס על קרבת הלקוח לבית ועל טמפרטורת המים הנוכחית.</li>
+                    <li><strong>ניהול טעינת רכב חשמלי חכם:</strong> הסטת טעינת הרכב לשעות השפל הזולות ביותר בלילה[cite: 1, 2].</li>
+                </ul>
+            </div>
+
+            <!-- Category 4: Presence & Climate -->
+            <div class="glass-card p-8 rounded-3xl space-y-4 border-t-4 border-t-purple-500">
+                <div class="text-3xl text-purple-400 mb-2"><i class="fa-solid fa-wind"></i></div>
+                <h3 class="text-2xl font-bold text-white mb-4">נוכחות, אקלים ואיכות אוויר</h3>
+                <ul class="space-y-4 text-slate-300 text-sm list-disc list-inside">
+                    <li><strong>חיישן נוכחות רדאר מסוג Aqara FP2:</strong> מזהה אדם גם בישיבה ללא תנועה מבוסס טכנולוגיית mmWave[cite: 2].</li>
+                    <li><strong>חיישן איכות אוויר מבית IKEA VINDSTYRKA:</strong> בודק רמות זיהום, PM2.5, VOC ולחות לאיוורור חכם[cite: 2].</li>
+                    <li><strong>חיישן לחות במקלחת מבית Aqara:</strong> מפעיל אוטומטית את הוונטה למניעת עובש[cite: 2].</li>
+                    <li><strong>עינית חכמה למזגנים מסוג Broadlink RM4:</strong> מאפשרת לשלוט במזגנים קיימים ללא מתאמים יקרים[cite: 2].</li>
+                    <li><strong>גלאי תנועה מהירים PIR:</strong> להדלקה מיידית של אורות במעברים ומדרגות[cite: 2].</li>
+                </ul>
+            </div>
+
+            <!-- Category 5: Ambient UX & Hardware -->
+            <div class="glass-card p-8 rounded-3xl space-y-4 border-t-4 border-t-amber-500">
+                <div class="text-3xl text-amber-400 mb-2"><i class="fa-solid fa-lightbulb"></i></div>
+                <h3 class="text-2xl font-bold text-white mb-4">חוויית משתמש שקטה וחומרה</h3>
+                <ul class="space-y-4 text-slate-300 text-sm list-disc list-inside">
+                    <li><strong>התראה ויזואלית חרישית Visual Red Alert:</strong> הפיכת מנורות הסטטוס בבית לאדום מהבהב באירוע חירום[cite: 1].</li>
+                    <li><strong>מנורות לדים חכמות מסוג RGBW:</strong> חיווי עדין לסטטוס הבית (לדוגמא כתום לדוד דולק)[cite: 2].</li>
+                    <li><strong>כפתור יציאה ראשי Master Off:</strong> לחיצה ארוכה המכבה את כל מכשירי החדר או הבית[cite: 1, 2].</li>
+                    <li><strong>ממסרים נסתרים מסוג Shelly Plus 1:</strong> מותקנים מאחורי מפסקי החשמל הקיימים לשמירה על עיצוב הבית[cite: 2].</li>
+                    <li><strong>מנוע וילון אוטומטי מסוג Aqara Curtain Driver:</strong> לפתיחה בהתאם לשעות השמש[cite: 2].</li>
+                </ul>
+            </div>
+
+            <!-- Category 6: Access Control & AI Support -->
+            <div class="glass-card p-8 rounded-3xl space-y-4 border-t-4 border-t-cyan-500">
+                <div class="text-3xl text-cyan-400 mb-2"><i class="fa-solid fa-door-open"></i></div>
+                <h3 class="text-2xl font-bold text-white mb-4">כניסה, תצוגה ותמיכה</h3>
+                <ul class="space-y-4 text-slate-300 text-sm list-disc list-inside">
+                    <li><strong>מנעול דלת כניסה חכם מסוג Nuki Smart Lock:</strong> נפתח אוטומטית בהתקרבות וננעל ביציאה[cite: 2].</li>
+                    <li><strong>עינית וידאו חכמה לדלת:</strong> זיהוי תנועה בכניסה לבית ללא עננים חיצוניים[cite: 2].</li>
+                    <li><strong>מסך שליטה בקיר Android Kiosk:</strong> טאבלט המציג דשבורד מרכזי וסטטיסטיקות במצב אורח[cite: 2].</li>
+                    <li><strong>תמיכה שוטפת מבוססת סוכן AI Agent:</strong> בוט וואטסאפ זמין 24/7 לפתרון תקלות[cite: 1].</li>
+                    <li><strong>ניטור פרואקטיבי מתמיד Watchman:</strong> מערכת הדואגת להתריע על סוללות חלשות או מכשירים מנותקים טרם הלקוח מבחין בכך[cite: 1].</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Packages Definition -->
+    <section class="py-20 px-6 max-w-7xl mx-auto border-t border-slate-800 mt-20">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl font-black text-white">אפשרויות בניית המסלולים והחבילות (מהמסמך)</h2>
+        </div>
+        
+        <ul class="grid grid-cols-1 md:grid-cols-3 gap-6 text-slate-300">
+            <li class="glass-card p-6 rounded-2xl">
+                <strong class="text-xl text-white block mb-3 border-b border-slate-700 pb-2">חבילת EcoHome (לדירות קבלן/עיר)</strong>
+                <ul class="list-disc list-inside space-y-2 mt-2 text-sm text-slate-400">
+                    <li>התקנת בקר ראשי מסוג HA Green[cite: 1].</li>
+                    <li>מערכת HEMS בלוח החשמל[cite: 1].</li>
+                    <li>שליטה בתאורה, דוד חשמל ואוורור נגד לחות במקלחת[cite: 1].</li>
+                </ul>
+            </li>
+            <li class="glass-card p-6 rounded-2xl">
+                <strong class="text-xl text-white block mb-3 border-b border-slate-700 pb-2">חבילת SafeHome (למשפחות)</strong>
+                <ul class="list-disc list-inside space-y-2 mt-2 text-sm text-slate-400">
+                    <li>כל מרכיבי חבילת הבסיס[cite: 1].</li>
+                    <li>מנעול כניסה מדגם Nuki[cite: 1].</li>
+                    <li>עינית מבוססת תקן Matter[cite: 1].</li>
+                    <li>הגנת הצפות אקטיבית ומנורת אזהרה Alarm[cite: 1].</li>
+                </ul>
+            </li>
+            <li class="glass-card p-6 rounded-2xl">
+                <strong class="text-xl text-white block mb-3 border-b border-slate-700 pb-2">חבילת EliteHome (לווילות ופרמיום)</strong>
+                <ul class="list-disc list-inside space-y-2 mt-2 text-sm text-slate-400">
+                    <li>כוללת את כל המרכיבים מחבילות הבסיס[cite: 1].</li>
+                    <li>התקנת מפסקי לוח Shelly Pro ומערכת שיבר מלאה[cite: 1].</li>
+                    <li>שילוב חיישני רדאר mmWave ובקרת מיזוג מקיפה[cite: 1].</li>
+                    <li>ליווי פרימיום מבוסס מנוע סוכן AI[cite: 1].</li>
+                </ul>
+            </li>
+        </ul>
+    </section>
+
+    <!-- Comparison Section -->
+    <section class="py-20 px-6 max-w-7xl mx-auto border-t border-slate-800">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl font-black text-white">השוואת הפתרון (פורמט רשימות)</h2>
+        </div>
+
+        <ul class="grid grid-cols-1 md:grid-cols-3 gap-6 text-slate-300 text-sm">
+            <li class="glass-card p-6 rounded-2xl opacity-75">
+                <strong class="text-lg text-white block mb-3">פתרונות פשוטים DIY (תויא/שיאומי)</strong>
+                <ul class="list-disc list-inside space-y-2 text-slate-400">
+                    <li><strong>פרטיות:</strong> נמוכה מאוד, דורשת שרתים בסין.</li>
+                    <li><strong>חיבור רשת:</strong> המערכת קורסת ללא אינטרנט תקין.</li>
+                    <li><strong>חסכון בחשמל:</strong> לא קיים כלל.</li>
+                    <li><strong>עלות:</strong> נמוכה, אך הלקוח מתקין ומתחזק לבד ללא תמיכה.</li>
+                </ul>
+            </li>
+            <li class="glass-card p-6 rounded-2xl opacity-75">
+                <strong class="text-lg text-white block mb-3">מערכות יוקרה קלאסיות (Control4/Crestron)</strong>
+                <ul class="list-disc list-inside space-y-2 text-slate-400">
+                    <li><strong>עלות התקנה:</strong> גבוהה מאוד (מ-50,000 ש"ח ומעלה)[cite: 1].</li>
+                    <li><strong>גמישות:</strong> גן סגור, מצריך הזמנת טכנאי בתשלום לכל שינוי קטן[cite: 1].</li>
+                    <li><strong>תלות ברישוי:</strong> כרוך בעדכונים יקרים ושדרוגי חומרה תכופים[cite: 1].</li>
+                </ul>
+            </li>
+            <li class="glass-card p-6 rounded-2xl border-emerald-500/50 bg-emerald-900/10">
+                <strong class="text-lg text-emerald-400 block mb-3">מערכת OneHome</strong>
+                <ul class="list-disc list-inside space-y-2 text-slate-300">
+                    <li><strong>פרטיות:</strong> מושלמת, התשתית עובדת במאת האחוזים באופן מקומי.</li>
+                    <li><strong>אמינות:</strong> ממשיכה לתפקד כרגיל גם בעת ניתוק מאינטרנט.</li>
+                    <li><strong>עלות התקנה:</strong> נגישה (מתחיל מ-7,500 ש"ח).</li>
+                    <li><strong>תחזוקה:</strong> אוטונומית ברובה, מגובה בבוט מבוסס בינה מלאכותית.</li>
+                </ul>
+            </li>
+        </ul>
+    </section>
+
+</body>
+</html>

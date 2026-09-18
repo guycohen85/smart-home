@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Open Home Foundation — מי עומד מאחורי Home Assistant — OneHome</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0f172a; --ink-soft: #475569; --muted: #64748b;
+    --bg: #f8fafc; --card-bg: #ffffff; --border: #e2e8f0;
+    --brand-blue: #0284c7; --brand-green: #059669;
+    --crit-bg: #fef2f2; --crit-fg: #b91c1c; --crit-bd:#fecaca;
+    --rec-bg: #ecfdf5; --rec-fg: #047857; --rec-bd:#a7f3d0;
+    --alt-bg: #f1f5f9; --alt-fg: #475569; --alt-bd:#e2e8f0;
+    --amber-bg:#fffbeb; --amber-fg:#92400e; --amber-bd:#fde68a;
+  }
+  * { box-sizing: border-box; }
+  body { margin:0; background: var(--bg); color: var(--ink); font-family:'Heebo',sans-serif; line-height:1.65; -webkit-font-smoothing:antialiased; }
+  a { color: inherit; }
+
+  .sitebar { position:sticky; top:0; z-index:60; background:#020617; border-bottom:1px solid #1e293b; }
+  .sitebar-inner { max-width: 1080px; margin:0 auto; padding: 10px 24px; display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap; }
+  .sitebar-logo { font-weight:800; font-size:15px; color:#f8fafc; text-decoration:none; display:flex; align-items:center; gap:8px; }
+  .sitebar-logo span { color:#5eead4; }
+  .sitebar-logo small { font-weight:500; color:#94a3b8; font-size:11.5px; }
+  .sitebar-links { display:flex; gap:4px; flex-wrap:wrap; }
+  .sitebar-links a { text-decoration:none; color:#cbd5e1; font-size:13.5px; font-weight:600; padding:7px 14px; border-radius:8px; transition: background .15s ease, color .15s ease; }
+  .sitebar-links a:hover { background: rgba(255,255,255,0.08); color:#fff; }
+  .sitebar-links a.active { background: rgba(94,234,212,0.15); color:#5eead4; }
+
+  header.top { background: linear-gradient(135deg, #0f172a 0%, #0c4a6e 100%); color: #fff; padding: 48px 24px 40px; }
+  .top-inner { max-width: 1080px; margin: 0 auto; }
+  .eyebrow { display:inline-flex; align-items:center; gap:8px; background: rgba(255,255,255,0.12); border:1px solid rgba(255,255,255,0.25); padding:6px 14px; border-radius:20px; font-size:13px; font-weight:600; margin-bottom:16px; }
+  h1.page-title { font-size: 32px; font-weight:800; margin: 0 0 10px; }
+  .page-sub { color: #cbd5e1; font-size: 15.5px; max-width: 760px; margin:0; }
+
+  nav.chipnav { position: sticky; top:58px; z-index:50; background: rgba(248,250,252,0.92); backdrop-filter: blur(8px); border-bottom: 1px solid var(--border); padding: 12px 24px; overflow-x:auto; white-space:nowrap; }
+  nav.chipnav .chipnav-inner { max-width:1080px; margin:0 auto; display:flex; gap:8px; }
+  .chip { display:inline-flex; align-items:center; gap:6px; text-decoration:none; font-size:13px; font-weight:600; color: var(--ink-soft); background:#fff; border:1px solid var(--border); border-radius:20px; padding:7px 14px; flex:0 0 auto; }
+  .chip:hover { border-color: var(--brand-blue); color: var(--brand-blue); }
+
+  main { max-width: 1080px; margin: 0 auto; padding: 36px 24px 80px; }
+
+  .insight-box { background: linear-gradient(135deg,#0f172a,#0c4a6e); color:#fff; border-radius:18px; padding:28px 30px; margin-bottom:40px; }
+  .insight-box .tag { font-size:12px; letter-spacing:.06em; text-transform:uppercase; color:#5eead4; font-weight:700; margin-bottom:10px; }
+  .insight-box p { margin:0; font-size:17px; font-weight:600; line-height:1.6; color:#f1f5f9; }
+  .insight-box .src { display:block; margin-top:12px; font-size:12.5px; font-weight:500; color:#94a3b8; }
+  .insight-box .src a { color:#7dd3fc; text-decoration:underline; }
+
+  .section-title-row { display:flex; align-items:baseline; gap:10px; margin: 44px 0 6px; scroll-margin-top: 130px; }
+  .section-title-row h2 { margin:0; font-size:22px; font-weight:800; }
+  .section-sub { color: var(--muted); font-size:14px; margin: 0 0 18px; }
+
+  .fact-grid { display:grid; grid-template-columns: 1fr; gap:14px; }
+  @media (min-width: 720px) { .fact-grid { grid-template-columns: 1fr 1fr; } }
+  .fact-card { background: var(--card-bg); border:1px solid var(--border); border-radius:16px; padding:18px 20px; }
+  .fact-card h3 { margin:0 0 8px; font-size:15.5px; font-weight:800; display:flex; align-items:center; gap:8px; }
+  .fact-card p { margin:0; font-size:14px; color: var(--ink-soft); }
+
+  .comp-grid { display:grid; grid-template-columns: 1fr; gap:14px; }
+  @media (min-width: 720px) { .comp-grid { grid-template-columns: 1fr 1fr; } }
+
+  .comp-card { background: var(--card-bg); border:1px solid var(--border); border-radius:16px; padding:18px 20px; }
+  .comp-head { display:flex; align-items:flex-start; justify-content:space-between; gap:10px; margin-bottom:10px; flex-wrap:wrap; }
+  .comp-head h3 { margin:0; font-size:16.5px; font-weight:800; }
+
+  .badge { font-size:11px; font-weight:700; padding:3px 10px; border-radius:20px; white-space:nowrap; border:1px solid; }
+  .badge-default { background: var(--rec-bg); color: var(--rec-fg); border-color: var(--rec-bd); }
+  .badge-optional { background: var(--amber-bg); color: var(--amber-fg); border-color: var(--amber-bd); }
+  .badge-case { background: var(--alt-bg); color: var(--alt-fg); border-color: var(--alt-bd); }
+
+  .comp-role { margin:0 0 10px; font-size:14px; color: var(--ink-soft); }
+  .comp-note { margin-top:8px; background:var(--amber-bg); border:1px solid var(--amber-bd); color:var(--amber-fg); border-radius:10px; padding:8px 12px; font-size:12.5px; font-weight:700; }
+  .comp-note.rec { background:var(--rec-bg); border-color:var(--rec-bd); color:var(--rec-fg); }
+
+  .conclusions { background: linear-gradient(135deg,#ecfdf5,#eff6ff); border:1px solid #bbf7d0; border-radius:18px; padding:26px 28px; margin-top:10px; }
+  .conclusions h2 { margin:0 0 14px; font-size:20px; }
+  .conclusions ul { margin:0; padding-inline-start:22px; }
+  .conclusions li { margin-bottom:12px; font-size:14.5px; color: var(--ink-soft); }
+  .conclusions li strong { color: var(--ink); }
+
+  .sources-box { margin-top:44px; background:#fff; border:1px dashed var(--border); border-radius:14px; padding:20px 24px; }
+  .sources-box h3 { margin:0 0 10px; font-size:13px; color: var(--muted); font-weight:800; text-transform:uppercase; letter-spacing:.04em; }
+  .sources-box ul { margin:0; padding-inline-start:20px; columns: 1; font-size:12.5px; }
+  @media (min-width:720px) { .sources-box ul { columns: 2; } }
+  .sources-box li { margin-bottom:8px; word-break: break-all; }
+  .sources-box a { color: var(--brand-blue); text-decoration:none; }
+  .sources-box a:hover { text-decoration:underline; }
+
+  footer { text-align:center; color: var(--muted); font-size:12.5px; padding: 30px 24px 50px; }
+
+  @media (max-width: 640px) { h1.page-title { font-size:24px; } }
+</style>
+</head>
+<body>
+
+<div class="sitebar"><div class="sitebar-inner">
+  <a href="index.html" class="sitebar-logo">One<span>Home</span> <small>· אתר פנימי</small></a>
+  <div class="sitebar-links">
+    <a href="index.html">בית</a>
+    <a href="vision.html">חזון העסק</a>
+    <a href="products.html">רשימת מוצרים</a>
+    <a href="competitors.html">מתחרים</a>
+    <a href="prds.html">PRD-ים</a>
+    <a href="kb.html">ידע טכני</a>
+    <a href="automations.html">רעיונות לאוטומציות</a>
+    <a href="nabu-casa.html">Nabu Casa</a>
+    <a href="ohf.html" class="active">Open Home Foundation</a>
+  </div>
+</div></div>
+
+<header class="top">
+  <div class="top-inner">
+    <span class="eyebrow">🏛️ רקע ארגוני — נבדק 18/09/2026</span>
+    <h1 class="page-title">Open Home Foundation — מי עומד מאחורי Home Assistant</h1>
+    <p class="page-sub">העמותה הלא-מסחרית שמחזיקה ומנהלת את כל שכבת התשתית שהעסק בנוי עליה — לא רק Home Assistant. הדף מסכם מי זה, למה זה רלוונטי לנו, ואילו פרויקטים נלווים שלה שווה להכיר.</p>
+  </div>
+</header>
+
+<nav class="chipnav"><div class="chipnav-inner">
+  <a href="#about" class="chip"><span>🏛️</span><span>מי זה</span></a>
+  <a href="#relevance" class="chip"><span>🎯</span><span>למה זה רלוונטי לנו</span></a>
+  <a href="#projects" class="chip"><span>🧩</span><span>פרויקטים נלווים</span></a>
+  <a href="#sources" class="chip"><span>📚</span><span>מקורות</span></a>
+</div></nav>
+
+<main>
+
+  <div id="about" class="insight-box">
+    <div class="tag">מי זה — openhomefoundation.org</div>
+    <p>עמותה שוויצרית ללא כוונת רווח שמחזיקה ומנהלת מעל 250 פרויקטי קוד פתוח לבית חכם — Home Assistant, ESPHome, Music Assistant, Zigpy, Z-Wave JS, Piper ועוד — סביב עקרונות של פרטיות, בחירה (בלי נעילה לספק אחד) וקיימות. ממומנת בעיקר ממנויי Nabu Casa (Home Assistant Cloud) ומתרומות, עם תמיכה מסחרית גם מ-Apollo Automation.</p>
+    <span class="src">מקור: <a href="https://www.openhomefoundation.org/" target="_blank" rel="noopener">openhomefoundation.org ↗</a></span>
+  </div>
+
+  <div class="section-title-row"><h2>🏛️ מה זה בפועל</h2></div>
+  <div class="fact-grid">
+    <div class="fact-card">
+      <h3>🎯 המשימה</h3>
+      <p>לקדם פרטיות, בחירה וקיימות בבתים חכמים — הפעלה מקומית של מכשירים, תקנים פתוחים, חומרה עמידה ושליטת המשתמש בנתונים שלו. זו בדיוק השפה שכבר משמשת אותנו ב-<code>vision.html</code> תחת "Local-First".</p>
+    </div>
+    <div class="fact-card">
+      <h3>🧩 מה בבעלותה</h3>
+      <p>מעל 250 פרויקטי קוד פתוח, כולל הפלטפורמות שכבר בשימוש אצלנו: Home Assistant (הליבה), ESPHome (פירמוור למכשירי DIY), Piper (TTS מקומי), Whisper-integration ו-Zigpy/Z-Wave JS (שכבות הפרוטוקול).</p>
+    </div>
+    <div class="fact-card">
+      <h3>💰 מימון</h3>
+      <p>בעיקר ממנויי Nabu Casa (אותו מנוי 6.50$/חודש שכבר הוחלט עליו) ומתרומות לפרויקטים תחת הקרן. תמיכה מסחרית נוספת מ-Apollo Automation. שקיפות ציבורית — דשבורד אנליטיקס פומבי, דוחות כספיים ומדיה רום.</p>
+    </div>
+    <div class="fact-card">
+      <h3>🇨🇭 מבנה ארגוני</h3>
+      <p>עמותה רשומה בשוויץ (CHE-416.988.952). מתנהלת בשקיפות מול הקהילה — ניוזלטר, GitHub פתוח, ואירועי קהילה שנתיים (Community Day).</p>
+    </div>
+  </div>
+
+  <div id="relevance" class="section-title-row"><h2>🎯 למה זה רלוונטי לעסק שלנו</h2></div>
+  <p class="section-sub">זו לא עוד עמותה מהצד — זה הגוף שמחליט על הכיוון של כל שכבת הטכנולוגיה שהעסק כבר תלוי בה.</p>
+  <div class="comp-grid">
+    <article class="comp-card">
+      <div class="comp-head"><h3>🧱 תלות תשתיתית ישירה</h3></div>
+      <p class="comp-role">Home Assistant, Nabu Casa, Piper — כל אחד מהם כבר מעוגן בהחלטה קיימת שלנו (<code>decision-network-access.md</code>, <code>decision-nabu-casa-services.md</code>). ההמשכיות, הקצב והכיוון של הפיתוח שלהם — כולם בשליטת הקרן, לא של ספק מסחרי בודד.</p>
+      <div class="comp-note rec">חדשות טובות: זה גוף לא-מסחרי עם משימה מוצהרת של local-first ופרטיות — פחות סיכון "שינוי כיוון פתאומי לטובת רווחים" מול ספק מסחרי רגיל.</div>
+    </article>
+    <article class="comp-card">
+      <div class="comp-head"><h3>📣 אימות למסר השיווקי</h3></div>
+      <p class="comp-role">המסר שכבר כתוב ב-<code>vision.html</code> ("Local-First", "ללא חדירה לפרטיות") הוא בדיוק המשימה המוצהרת של הקרן — לא סיסמה שלנו בלבד, אלא עיקרון מתועד ומגובה בארגון אמיתי מאחורי הטכנולוגיה. אפשר להשתמש בזה כאלמנט אמינות מול לקוח שמפקפק.</p>
+    </article>
+    <article class="comp-card">
+      <div class="comp-head"><h3>🗣️ ערוץ השפעה על הפלטפורמה</h3></div>
+      <p class="comp-role">שאלון המחקר למתקיני smart home כבר מולא (18/09) — זו דרך ממשית (לא הבטחה) שהקול של מתקינים בפועל, כמונו, ישפיע על מה שהקרן תבנה בהמשך.</p>
+    </article>
+    <article class="comp-card">
+      <div class="comp-head"><h3>🔭 מקור מעקב לעדכונים עתידיים</h3></div>
+      <p class="comp-role">שינויים עתידיים בתמחור/מודל ה-billing של Nabu Casa (כולל תוכנית מתקינים/אינטגרטורים שבפיתוח לפי Andy Gill מ-Nabu Casa Business Development, ראו <code>decision-network-access.md</code>) צפויים לצאת דרך הקרן/Nabu Casa יחד — שווה לעקוב אחרי הניוזלטר והדשבורד הפומבי שלהם.</p>
+    </article>
+  </div>
+
+  <div id="projects" class="section-title-row"><h2>🧩 פרויקטים ושירותים נלווים שכדאי להכיר</h2></div>
+  <p class="section-sub">לא כל הפרויקטים תחת הקרן רלוונטיים לעסק כרגע — אלה שכן, עם ההקשר הספציפי לנו.</p>
+  <div class="comp-grid">
+
+    <article class="comp-card">
+      <div class="comp-head"><h3>🔧 ESPHome</h3><span class="badge badge-default">כבר בשימוש</span></div>
+      <p class="comp-role">מסגרת פירמוור בקוד פתוח למכשירי ESP32/ESP8266 — מגדירים ב-YAML, משתלב באופן native עם Home Assistant בלי integration נפרד.</p>
+      <div class="comp-note rec">כבר מוזכר ב-<code>kb.html</code>. רלוונטי לכל מכשיר DIY/מותאם אישית שלא קיים לו מוצר מדף — שווה לגבש מדיניות מסודרת מתי משתמשים בו מול קניית חיישן מוכן.</div>
+    </article>
+
+    <article class="comp-card">
+      <div class="comp-head"><h3>🎵 Music Assistant</h3><span class="badge badge-case">לא בשימוש כרגע</span></div>
+      <p class="comp-role">שכבת ניהול מוזיקה מרובת-חדרים וספקים (Spotify, YouTube Music, רדיו, נגני רשת) שמשתלבת ישירות ב-HA — בלי תלות במערכת אקולוגית סגורה של ספק מסחרי אחד (כמו Sonos).</p>
+      <div class="comp-note">לא מופיע כרגע ב-<code>products.html</code>. פוטנציאל למוצר/פיצ'ר עתידי בחבילת Elite — "אודיו מרובה-חדרים" בלי לנעול לקוח לחומרה של ספק אחד.</div>
+    </article>
+
+    <article class="comp-card">
+      <div class="comp-head"><h3>💡 WLED</h3><span class="badge badge-case">לא בשימוש כרגע</span></div>
+      <p class="comp-role">פרויקט שותף (לא בבעלות מלאה של הקרן) — פירמוור קוד פתוח לבקרת רצועות LED כתובתיות, עם אינטגרציה חזקה ל-HA.</p>
+      <div class="comp-note">רלוונטי לקטגוריה 8 ב-<code>products.html</code> ("חיווי ויזואלי, תאורה") — אפשרות למוצר תאורה מותאם-אישית (אווירה/סצנות) בעלות נמוכה יחסית לפתרונות תאורה חכמה קנייניים.</div>
+    </article>
+
+    <article class="comp-card">
+      <div class="comp-head"><h3>🛰️ Apollo Automation</h3><span class="badge badge-optional">שווה בדיקה</span></div>
+      <p class="comp-role">יצרן חומרה מסחרי (תומך רשמי של הקרן) — מוכר חיישנים וכן מכשירי ESPHome-native מוכנים לשימוש, כתחליף/השלמה לבניית DIY עצמאית.</p>
+      <div class="comp-note">כדאי להשוות מול הספקים הקיימים ב-<code>products.html</code> — יתרון פוטנציאלי: תאימות ESPHome "out of the box" בלי הרכבה/פלאשינג עצמי בכל התקנה.</div>
+    </article>
+
+    <article class="comp-card">
+      <div class="comp-head"><h3>📡 Z-Wave JS / Zigpy (Zigbee)</h3><span class="badge badge-default">רקע לשכבת הפרוטוקול</span></div>
+      <p class="comp-role">מנועי הפרוטוקול שה-HA משתמש בהם מתחת למכסה המנוע לתקשורת עם חיישני Z-Wave ו-Zigbee (ZHA). לא "שירות" שקונים בנפרד — אבל רכיב תשתית קריטי לכל בחירת חיישן/רכזת ב-<code>products.html</code>.</p>
+      <div class="comp-note">שימושי כרקע טכני להחלטות תאימות חומרה (Zigbee מול Z-Wave מול Matter) — לא דורש פעולה מיידית, אלא ידע רקע ל-<code>kb.html</code> כשעולה שאלת תאימות אצל לקוח.</div>
+    </article>
+
+    <article class="comp-card">
+      <div class="comp-head"><h3>🌉 Zigbee2MQTT</h3><span class="badge badge-case">חלופה, לא ברירת מחדל</span></div>
+      <p class="comp-role">פרויקט שותף — גשר Zigbee חלופי ל-ZHA (המובנה ב-HA), עם תמיכה רחבה יותר במכשירים לא-סטנדרטיים ותפריט כוונון מתקדם יותר, אבל דורש הגדרה נפרדת (בדרך כלל דרך MQTT broker נוסף).</p>
+      <div class="comp-note">שווה להכיר כפתרון גיבוי למקרה שמכשיר Zigbee ספציפי אצל לקוח לא נתמך היטב ב-ZHA המובנה — לא משנה את ברירת המחדל הנוכחית.</div>
+    </article>
+
+  </div>
+
+  <div class="section-title-row" style="margin-top:36px"><h2>🆕 עוד פרויקטים של הקרן — עדכון 18/09</h2></div>
+  <p class="section-sub">מהרשימה המלאה של הקרן (openhomefoundation.org/projects) — אלה שבאמת רלוונטיים לתפעול ולמוצר שלנו, מעבר לששת הראשונים.</p>
+  <div class="comp-grid">
+
+    <article class="comp-card">
+      <div class="comp-head"><h3>🛍️ HACS</h3><span class="badge badge-default">כדאי לוודא שמשתמשים</span></div>
+      <p class="comp-role">Home Assistant Community Store — התוסף הסטנדרטי שדרכו מתקינים אינטגרציות ו-Custom Cards שלא נכללים ב-HA הרשמי, ישירות מתוך ה-UI.</p>
+      <div class="comp-note rec">בפועל כמעט כל התקנה מקצועית של HA משתמשת בזה — שווה לוודא שזה חלק קבוע מ-checklist ההתקנה (PRD 3), לא רק "יודעים שזה קיים".</div>
+    </article>
+
+    <article class="comp-card">
+      <div class="comp-head"><h3>⚡ ESP Web Tools</h3><span class="badge badge-optional">שווה לאמץ בתפעול</span></div>
+      <p class="comp-role">כלי דפדפן (בלי צורך בהתקנת תוכנה) להטענת פירמוור ESPHome למכשירי ESP32/ESP8266 ישירות מ-Chrome, דרך USB.</p>
+      <div class="comp-note rec">רלוונטי ישירות ל-Fleet/Ops (PRD 4) — מפשט את תהליך ה-flashing של מכשירי DIY בזמן הרכבה/תיקון בשטח, בלי סביבת פיתוח מותקנת על המחשב הנייד של גיא.</div>
+    </article>
+
+    <article class="comp-card">
+      <div class="comp-head"><h3>📶 Improv Wi-Fi</h3><span class="badge badge-optional">שיפור לחוויית Onboarding</span></div>
+      <p class="comp-role">תקן פתוח לחיבור מכשיר לרשת ה-WiFi דרך Bluetooth LE או USB Serial — בלי שהלקוח צריך להקליד שם רשת/סיסמה ידנית במכשיר עצמו.</p>
+      <div class="comp-note rec">רלוונטי ל-PRD 3 (Onboarding) — במכשירי ESPHome תומכים, זו חוויית הגדרה הרבה יותר פשוטה ללקוח לא-טכני מאשר חיבור ל-AP זמני והקלדת פרטי רשת.</div>
+    </article>
+
+    <article class="comp-card">
+      <div class="comp-head"><h3>🎤 microWakeWord</h3><span class="badge badge-default">רקע לפייפליין הקולי</span></div>
+      <p class="comp-role">ספרייה לזיהוי מילת-הפעלה ("Wake Word") מקומי לגמרי, על מכשירים חלשים כמו Voice PE — בלי לשלוח אודיו לענן רק כדי לזהות "היי עוזר".</p>
+      <div class="comp-note">משלים בדיוק את הפייפליין המקומי (Whisper + Piper) שכבר הוחלט עליו כברירת מחדל ל-Voice PE — שווה לבדוק אם אפשר להציע ללקוח מילת הפעלה מותאמת-אישית (מעבר לברירת המחדל) כפיצ'ר premium קטן.</div>
+    </article>
+
+    <article class="comp-card">
+      <div class="comp-head"><h3>🧵 Matter.js</h3><span class="badge badge-case">מעקב לעתיד, לא פעולה מיידית</span></div>
+      <p class="comp-role">מימוש קוד-פתוח של Matter Controller/Server — תקן התאימות התעשייתי החדש (נתמך גם ע"י Google/Apple/Amazon) לתקשורת בין מכשירי בית חכם ממותגים שונים.</p>
+      <div class="comp-note">כבר מוזכר אגבית ב-<code>kb.html</code> (Zigbee/Matter/Thread). שווה מעקב שוטף — ככל שיותר יצרני חומרה יעברו ל-Matter, זה ישפיע על החלטות תאימות חיישנים עתידיות ב-<code>products.html</code>.</div>
+    </article>
+
+    <article class="comp-card">
+      <div class="comp-head"><h3>🖥️ OpenDisplay</h3><span class="badge badge-case">פוטנציאל למוצר עתידי</span></div>
+      <p class="comp-role">תקן ופירמוור למסכי דיו אלקטרוני (e-paper) בצריכת חשמל נמוכה מאוד, נשלטים מקומית — לא תלויים בענן, לא צריכים טעינה תכופה.</p>
+      <div class="comp-note">רלוונטי לקטגוריה 9 ב-<code>products.html</code> ("מסכי Kiosk") — פתרון תצוגה סוללה-ידידותי לסטטוס/לו״ז על הקיר, חלופה זולה וחסכונית יותר ממסך Kiosk רגיל למי שלא צריך וידאו/מגע.</div>
+    </article>
+
+  </div>
+
+  <div class="comp-grid" style="margin-top:14px">
+    <article class="comp-card">
+      <div class="comp-head"><h3>🗣️ Rhasspy</h3><span class="badge badge-case">לא רלוונטי כרגע</span></div>
+      <p class="comp-role">עוזר קולי אופליין ותיק יותר של הקרן, קדם את Whisper/Piper + Voice PE.</p>
+      <div class="comp-note">ברוב המקרים הוחלף בפועל בפייפליין ה-Assist המובנה של HA (Whisper + Piper) שכבר בתכנון אצלנו — לא נדרשת פעולה, מוזכר להשלמת התמונה בלבד.</div>
+    </article>
+  </div>
+
+  <div id="sources" class="sources-box">
+    <h3>מקורות</h3>
+    <ul>
+      <li><a href="https://www.openhomefoundation.org/" target="_blank" rel="noopener">openhomefoundation.org</a></li>
+      <li><a href="https://docs.google.com/forms/d/1m9KwRK4D_P95RGYVzWFbw_O5qJJ2sWF5y49qIapb_SI/viewform" target="_blank" rel="noopener">שאלון מחקר מתקיני smart home (מולא 18/09)</a></li>
+    </ul>
+  </div>
+
+</main>
+
+<footer>נוצר 18/09/2026 · מבוסס על openhomefoundation.org ותיעוד ההחלטות בפרויקט Claude · מתעדכן לפי החלטות גיא</footer>
+
+</body>
+</html>

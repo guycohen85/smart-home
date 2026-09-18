@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OneHome | הבית החכם שחושב צעד אחד לפניכם - הרשמה מוקדמת</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700;800&family=Rubik:wght@500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --bg-dark: #020617;
+            --card-bg: #0f172a;
+            --border-color: #1e293b;
+            --accent-blue: #38bdf8;
+            --accent-green: #34d399;
+            --text-white: #f8fafc;
+            --text-muted: #94a3b8;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-white);
+            font-family: 'Assistant', sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Rubik', sans-serif;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Header / Nav */
+        header {
+            padding: 24px 0;
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            background-color: rgba(2, 6, 23, 0.85);
+            backdrop-filter: blur(12px);
+            z-index: 100;
+        }
+
+        .nav-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--text-white);
+            text-decoration: none;
+        }
+
+        .logo span {
+            color: var(--accent-blue);
+        }
+
+        .badge-launch {
+            background: rgba(56, 189, 248, 0.1);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            color: var(--accent-blue);
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 90px 0 60px;
+            text-align: center;
+            position: relative;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(56, 189, 248, 0.12) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .hero h1 {
+            font-size: 54px;
+            line-height: 1.15;
+            margin-bottom: 20px;
+            font-weight: 800;
+        }
+
+        .hero h1 span {
+            background: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-green) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p.subtitle {
+            font-size: 22px;
+            color: var(--text-muted);
+            max-width: 780px;
+            margin: 0 auto 35px;
+        }
+
+        .early-bird-banner {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(52, 211, 153, 0.1);
+            border: 1px solid rgba(52, 211, 153, 0.3);
+            color: var(--accent-green);
+            padding: 10px 24px;
+            border-radius: 30px;
+            font-weight: 700;
+            margin-bottom: 40px;
+        }
+
+        /* Form Card */
+        .form-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 40px;
+            max-width: 620px;
+            margin: 0 auto;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            text-align: right;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #cbd5e1;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 14px 18px;
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            color: #fff;
+            font-size: 16px;
+            font-family: inherit;
+            transition: border-color 0.2s;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+        }
+
+        select.form-control {
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: left 15px center;
+            background-size: 16px;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #0284c7 0%, #059669 100%);
+            border: none;
+            border-radius: 12px;
+            color: #fff;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(2, 132, 199, 0.3);
+        }
+
+        .form-footer-note {
+            font-size: 13px;
+            color: #64748b;
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        /* Pillars Section */
+        .section-pillars {
+            padding: 100px 0;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 38px;
+            margin-bottom: 15px;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 20px;
+            margin-bottom: 60px;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+
+        .pillar-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 32px;
+            transition: transform 0.3s ease;
+        }
+
+        .pillar-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(56, 189, 248, 0.4);
+        }
+
+        .pillar-icon {
+            font-size: 36px;
+            color: var(--accent-blue);
+            margin-bottom: 20px;
+        }
+
+        .pillar-card h3 {
+            font-size: 22px;
+            margin-bottom: 12px;
+            color: #fff;
+        }
+
+        .pillar-card p {
+            color: var(--text-muted);
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        /* Comparison Table */
+        .section-compare {
+            padding: 80px 0;
+            background: rgba(15, 23, 42, 0.5);
+        }
+
+        .compare-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 40px;
+            background: var(--card-bg);
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+
+        .compare-table th, .compare-table td {
+            padding: 18px 24px;
+            text-align: right;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .compare-table th {
+            background: #1e293b;
+            color: var(--accent-blue);
+            font-size: 18px;
+        }
+
+        .compare-table td.highlight {
+            background: rgba(56, 189, 248, 0.05);
+            font-weight: 700;
+            color: var(--accent-green);
+        }
+
+        /* FAQ Section */
+        .section-faq {
+            padding: 90px 0;
+        }
+
+        .faq-item {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            margin-bottom: 16px;
+            padding: 24px;
+        }
+
+        .faq-item h4 {
+            font-size: 20px;
+            color: var(--accent-blue);
+            margin-bottom: 10px;
+        }
+
+        .faq-item p {
+            color: var(--text-muted);
+            font-size: 16px;
+        }
+
+        /* Footer */
+        footer {
+            border-top: 1px solid var(--border-color);
+            padding: 40px 0;
+            text-align: center;
+            color: #64748b;
+            font-size: 15px;
+        }
+
+        /* Toast Message */
+        .toast {
+            display: none;
+            background: #059669;
+            color: #fff;
+            padding: 16px 24px;
+            border-radius: 12px;
+            text-align: center;
+            font-weight: 700;
+            margin-top: 20px;
+        }
+
+        @media (max-width: 900px) {
+            .grid-3 { grid-template-columns: 1fr; }
+            .hero h1 { font-size: 38px; }
+            .form-card { padding: 25px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="container nav-content">
+            <a href="#" class="logo">One<span>Home</span></a>
+            <div class="badge-launch"><i class="fa-solid fa-rocket"></i> בהכנה — הרשמה נפתחת בהמשך</div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="early-bird-banner">
+                <i class="fa-solid fa-fire"></i> רק 15 מקומות פנויים במחזור ההשקה הראשוני!
+            </div>
+            <h1>הבית החכם שחושב<br><span>צעד אחד לפניכם</span></h1>
+            <p class="subtitle">
+                בלי 10 אפליקציות שונות, בלי תלות באינטרנט ובלי לפגוע בפרטיות שלכם.<br>
+                OneHome מאחדת את כל מערכות הבית למוח מקומי אחד, חכם וחסכוני.
+            </p>
+
+            <!-- Registration Form Card -->
+            <div class="form-card" id="register-form">
+                <h3 style="font-size: 24px; margin-bottom: 8px; color: #fff;">הירשמו לגישת VIP מוקדמת</h3>
+                <p style="color: var(--text-muted); font-size: 15px; margin-bottom: 25px;">
+                    הרשמו עכשיו וקבלו <strong>20% הנחה על חבילת ההתקנה</strong> + חודש שירות פרימיום במתנה ביום ההשקה.
+                </p>
+
+                <form id="waitlistForm" onsubmit="handleFormSubmit(event)">
+                    <div class="form-group">
+                        <label for="fullName">שם מלא</label>
+                        <input type="text" id="fullName" class="form-control" placeholder="ישראל ישראלי" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phone">מספר טלפון (לוואטסאפ)</label>
+                        <input type="tel" id="phone" class="form-control" placeholder="050-0000000" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">דואר אלקטרוני</label>
+                        <input type="email" id="email" class="form-control" placeholder="your@email.com" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="homeType">סוג הנכס</label>
+                        <select id="homeType" class="form-control" required>
+                            <option value="" disabled selected>בחר/י סוג נכס...</option>
+                            <option value="apartment">דירת מגורים (3-5 חדרים)</option>
+                            <option value="house">בית פרטי / וילה</option>
+                            <option value="new_build">דירה בבנייה (מקבלן)</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn-submit">
+                        <i class="fa-solid fa-paper-plane"></i> השוריינו לי מקום בהשקה
+                    </button>
+
+                    <div class="toast" id="successToast">
+                        🎉 הרשמתך נקלטה בהצלחה! נציג OneHome יצור איתך קשר ראשון לקראת ההשקה.
+                    </div>
+
+                    <p class="form-footer-note"><i class="fa-solid fa-lock"></i> הפרטים שלכם שמורים באופן הרמטי ולא יועברו לאף גורם צד-ג'.</p>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pillars Section -->
+    <section class="section-pillars">
+        <div class="container">
+            <h2 class="section-title">למה OneHome שונה מכל מה שהכרתם?</h2>
+            <p class="section-subtitle">אנחנו לא מוכרים גאדג'טים - אנחנו מקימים תשתית אוטונומית לבית</p>
+
+            <div class="grid-3">
+                <div class="pillar-card">
+                    <div class="pillar-icon"><i class="fa-solid fa-shield-halved"></i></div>
+                    <h3>פרטיות הרמטית (Local First)</h3>
+                    <p>הנתונים שלכם, המצלמות וההרגלים שלכם לא עוזבים את גבולות הבית. כל הנתונים מעובדים בלעדית על בקר מקומי (Home Assistant Green) ללא שרתים בסין.</p>
+                </div>
+
+                <div class="pillar-card">
+                    <div class="pillar-icon"><i class="fa-solid fa-bolt"></i></div>
+                    <h3>חיסכון בחשמל (HEMS)</h3>
+                    <p>המערכת מנטרת את תעריפי החשמל בזמן אמת ומסיטה עומסים לשעות זולות — פוטנציאל חיסכון של עד 30% בחשבון החשמל החודשי.</p>
+                </div>
+
+                <div class="pillar-card">
+                    <div class="pillar-icon"><i class="fa-solid fa-faucet-drip"></i></div>
+                    <h3>הגנה אקטיבית מנזקים</h3>
+                    <p>חיישן ייעודי מזהה נזילה תוך שניות ושולח התראה מיידית אליכם ולצוות OneHome — לפני שהנזק מתפשט. (שיבר מים אוטומטי בפיתוח לשלב הבא.)</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Comparison Section -->
+    <section class="section-compare">
+        <div class="container">
+            <h2 class="section-title">השוואת פתרונות בית חכם</h2>
+            <p class="section-subtitle">ראו כיצד OneHome ניצבת מול החלופות בשוק</p>
+
+            <table class="compare-table">
+                <thead>
+                    <tr>
+                        <th>מאפיין / יכולת</th>
+                        <th>אפליקציות DIY (תויא/שיאומי)</th>
+                        <th>מערכות יוקרה (Control4)</th>
+                        <th style="color: var(--accent-blue);">OneHome 2026</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>רמת פרטיות</strong></td>
+                        <td>נמוכה (שרתים בסין)</td>
+                        <td>בינונית</td>
+                        <td class="highlight">הרמטית (100% מקומי)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>עבודה ללא אינטרנט</strong></td>
+                        <td>❌ לא פועל</td>
+                        <td>חלקית</td>
+                        <td class="highlight">✅ עבודה מקומית מלאה</td>
+                    </tr>
+                    <tr>
+                        <td><strong>פוטנציאל חיסכון בחשמל (HEMS)</strong></td>
+                        <td>❌ אין</td>
+                        <td>בתוספת תשלום יקרה</td>
+                        <td class="highlight">✅ מובנה (עד 30% חיסכון)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>גמישות ציוד ומכשירים</strong></td>
+                        <td>מוגבלת למותג אחד</td>
+                        <td>גן סגור ויקר מאוד</td>
+                        <td class="highlight">פתוחה לכל הציוד (Matter/Zigbee)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>עלות התקנה ראשונית</strong></td>
+                        <td>זולה (ללא גב גב)</td>
+                        <td>₪50,000 - ₪100,000+</td>
+                        <td class="highlight">נגישה (מ-₪5,700)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="section-faq">
+        <div class="container">
+            <h2 class="section-title">שאלות נפוצות</h2>
+            <p class="section-subtitle">כל מה שרציתם לדעת לקראת ההשקה</p>
+
+            <div class="faq-item">
+                <h4>מה קורה אם האינטרנט הביתי מתנתק?</h4>
+                <p>כל האוטומציות, המפסקים, והחיישנים בבית ממשיכים לעבוד כרגיל! מכיוון ש-OneHome מתבססת על עיבוד מקומי (Home Assistant Green), הבית שלכם אינו תלוי בחיבור האינטרנט החיצוני.</p>
+            </div>
+
+            <div class="faq-item">
+                <h4>האם צריך לשבור קירות או לעשות שיפוץ?</h4>
+                <p>בשום אופן לא. המערכת מותקנת מאחורי המפסקים הקיימים בביתכם (Shelly/Aqara) או על גבי הלוח הקיים, ללא הרס וללא צורך בחיווט מחדש.</p>
+            </div>
+
+            <div class="faq-item">
+                <h4>מה כולל השירות המנוהל (Retainer)?</h4>
+                <p>השירות כולל ניטור פרואקטיבי (Watchman) לתקינות הרכיבים, גיבויים אוטומטיים מוצפנים, עדכוני אבטחה שוטפים ותמיכה אישית ב-WhatsApp — עם התחייבות לזמן תגובה על כל אירוע בטיחות קריטי.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>© 2026 OneHome | Cognitive Home Orchestration. כל הזכויות שמורות.</p>
+        </div>
+    </footer>
+
+    <script>
+        function handleFormSubmit(event) {
+            event.preventDefault();
+            const form = document.getElementById('waitlistForm');
+            const toast = document.getElementById('successToast');
+
+            // Show success toast
+            toast.style.display = 'block';
+            form.reset();
+
+            setTimeout(() => {
+                toast.style.display = 'none';
+            }, 6000);
+        }
+    </script>
+</body>
+</html>

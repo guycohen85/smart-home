@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PRD 5 — חנות תוספות למנויים — OneHome</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0f172a; --ink-soft: #475569; --muted: #64748b; --bg: #f8fafc;
+    --card-bg: #ffffff; --border: #e2e8f0; --brand-blue: #0284c7; --brand-green: #059669;
+    --draft-bg: #fffbeb; --draft-fg: #92400e; --draft-bd: #fde68a;
+    --done-bg: #ecfdf5; --done-fg: #047857; --done-bd: #a7f3d0;
+    --empty-bg: #f1f5f9; --empty-fg: #64748b; --empty-bd: #e2e8f0;
+  }
+  * { box-sizing: border-box; }
+  body { margin:0; background: var(--bg); color: var(--ink); font-family: 'Heebo', sans-serif; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+  a { color: inherit; }
+  header.top { background: linear-gradient(135deg, #0f172a 0%, #0c4a6e 100%); color: #fff; padding: 52px 24px 44px; }
+  .top-inner { max-width: 880px; margin: 0 auto; }
+  .eyebrow { display:inline-flex; align-items:center; gap:8px; background: rgba(255,255,255,0.12); border:1px solid rgba(255,255,255,0.25); padding:6px 14px; border-radius:20px; font-size:13px; font-weight:600; margin-bottom:16px; }
+  h1.page-title { font-size: 36px; font-weight:800; margin: 0 0 10px; }
+  h1.page-title span { color:#5eead4; }
+  .page-sub { color: #cbd5e1; font-size: 15.5px; max-width: 640px; margin:0; }
+  .breadcrumb { max-width:880px; margin:0 auto; padding: 14px 24px 0; }
+  .breadcrumb a { font-size:13px; font-weight:600; color:#7dd3fc; text-decoration:none; }
+  .breadcrumb a:hover { text-decoration:underline; }
+  main { max-width: 880px; margin: 0 auto; padding: 40px 24px 80px; }
+  section.block { background:#fff; border:1px solid var(--border); border-radius:18px; padding: 28px 30px; margin-bottom: 22px; }
+  .block-head { display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:14px; }
+  .block-head-left { display:flex; align-items:center; gap:14px; }
+  .letter-badge { flex:0 0 auto; width:42px; height:42px; border-radius:12px; background: linear-gradient(135deg, var(--brand-blue), var(--brand-green)); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:17px; }
+  .block-head h2 { margin:0; font-size:20px; font-weight:800; }
+  .status { font-size:11.5px; font-weight:700; padding:4px 12px; border-radius:20px; border:1px solid; white-space:nowrap; }
+  .status-draft { background: var(--draft-bg); color: var(--draft-fg); border-color: var(--draft-bd); }
+  .block p { margin: 0 0 10px; color: var(--ink-soft); font-size:15px; }
+  .block ul { margin: 8px 0 0; padding-inline-start: 22px; }
+  .block li { margin-bottom: 9px; font-size:15px; color: var(--ink-soft); }
+  .block li strong { color: var(--ink); }
+  .idea-box { background: var(--bg); border:1px dashed var(--border); border-radius:14px; padding:18px 22px; margin-top:8px; }
+  .idea-box h3 { margin:0 0 8px; font-size:14px; color: var(--brand-blue); font-weight:800; }
+  .idea-box.warn h3 { color:#b45309; }
+  .idea-box.q h3 { color:#7c3aed; }
+  footer { text-align:center; color: var(--muted); font-size:12.5px; padding: 10px 24px 50px; }
+  .sitebar { position:sticky; top:0; z-index:60; background:#020617; border-bottom:1px solid #1e293b; }
+  .sitebar-inner { max-width: 1000px; margin:0 auto; padding: 10px 24px; display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap; }
+  .sitebar-logo { font-weight:800; font-size:15px; color:#f8fafc; text-decoration:none; display:flex; align-items:center; gap:8px; }
+  .sitebar-logo span { color:#5eead4; }
+  .sitebar-logo small { font-weight:500; color:#94a3b8; font-size:11.5px; }
+  .sitebar-links { display:flex; gap:4px; }
+  .sitebar-links a { text-decoration:none; color:#cbd5e1; font-size:13.5px; font-weight:600; padding:7px 14px; border-radius:8px; transition: background .15s ease, color .15s ease; }
+  .sitebar-links a:hover { background: rgba(255,255,255,0.08); color:#fff; }
+  .sitebar-links a.active { background: rgba(94,234,212,0.15); color:#5eead4; }
+</style>
+</head>
+<body>
+<div class="sitebar"><div class="sitebar-inner">
+  <a href="index.html" class="sitebar-logo">One<span>Home</span> <small>· אתר פנימי</small></a>
+  <div class="sitebar-links">
+    <a href="index.html">בית</a>
+    <a href="vision.html">חזון העסק</a>
+    <a href="products.html">רשימת מוצרים</a>
+    <a href="competitors.html">מתחרים</a>
+    <a href="prds.html" class="active">PRD-ים</a>
+    <a href="kb.html">ידע טכני</a>
+    <a href="automations.html">רעיונות לאוטומציות</a>
+    <a href="nabu-casa.html">Nabu Casa</a>
+    <a href="ohf.html">Open Home Foundation</a>
+  </div>
+</div></div>
+
+<div class="breadcrumb"><a href="prds.html">← כל ה-PRD-ים</a></div>
+
+<header class="top">
+  <div class="top-inner">
+    <span class="eyebrow">🛍️ PRD 5 — רק זרע רעיון, טרם התחלנו לבנות</span>
+    <h1 class="page-title">חנות תוספות למנויים</h1>
+    <p class="page-sub">חנות תוספות ומוצרים באתר, <strong>פתוחה לכולם</strong> — לא רק למנויים. ההבדל הוא ברמת השירות: מנוי שקונה מוצר שמתחבר ל-Home Assistant מקבל גם הגדרה מרחוק כחלק מהריטיינר; מי שאינו מנוי מקבל את המוצר במשלוח בלבד. עלה לראשונה בשיחה מ-17/09/2026, כפורמליזציה של החלטה קיימת מ-PRD 1 על תוספות בתשלום נפרד.</p>
+  </div>
+</header>
+
+<main>
+
+  <section class="block">
+    <div class="block-head">
+      <div class="block-head-left"><div class="letter-badge">🔌</div><h2>קטגוריה 1 — מוצרים המתחברים ל-Home Assistant</h2></div>
+      <span class="status status-draft">✎ רעיון ראשוני — מ-17/09</span>
+    </div>
+    <p>המוצר נשלח ללקוח. <strong>מנוי קיים</strong> מקבל גם הגדרה מרחוק כחלק מהריטיינר (שם, אוטומציות, דשבורד) — הלקוח רק מדליק/מחבר בבית. <strong>לקוח בלי מנוי</strong> מקבל את המוצר במשלוח בלבד ומגדיר לבד לפי הוראות היצרן — <strong>הוכרע (17/09): בלי הגדרה בתשלום חד-פעמי.</strong> הכסף לא שווה את המאמץ/זמן, ולקוח בלי מנוי יכול פשוט להפעיל את המוצר לפי הוראות היצרן בלי מעורבות של גיא. זו למעשה פורמליזציה של החלטה קיימת: "תוספות בתשלום נפרד לפי מחיר בודד" ו"פריטי לייף-סטייל כתוספת אופציונלית" (ר' PRD 1).</p>
+    <div class="idea-box warn">
+      <h3>✅ הוכרע (17/09) — אישור הבנה חובה לפני רכישת מוצר שדורש hub בלי מנוי</h3>
+      <p style="margin:0">מכשירי <strong>WiFi עצמאיים</strong> (מצלמה, שקע חכם) עובדים גם בלי הגדרה — הלקוח משתמש באפליקציית היצרן. אבל מכשירי <strong>Zigbee / Z-Wave / Thread</strong> פיזית לא יכולים לעבוד בלי רכזת (hub) בבית — ללקוח בלי מנוי ובלי רכזת משלו זה יגיע כ"קופסה מתה", ויוצר אצל גיא התעסקות בלי תמורה. ההחלטה: לפני רכישה ללא מנוי של מוצר כזה, הלקוח <strong>חייב</strong> לסמן צ'קבוקס עם ניסוח ספציפי שמכריח אותו לעצור ולחשוב, לא כן/לא גנרי — לדוגמה:</p>
+      <p style="margin:12px 0 0;padding:12px 16px;background:#fff;border:1px solid var(--draft-bd);border-radius:10px;font-size:13.5px;color:var(--ink)">"אני מאשר/ת שיש לי כבר רכזת בית חכם פעילה (למשל Home Assistant, SmartThings או Hubitat) שיודעת לחבר מכשירי Zigbee/Z-Wave, ושההתקנה וההגדרה באחריותי המלאה. ידוע לי כי ללא מנוי OneHome אינה מספקת ליווי או תמיכה בהתקנת מוצר זה."</p>
+      <p style="margin:12px 0 0">לתרחיש שבכל זאת יגיעו פניות תמיכה — להכין מראש תבנית תשובה קבועה (קישור להוראות היצרן + תזכורת שזה לא כלול בלי מנוי), כדי שגם פנייה חריגה תעלה שניות ולא זמן אמיתי.</p>
+    </div>
+    <div class="idea-box">
+      <h3>נקודה טכנית — התהליך בפועל שונה לפי סוג הפרוטוקול</h3>
+      <p style="margin:0"><strong>Zigbee / Z-Wave / Thread:</strong> לא ניתן לקנפג לפני הגעה פיזית — ההצטרפות לרשת קורית כשהמכשיר דולק בפועל ליד ה-hub. התהליך: הלקוח מדליק → HA מזהה אוטומטית (במצב גילוי) → גיא משלים מרחוק תוך דקות (שם, אוטומציה, דשבורד).<br><br>
+      <strong>WiFi עצמאי:</strong> ניתן "להכין" מראש לפני משלוח — למשל חיבור המכשיר לראוטר נייד עם אותו SSID/סיסמה כמו הבית של הלקוח, כך שהמכשיר מצטרף לבד בהגעה. דורש שה-WiFi credentials של הלקוח כבר ידועים מראש (בדרך כלל כבר קיימים מההתקנה הראשונית).</p>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="block-head">
+      <div class="block-head-left"><div class="letter-badge">⭐</div><h2>קטגוריה 2 — מוצרים מיוחדים ועצמאיים (לא צריכים HA)</h2></div>
+      <span class="status status-draft">✎ רעיון ראשוני — מ-17/09</span>
+    </div>
+    <p>מוצרים שעובדים בפני עצמם, לא דורשים חיבור ל-Home Assistant, ותורמים ליעילות/ביטחון בבית. <strong>במפורש לא</strong> חנות כללית/גדולה — רק מספר מצומצם של מוצרים ממש מיוחדים שגיא מאמין בהם אישית.</p>
+    <ul>
+      <li><strong>אחריות ותמיכה:</strong> אצל היצרן בלבד — לא חלק מה-SLA/ריטיינר של OneHome.</li>
+    </ul>
+    <div class="idea-box warn">
+      <h3>⚠️ סיכון שזוהה — חשוב לטפל בו בדף המוצר, לא רק במדיניות פנימית</h3>
+      <p style="margin:0">גם אם רשמית "אחריות יצרן בלבד", לקוח כנראה יפנה לגיא בוואטסאפ אם יש בעיה, כי המוצר "בא ממנו". ההחלטה: להבהיר את זה בבירור בדף המוצר עצמו — למשל שורה כמו "מוצר עצמאי, לא מחובר למערכת הבית החכם שלך, אחריות ותמיכה ישירות מול היצרן" — כדי ליצור ציפייה נכונה מהרגע הראשון ולהבדיל בבירור מהמוצרים בקטגוריה 1 (שם יש התקנה מרחוק + SLA).</p>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="block-head">
+      <div class="block-head-left"><div class="letter-badge">🔍</div><h2>מוצר למחקר — שסתום מקלחת עם ניתוק אוטומטי לפי טמפרטורה</h2></div>
+      <span class="status status-draft">✎ למחקר — מ-17/09</span>
+    </div>
+    <p>דרישה שהוגדרה: מוצר שמודד את טמפרטורת מי המקלחת, ואם היא עוברת סף של <strong>41–42°C</strong> — המים נסגרים אוטומטית (לא רק מתריע), כדי למנוע כוויות לתינוק/ילד. כולל את התרחיש שבו מישהו אחר בבית פותח ברז ומשנה את הטמפרטורה באמצע מקלחת.</p>
+    <div class="idea-box">
+      <h3>רקע ממחקר קודם (17/09) — לפני שממשיכים לחפש</h3>
+      <p style="margin:0">הרעיון הכללי "עצירת מים לפי טמפרטורה" קיים כבר עשרות שנים (מוצרים מכניים זולים + שסתומי TMV מקצועיים + שרשרת פטנטים מ-1979 ואילך) — כנראה לא פטנטבילי. לא נמצא עדיין מוצר גמור בשוק שעונה בדיוק על הדרישה (ניתוק מלא, גם חום וגם קור, חכם, standalone). נקודות פתיחה לחיפוש/מקור: מוצרי אנטי-כוויה מכניים באמזון, שסתומי TMV מקצועיים, וספקי OEM ב-Alibaba (שסתום סולנואיד + חיישן טמפרטורה + WiFi).</p>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="block-head">
+      <div class="block-head-left"><div class="letter-badge">✅</div><h2>הוכרע (17/09) — החנות פתוחה לכולם, לא רק למנויים</h2></div>
+      <span class="status" style="background:#ecfdf5;color:#047857;border-color:#a7f3d0">✓ הוחלט</span>
+    </div>
+    <p style="margin:0">גם קטגוריה 1 (מוצרי Home Assistant) וגם קטגוריה 2 (מוצרים עצמאיים) פתוחות לכל מבקר באתר — לא רק למנויים. זה הופך את החנות גם לערוץ הכנסה עצמאי וגם למשפך הצטרפות (טעימה מהאוצרות של גיא, עם אפשרות שדרוג בהמשך). ההבחנה בין מנוי ללא-מנוי היא ברמת השירות סביב המוצר (הגדרה מרחוק), לא בגישה לחנות עצמה.</p>
+  </section>
+
+  <div class="idea-box" style="text-align:center;color:var(--muted);font-size:13.5px">
+    תעדוף: זה רעיון מתועד לעתיד — <strong>לא חוסם</strong> את PRD 3 (Onboarding), שנשאר הצעד הבא המומלץ. מומלץ לבדוק את הרעיון קודם באופן ידני מול הלקוחות הראשונים (בקשה דרך וואטסאפ, תמחור ומשלוח ידניים) לפני השקעה בקטלוג/תשתית רכישה אמיתית. שאר ה-PRD (Scope, דרישות פונקציונליות/לא-פונקציונליות וכו') ייבנה בשיחה נפרדת, באותה שיטה שהשתמשנו בה ב-PRD 1.
+  </div>
+
+</main>
+
+<footer>נוצר 17/09/2026 · PRD 5 — רעיון ראשוני בלבד</footer>
+
+</body>
+</html>

@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PRD 1 — שירות הליבה — OneHome</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0f172a;
+    --ink-soft: #475569;
+    --muted: #64748b;
+    --bg: #f8fafc;
+    --card-bg: #ffffff;
+    --border: #e2e8f0;
+    --brand-blue: #0284c7;
+    --brand-green: #059669;
+    --draft-bg: #fffbeb; --draft-fg: #92400e; --draft-bd: #fde68a;
+    --done-bg: #ecfdf5; --done-fg: #047857; --done-bd: #a7f3d0;
+    --empty-bg: #f1f5f9; --empty-fg: #64748b; --empty-bd: #e2e8f0;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin:0; background: var(--bg); color: var(--ink);
+    font-family: 'Heebo', sans-serif; line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; }
+  header.top {
+    background: linear-gradient(135deg, #0f172a 0%, #0c4a6e 100%);
+    color: #fff; padding: 52px 24px 44px;
+  }
+  .top-inner { max-width: 880px; margin: 0 auto; }
+  .eyebrow {
+    display:inline-flex; align-items:center; gap:8px;
+    background: rgba(255,255,255,0.12); border:1px solid rgba(255,255,255,0.25);
+    padding:6px 14px; border-radius:20px; font-size:13px; font-weight:600; margin-bottom:16px;
+  }
+  h1.page-title { font-size: 36px; font-weight:800; margin: 0 0 10px; }
+  h1.page-title span { color:#5eead4; }
+  .page-sub { color: #cbd5e1; font-size: 15.5px; max-width: 640px; margin:0; }
+
+  .breadcrumb { max-width:880px; margin:0 auto; padding: 14px 24px 0; }
+  .breadcrumb a { font-size:13px; font-weight:600; color:#7dd3fc; text-decoration:none; }
+  .breadcrumb a:hover { text-decoration:underline; }
+
+  nav.chipnav {
+    position: sticky; top:58px; z-index:50;
+    background: rgba(248,250,252,0.92); backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border);
+    padding: 12px 24px; overflow-x:auto; white-space:nowrap;
+  }
+  nav.chipnav .chipnav-inner { max-width:880px; margin:0 auto; display:flex; gap:8px; }
+  .chip {
+    display:inline-flex; align-items:center; gap:6px; text-decoration:none;
+    font-size:13px; font-weight:600; color: var(--ink-soft);
+    background:#fff; border:1px solid var(--border); border-radius:20px;
+    padding:7px 14px; flex:0 0 auto; transition: all .15s ease;
+  }
+  .chip:hover { border-color: var(--brand-blue); color: var(--brand-blue); }
+
+  main { max-width: 880px; margin: 0 auto; padding: 40px 24px 80px; }
+
+  section.block {
+    background:#fff; border:1px solid var(--border); border-radius:18px;
+    padding: 28px 30px; margin-bottom: 22px; scroll-margin-top: 90px;
+  }
+  .block-head { display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:14px; }
+  .block-head-left { display:flex; align-items:center; gap:14px; }
+  .letter-badge {
+    flex:0 0 auto; width:42px; height:42px; border-radius:12px;
+    background: linear-gradient(135deg, var(--brand-blue), var(--brand-green));
+    color:#fff; display:flex; align-items:center; justify-content:center;
+    font-weight:800; font-size:17px;
+  }
+  .block-head h2 { margin:0; font-size:20px; font-weight:800; }
+  .status {
+    font-size:11.5px; font-weight:700; padding:4px 12px; border-radius:20px; border:1px solid; white-space:nowrap;
+  }
+  .status-draft { background: var(--draft-bg); color: var(--draft-fg); border-color: var(--draft-bd); }
+  .status-done { background: var(--done-bg); color: var(--done-fg); border-color: var(--done-bd); }
+  .status-empty { background: var(--empty-bg); color: var(--empty-fg); border-color: var(--empty-bd); }
+
+  .block p { margin: 0 0 10px; color: var(--ink-soft); font-size:15px; }
+  .block ul { margin: 8px 0 0; padding-inline-start: 22px; }
+  .block li { margin-bottom: 9px; font-size:15px; color: var(--ink-soft); }
+  .block li strong { color: var(--ink); }
+
+  .persona-grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(190px,1fr)); gap:12px; margin-top:14px; }
+  .persona-card { background: var(--bg); border:1px solid var(--border); border-radius:12px; padding:14px 16px; }
+  .persona-card .name { font-weight:800; font-size:14.5px; margin-bottom:4px; }
+  .persona-card .desc { font-size:13px; color: var(--muted); }
+
+  .split { display:grid; grid-template-columns: 1fr; gap:14px; margin-top:6px; }
+  @media (min-width: 640px) { .split { grid-template-columns: 1fr 1fr; } }
+  .split-card { background: var(--bg); border:1px solid var(--border); border-radius:12px; padding:16px 18px; }
+  .split-card .label { font-size:12px; font-weight:800; letter-spacing:.04em; text-transform:uppercase; margin-bottom:8px; }
+  .split-card.in .label { color: var(--brand-green); }
+  .split-card.out .label { color: #b91c1c; }
+
+  .qbox { background: var(--bg); border:1px dashed var(--border); border-radius:12px; padding:14px 18px; margin-top:10px; }
+  .qbox .qlabel { font-size:11.5px; font-weight:800; text-transform:uppercase; letter-spacing:.04em; color: var(--muted); margin-bottom:6px; }
+  .qbox p { margin:0; font-size:14.5px; color: var(--ink-soft); }
+
+  .req-table { width:100%; border-collapse:collapse; margin-top:14px; font-size:13.5px; }
+  .req-table th, .req-table td { border:1px solid var(--border); padding:10px 12px; text-align:right; vertical-align:top; }
+  .req-table th { background: var(--bg); font-weight:800; font-size:12.5px; }
+  .req-table td.tbd { color: var(--muted); font-style:italic; }
+  .req-table .rowlabel { font-weight:700; white-space:nowrap; background: #fafcff; }
+  .req-table-wrap { overflow-x:auto; }
+
+  ol.open-q { margin: 8px 0 0; padding-inline-start: 22px; }
+  ol.open-q li { margin-bottom: 12px; font-size:15px; color: var(--ink-soft); }
+  ol.open-q li strong { color: var(--ink); }
+
+  .bg-note { background:#fff; border:1px dashed var(--border); border-radius:14px; padding:18px 22px; margin-top:8px; }
+  .bg-note h3 { margin:0 0 10px; font-size:14px; color: var(--muted); font-weight:800; text-transform:uppercase; letter-spacing:.04em; }
+  .bg-note ul { margin:0; padding-inline-start: 20px; }
+  .bg-note li { font-size:13.5px; color: var(--muted); margin-bottom:8px; }
+
+  footer { text-align:center; color: var(--muted); font-size:12.5px; padding: 10px 24px 50px; }
+
+  @media (max-width: 640px) {
+    h1.page-title { font-size:27px; }
+    .block-head h2 { font-size:17px; }
+  }
+
+  .sitebar { position:sticky; top:0; z-index:60; background:#020617; border-bottom:1px solid #1e293b; }
+  .sitebar-inner { max-width: 1000px; margin:0 auto; padding: 10px 24px; display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap; }
+  .sitebar-logo { font-weight:800; font-size:15px; color:#f8fafc; text-decoration:none; display:flex; align-items:center; gap:8px; }
+  .sitebar-logo span { color:#5eead4; }
+  .sitebar-logo small { font-weight:500; color:#94a3b8; font-size:11.5px; }
+  .sitebar-links { display:flex; gap:4px; }
+  .sitebar-links a {
+    text-decoration:none; color:#cbd5e1; font-size:13.5px; font-weight:600;
+    padding:7px 14px; border-radius:8px; transition: background .15s ease, color .15s ease;
+  }
+  .sitebar-links a:hover { background: rgba(255,255,255,0.08); color:#fff; }
+  .sitebar-links a.active { background: rgba(94,234,212,0.15); color:#5eead4; }
+</style>
+</head>
+<body>
+<div class="sitebar"><div class="sitebar-inner">
+  <a href="index.html" class="sitebar-logo">One<span>Home</span> <small>· אתר פנימי</small></a>
+  <div class="sitebar-links">
+    <a href="index.html">בית</a>
+    <a href="vision.html">חזון העסק</a>
+    <a href="products.html">רשימת מוצרים</a>
+    <a href="competitors.html">מתחרים</a>
+    <a href="prds.html" class="active">PRD-ים</a>
+    <a href="kb.html">ידע טכני</a>
+    <a href="automations.html">רעיונות לאוטומציות</a>
+    <a href="nabu-casa.html">Nabu Casa</a>
+    <a href="ohf.html">Open Home Foundation</a>
+  </div>
+</div></div>
+
+<div class="breadcrumb"><a href="prds.html">← כל ה-PRD-ים</a></div>
+
+<header class="top">
+  <div class="top-inner">
+    <span class="eyebrow">🧩 PRD 1 — טיוטת עבודה</span>
+    <h1 class="page-title">שירות הליבה — התקנה + ריטיינר</h1>
+    <p class="page-sub">מגדיר בדיוק מה כלול בהתקנה החד-פעמית ובריטיינר החודשי (Watchman) בכל אחד משלושת המסלולים. זה ה-scope שצריך להיות סגור לפני שיוצאים ל-3 הלקוחות הראשונים.</p>
+  </div>
+</header>
+
+<nav class="chipnav"><div class="chipnav-inner">
+  <a href="#overview" class="chip"><span>🧭</span><span>רקע</span></a>
+  <a href="#goals" class="chip"><span>🎯</span><span>מטרות ומדדים</span></a>
+  <a href="#users" class="chip"><span>👥</span><span>משתמשים</span></a>
+  <a href="#scope" class="chip"><span>📦</span><span>Scope</span></a>
+  <a href="#requirements" class="chip"><span>⚙️</span><span>דרישות לפי מסלול</span></a>
+  <a href="#nonfunctional" class="chip"><span>🛡️</span><span>לא-פונקציונלי</span></a>
+  <a href="#risks" class="chip"><span>⚠️</span><span>סיכונים</span></a>
+  <a href="#open" class="chip"><span>❓</span><span>שאלות פתוחות</span></a>
+</div></nav>
+
+<main>
+
+  <section id="overview" class="block">
+    <div class="block-head">
+      <div class="block-head-left"><div class="letter-badge">A</div><h2>רקע ובעיה</h2></div>
+      <span class="status status-done">✓ מבוסס על החזון</span>
+    </div>
+    <p>אין כרגע מתחרה ישראלי שמציע מודל ריטיינר/ניטור מנוהל מבוסס Home Assistant. הפער בשוק: מתקינים קלאסיים (Vitrea, Accorto, HomeLink...) חזקים בחומרה וחלשים ב-DevOps; חובבי DIY חזקים בתוכנה בלי משמעת הנדסית. המתחרה הקרוב ביותר טכנולוגית (Homeii) דווקא ממצב את עצמו נגד מודל מנוי.</p>
+    <p style="margin:0">PRD זה מגדיר את השירות המנוהל שסוגר את הפער הזה: לא מכירת גאדג'טים, אלא <strong>התקנה חד-פעמית + ריטיינר חודשי</strong> שהוא הליבה האמיתית של המודל העסקי (ראו <a href="vision.html#what" style="color:var(--brand-blue);text-decoration:none;font-weight:600">What בחזון ←</a>).</p>
+  </section>
+
+  <section id="goals" class="block">
+    <div class="block-head">
+      <div class="block-head-left"><div class="letter-badge">B</div><h2>מטרות ומדדי הצלחה</h2></div>
+      <span class="status status-done">✓ הוחלט</span>
+    </div>
+    <p>כמה שאלות מנחות; שאלה 1 נסגרה, 2 ו-3 עדיין פתוחות:</p>
+    <div class="qbox"><div class="qlabel">שאלה 1 — הוחלט ✓</div><p>"תגובה" = פנייה ראשונית + ניסיון תיקון מרחוק, בתוך חלון הזמן שהוגדר במדיניות ה-SLA לפי חומרה (סעיף E). "פתרון בפועל" יכול לקחת יותר אם נדרש ביקור פיזי.</p></div>
+    <div class="qbox"><div class="qlabel">שאלה 2 — הוחלט ✓</div><p>לא נמדוד "uptime" כאחוז בשלב הזה — אין עדיין תשתית לניטור רציף כזה (זה יגיע עם PRD 4, כלי ניהול פנימי). המדד המעשי לשלב הנוכחי: <strong>מספר אירועים קריטיים לא-פתורים בחודש</strong>, לפי לקוח. יעד: 0 אירועים קריטיים שחורגים מחלון ה-SLA שהוגדר למעלה.</p></div>
+    <div class="qbox"><div class="qlabel">שאלה 3 — הוחלט ✓</div><p>עם 3 לקוחות מתוך הרשת האישית, לא צריך סקר NPS פורמלי. המדד: <strong>חידוש הריטיינר מדי חודש</strong> (הסימן האמיתי לשביעות רצון), בתוספת צ'ק-אין קצר ב-WhatsApp מדי חודש. סקרי שביעות רצון פורמליים — רק אחרי שלב 3 הלקוחות, כשעוברים לדף נחיתה והרשמה פתוחה.</p></div>
+  </section>
+
+  <section id="users" class="block">
+    <div class="block-head">
+      <div class="block-head-left"><div class="letter-badge">C</div><h2>משתמשים ותרחישי שימוש</h2></div>
+      <span class="status status-done">✓ מבוסס על Who בחזון</span>
+    </div>
+    <p>אותם שלושה מסלולים שכבר הוגדרו — כל אחד עם רמת דרישות שונה מהשירות:</p>
+    <div class="persona-grid">
+      <div class="persona-card"><div class="name">🏢 EcoHome</div><div class="desc">דירות / עיר</div></div>
+      <div class="persona-card"><div class="name">👨‍👩‍👧 SafeHome</div><div class="desc">משפחות — דגש הגנה ושקט נפשי</div></div>
+      <div class="persona-card"><div class="name">🏡 EliteHome</div><div class="desc">וילות / פרימיום</div></div>
+    </div>
+  </section>
+
+  <section id="scope" class="block">
+    <div class="block-head">
+      <div class="block-head-left"><div class="letter-badge">D</div><h2>בתוך ה-Scope / מחוץ ל-Scope</h2></div>
+      <span class="status status-done">✓ אושר</span>
+    </div>
+    <div class="split">
+      <div class="split-card in">
+        <div class="label">✓ בתוך ה-Scope</div>
+        <ul style="margin-top:0">
+          <li>ארכיטקטורת Local-First — VLAN מבודד, כתובות סטטיות, Cloudflare Tunnel</li>
+          <li>ניטור פרואקטיבי (Watchman) — לפי How בחזון</li>
+          <li>גיבויים מוצפנים אוטומטיים</li>
+          <li>עדכוני אבטחה שוטפים</li>
+          <li>תמיכת AI/WhatsApp</li>
+        </ul>
+      </div>
+      <div class="split-card out">
+        <div class="label">✗ מחוץ ל-Scope (כרגע)</div>
+        <ul style="margin-top:0">
+          <li>שיבר מים חשמלי (Active Defense) — נדחה במכוון עד שיהיה עסק פעיל</li>
+          <li>כל עבודת חשמל בפועל — מבוצעת ע"י חשמלאי מוסמך כקבלן משנה, לא ע"י OneHome</li>
+          <li>סוכן AI אוטונומי לפתרון תקלות אצל הלקוח — חזון עתידי רחוק, לא ב-Scope</li>
+        </ul>
+      </div>
+    </div>
+    <p style="margin-top:14px">רשימת הרכיבים/החומרה המלאה כבר קיימת ב-<a href="products.html" style="color:var(--brand-blue);text-decoration:none;font-weight:600">רשימת המוצרים ←</a> — צריך לאשר יחד איזה תת-סט הוא ברירת המחדל של כל מסלול.</p>
+  </section>
+
+  <div class="bg-note">
+    <h3>ניטור (Watchman) — הפניה</h3>
+    <p style="margin:0">ההחלטה הטכנית המלאה על ארכיטקטורת הניטור (האינטגרציה המובנית Alert ב-Home Assistant, תהליך עדכוני קושחה) עברה ל-<a href="prd4.html" style="color:var(--brand-blue);text-decoration:none;font-weight:600">PRD 4 — כלי ניהול פנימי ←</a>, יחד עם שאר הצד התפעולי של Watchman. כאן ב-PRD 1 נשאר רק מה שהלקוח מקבל: ניטור פרואקטיבי כחלק מהריטיינר (ראו Scope למעלה) ו-SLA לפי חומרה (סעיף E).</p>
+  </div>
+
+  <div class="bg-note">
+    <h3>החלטה — מדיניות חבילות ותוספות</h3>
+    <ul>
+      <li>כל מסלול (EcoHome/SafeHome/EliteHome) = <strong>חבילה קבועה ומוגדרת מראש</strong> לפי הקטגוריות ברשימת המוצרים — לא בחירה חופשית/קרדיטים.</li>
+      <li>מעבר לחבילה הקבועה — תוספות נמכרות <strong>בנפרד, במחיר בודד לכל פריט</strong> (לא "קרדיטים" לפי כמות), כדי שהתמחור הקבוע של ההתקנה (5,700 / 8,700 / 13,150 ₪, מעודכן) ימשיך לשקף את העלות בפועל.</li>
+      <li>מודל "בחר X פריטים מרשימה מדורגת" (הרעיון המקורי של גיא) — נשמר כרעיון טוב ל-<strong>configurator עתידי</strong>, לשקול ב-PRD 2 (חוויית הלקוח) כשיהיה יותר נפח לקוחות.</li>
+    </ul>
+  </div>
+
+  <section id="requirements" class="block">
+    <div class="block-head">
+      <div class="block-head-left"><div class="letter-badge">E</div><h2>דרישות פונקציונליות לפי מסלול</h2></div>
+      <span class="status status-draft">✎ כמעט הושלם — 3 שדות עדיין TBD</span>
+    </div>
+    <p>זה החלק המרכזי שעוד לא מולא. נשלים אותו ביחד, מסלול-מסלול.</p>
+    <div class="req-table-wrap">
+      <table class="req-table">
+        <tr><th>נושא</th><th>EcoHome</th><th>SafeHome</th><th>EliteHome</th></tr>
+        <tr><td class="rowlabel">מה כלול בהתקנה הראשונית</td><td colspan="3" style="text-align:center">ראו טבלת "הרכב החבילה לפי קטגוריה" למטה</td></tr>
+        <tr><td class="rowlabel">Watchman — תדירות בדיקה</td><td class="tbd">TBD</td><td class="tbd">TBD</td><td class="tbd">TBD</td></tr>
+        <tr><td class="rowlabel">זמן תגובה לתקלה קריטית (SLA)</td><td colspan="3" style="text-align:center;color:var(--ink-soft)">אחיד בכל המסלולים — ראו מדיניות SLA לפי חומרה, למטה ↓</td></tr>
+        <tr><td class="rowlabel">תדירות גיבויים</td><td class="tbd">TBD</td><td class="tbd">TBD</td><td class="tbd">TBD</td></tr>
+        <tr><td class="rowlabel">ערוצי תמיכה כלולים</td><td class="tbd">TBD</td><td class="tbd">TBD</td><td class="tbd">TBD</td></tr>
+        <tr><td class="rowlabel">ביקורי תחזוקה מתוכננים בשנה</td><td colspan="3" style="text-align:center">0 — אין ביקורי תחזוקה יזומים. ביקור פיזי רק לתיקון (SLA) או בתשלום לפי בקשה</td></tr>
+        <tr><td class="rowlabel">מחיר התקנה / ריטיינר</td><td>5,700 ₪ / 160 ₪</td><td>8,700 ₪ / 220 ₪</td><td>13,150 ₪ / 350 ₪</td></tr>
+      </table>
+    </div>
+
+    <div style="margin-top:22px">
+      <div class="block-head" style="margin-bottom:10px">
+        <div class="block-head-left"><h2 style="font-size:16px">הרכב החבילה הקבועה לפי קטגוריה (מתוך רשימת המוצרים)</h2></div>
+        <span class="status status-done">✓ הושלמו כל 9 הקטגוריות</span>
+      </div>
+      <div class="req-table-wrap">
+        <table class="req-table">
+          <tr><th>קטגוריה</th><th>EcoHome</th><th>SafeHome</th><th>EliteHome</th></tr>
+          <tr><td class="rowlabel">1. בקר מרכזי, קישוריות ושרתים</td><td colspan="3" style="text-align:center">זהה בכל המסלולים: HA Green + SkyConnect + Cloudflare Tunnel / Nabu Casa</td></tr>
+          <tr><td class="rowlabel">2. חיישני נוכחות ותנועה</td><td>FP2 ~2-3 יח' + PIR במעברים</td><td>FP2 ~4-5 יח' + PIR במעברים/כניסות</td><td>FP2 6+ יח' + PIR בכל מעבר</td></tr>
+          <tr><td class="rowlabel">3. אקלים, איכות אוויר ובריאות</td><td>Broadlink RM4 + חיישן Aqara טמפ'/לחות</td><td>+ IKEA VINDSTYRKA (איכות אוויר)</td><td>+ IKEA VINDSTYRKA (איכות אוויר)</td></tr>
+          <tr><td class="rowlabel">4. בטיחות, הצפה והגנה אקטיבית</td><td>חיישן הצפה + גלאי עשן</td><td>+ Shelly Pro DIN-Rail (ניתוק אוטומטי)</td><td>+ Shelly Pro DIN-Rail (ניתוק אוטומטי)</td></tr>
+          <tr><td class="rowlabel">5. ניהול אנרגיה, דוד ורכב חשמלי</td><td>Switcher (דוד) + Shelly EM חד-פאזי</td><td>Switcher (דוד) + Shelly EM חד-פאזי</td><td>Switcher (דוד) + Shelly Pro 3EM תלת-פאזי</td></tr>
+          <tr><td class="rowlabel">6. מפסקים, עמעמים ובקרי תריסים</td><td>Shelly Plus 1/1PM + 2PM (לפי כמות)</td><td>+ Shelly Dimmer 2</td><td>+ Shelly Dimmer 2</td></tr>
+          <tr><td class="rowlabel">7. בקרת כניסה, דלתות וחלונות</td><td colspan="3" style="text-align:center">חיישני פתיחה/סגירה לכל דלת/חלון — זהה בכל המסלולים. מנעול Nuki + פעמון וידאו: תוספת בתשלום לכולם</td></tr>
+          <tr><td class="rowlabel">8. חיווי ויזואלי, תאורה וכפתורי משימות</td><td colspan="3" style="text-align:center">לא בבסיס אף מסלול — תוספת אופציונלית לכולם, טעון אימות מול לקוחות אמיתיים</td></tr>
+          <tr><td class="rowlabel">9. מסכי Kiosk ושילוב מכשירים חכמים</td><td colspan="3" style="text-align:center">טאבלט קיר: תוספת אופציונלית (לא דשבורד ברירת מחדל). שואב רובוטי: משולב אוטומטית אם קיים אצל הלקוח, ללא עלות</td></tr>
+        </table>
+      </div>
+      <p style="margin-top:10px;font-size:13.5px">Home Assistant Voice PE (שליטה קולית) — <strong>לא</strong> חלק מאף חבילה קבועה; זמין כתוספת בתשלום נפרד לכל מסלול באותה מידה.</p>
+      <p style="margin:4px 0 0;font-size:13.5px">כמויות בקטגוריה 2 הן הערכת בסיס לפי גודל טיפוסי; המספר הסופי נקבע בסקר הבית בפועל.</p>
+    </div>
+
+    <div style="margin-top:22px">
+      <div class="block-head" style="margin-bottom:10px">
+        <div class="block-head-left"><h2 style="font-size:16px">מדיניות תגובה לפי חומרת אירוע (SLA) — אחיד לכל המסלולים</h2></div>
+        <span class="status status-done">✓ הוחלט בשיחה 16/09</span>
+      </div>
+      <div class="req-table-wrap">
+        <table class="req-table">
+          <tr><th>חומרה</th><th>מי מקבל התראה</th><th>זמן תגובה</th><th>טיפול</th></tr>
+          <tr><td class="rowlabel">מידע (סוללה חלשה)</td><td>הלקוח בלבד</td><td>אין SLA</td><td>הלקוח מחליף בעצמו — גיא לא מעורב</td></tr>
+          <tr><td class="rowlabel">אזהרה (מכשיר לא קריטי נופל)</td><td>גיא בלבד</td><td>עד 3 ימי עסקים</td><td>ניסיון תיקון מרחוק</td></tr>
+          <tr><td class="rowlabel">קריטי (בטיחות / הצפה / עשן / גישה / הליבה)</td><td>גיא בלבד</td><td>עד יום עסקים אחד</td><td>ניסיון תיקון מרחוק; אם נדרש ביקור פיזי — מתואם תוך עד 3 ימי עסקים נוספים</td></tr>
+        </table>
+      </div>
+      <p style="margin-top:12px;font-size:13.5px">ההתחייבות אחידה בכל שלושת המסלולים מטעמי בטיחות והוגנות. הבדלים בין מסלולים (אם יהיו) יתבטאו בכמות ביקורים כלולים בשנה ובערוצי/שעות תמיכה — לא בזמן התגובה לאירוע קריטי.</p>
+      <p style="margin:6px 0 0;font-size:13.5px"><strong>הבהרה חשובה:</strong> על אירוע חירום פיזי בפועל (הצפה מתרחשת, אש) — הלקוח גם פונה ישירות לשירותי חירום/אינסטלטור. השירות הוא שכבת ניטור והתראה, לא תגובת חירום פיזית.</p>
+
+      <div style="margin-top:20px;padding-top:18px;border-top:1px dashed var(--border)">
+        <div class="block-head" style="margin-bottom:10px">
+          <div class="block-head-left"><h2 style="font-size:16px">ערוצי תמיכה ותקשורת</h2></div>
+          <span class="status status-done">✓ הוחלט בשיחה 16/09</span>
+        </div>
+        <p>שני ערוצים נפרדים, לא אחד:</p>
+        <ul style="margin-top:6px">
+          <li><strong>התראה פנימית לגיא</strong> — Push דרך אפליקציית Home Assistant Companion (מובנה, מיידי, אמין, לא תלוי בצד שלישי). זה מה שמעיר אותך על אירוע קריטי.</li>
+          <li><strong>תמיכה מול הלקוח</strong> — WhatsApp Business App (חינמי, מענה ידני של גיא בשלב זה). הבחירה הנכונה כרגע: זה הערוץ שהלקוחות כבר משתמשים בו יומיומית בישראל, לא דורש התקנת אפליקציה נוספת, ומתאים ל-UX הפרימיום-שקט שכבר הוגדר בחזון. WhatsApp Business API עם בוט/אוטומציה — לא כדאי כרגע: עלות תפעולית ומורכבות טכנית שלא מוצדקת עבור 3 לקוחות.</li>
+        </ul>
+        <p style="margin-top:10px;font-size:13.5px">"תמיכת AI" שמוזכרת בחזון היא כיוון עתידי, לא MVP: בשלב הבא (PRD 2 — חוויית הלקוח) אפשר לשקול בוט שעושה טריאז' בסיסי לפני שמגיע לגיא. סוכן AI שמנסה לתקן תקלות אצל הלקוח באופן אוטונומי — חזון רחוק יותר, מחוץ ל-Scope הנוכחי (נוסף גם לסעיף D).</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="nonfunctional" class="block">
+    <div class="block-head">
+      <div class="block-head-left"><div class="letter-badge">F</div><h2>דרישות לא-פונקציונליות</h2></div>
+      <span class="status status-draft">✓ הוחלט (תקנים טעון אימות מקצועי)</span>
+    </div>
+    <div class="qbox"><div class="qlabel">פרטיות ואבטחה — הוחלט ✓</div><p><strong>מסמך פרטיות פורמלי</strong> שהלקוח מקבל/חותם עליו: מה נאסף, איפה נשמר, מי יכול לגשת.</p>
+    <p style="margin-top:8px"><strong>גיבויים:</strong> מרכזיים אצל גיא ב-Cloudflare R2 (לא לוקאלי בלבד, לא ב-Google Drive האישי של הלקוח) — כל לקוח עם bucket/הרשאות מבודדות משלו, כך שדליפה אצל לקוח אחד לא חושפת אחרים. כל גיבוי מוצפן דרך פיצ'ר ה-Backup המובנה של Home Assistant, בסיסמה ייחודית לכל לקוח. בנוסף נשמר עותק מקומי בבית לשחזור מהיר.</p></div>
+    <div class="qbox"><div class="qlabel">זמינות — הוחלט ✓</div><p>אוטומציות מקומיות (Zigbee, בקרת דוד/מזגן) ממשיכות לפעול בלי אינטרנט — Home Assistant רץ מקומית. לגלאי העשן יש סירנה מקומית משלו, לא תלויה במערכת. מה שנפגע: גישה מרחוק, גיבויים ל-R2 (נדחים), ו<strong>גיא לא מקבל התראה מרחוק על אירוע בזמן שהאינטרנט בבית נפל</strong>. מוצהר במפורש במסמך הפרטיות/השירות כמגבלה — הניטור מוסיף שכבת נוחות, לא מחליף בטיחות מובנית במכשירים.</p></div>
+    <div class="qbox"><div class="qlabel">תקנים וחשמל — מדיניות בסיסית, טעון אישור</div><p>כל עבודה שנוגעת בלוח חשמל או בחיווט קיים מאחורי מתג/שקע — <strong>אך ורק ע"י חשמלאי מוסמך (קבלן משנה)</strong>, לא ע"י גיא. מכשירים אלחוטיים/סוללה — גיא מתקין בעצמו. בפועל זה אומר שקטגוריות 5 ו-6 (Shelly מאחורי מתגים, צבתות מדידה, DIN-Rail, בקרת דוד) הן כמעט תמיד עבודת חשמלאי. <em>לא נמצא מקור שקובע במדויק אילו משימות ספציפיות מחייבות רישיון — לאימות מול חשמלאי/בעל מקצוע.</em></p></div>
+  </section>
+
+  <section id="risks" class="block">
+    <div class="block-head">
+      <div class="block-head-left"><div class="letter-badge">G</div><h2>תלויות וסיכונים</h2></div>
+      <span class="status status-draft">✎ טיוטה — תוכנית לחשמלאי הוגדרה</span>
+    </div>
+    <ul>
+      <li><strong>קבלן משנה לחשמל</strong> — תלות בזמינות חשמלאי מוסמך לכמעט כל עבודה שדורשת חשמל (ראו סעיף F). <strong>תוכנית:</strong> בשלב 3 הלקוחות הראשונים — חשמלאי קבוע אחד (המלצה מהרשת האישית) + איש קשר גיבוי, תשלום פר-עבודה, בלי חוזה בלעדיות. עם גדילה בקצב ההתקנות — מעבר להסכם קבוע (תעריף + זמינות מועדפת) ושמירה על 2-3 חשמלאים ברוטציה. לוודא בכל שלב: תעודת "חשמלאי מוסמך" בתוקף + הבהרה כתובה על חלוקת אחריות/ביטוח. (פירוט תהליך מלא — ב-PRD 3, Onboarding).</li>
+      <li><strong>תלות בספקים חיצוניים</strong> — Nabu Casa / Cloudflare (Tunnel + R2) לגישה מרחוק וגיבויים, Home Assistant כפלטפורמת ליבה.</li>
+      <li><strong>קיבולת יחיד</strong> — כרגע גיא לבד עונה לכל תקלה/התראה; אין עדיין SOP להעברה לטכנאי שכיר.</li>
+    </ul>
+  </section>
+
+  <section id="open" class="block">
+    <div class="block-head">
+      <div class="block-head-left"><div class="letter-badge">H</div><h2>שאלות פתוחות להחלטה</h2></div>
+      <span class="status status-done">✓ כל השאלות נסגרו</span>
+    </div>
+    <ol class="open-q">
+      <li style="opacity:.55"><strong>זמן תגובה — נסגר ✓</strong> ראו מדיניות SLA לפי חומרה, סעיף E.</li>
+      <li style="opacity:.55"><strong>תמיכת AI/WhatsApp — נסגר ✓</strong> WhatsApp Business ידני בשלב זה, ראו סעיף E.</li>
+      <li style="opacity:.55"><strong>ביקורי תחזוקה — נסגר ✓</strong> אין ביקורים יזומים כלל; תיקונים דרך פתיחת קריאה (SLA), עדכוני קושחה מרחוק בלילה, סוללות באחריות הלקוח.</li>
+      <li style="opacity:.55"><strong>הרחבות — נסגר ✓</strong> עלות חומרה ×1.3 + עבודה לפי 180 ₪/שעה (+495 ₪ אם נדרש חשמלאי). תוך כדי ביקור קיים — בלי עמלת נסיעה נוספת; ביקור ייעודי — מינימום קריאה של שעה.</li>
+      <li style="opacity:.55"><strong>הפסקת שירות — נסגר ✓</strong> 7 ימי חסד, ואז השירות (לא החומרה) מושהה — האוטומציות הממשיות ממשיכות לעבוד מקומית. חידוש תשלום = חזרה מיידית. עקרון: לא לנעול לקוח מחוץ למערכת שלו, בניגוד למתחרים כמו Control4.</li>
+    </ol>
+  </section>
+
+</main>
+
+<footer>עודכן 16/09/2026 · PRD 1 — טיוטת עבודה, מתעדכן תוך כדי שיחה עם גיא</footer>
+
+</body>
+</html>

@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>רעיונות לאוטומציות — OneHome</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0f172a;
+    --ink-soft: #475569;
+    --muted: #64748b;
+    --bg: #f8fafc;
+    --card-bg: #ffffff;
+    --border: #e2e8f0;
+    --brand-blue: #0284c7;
+    --brand-green: #059669;
+    --easy-bg:#ecfdf5; --easy-fg:#047857; --easy-bd:#a7f3d0;
+    --med-bg:#eff6ff; --med-fg:#1d4ed8; --med-bd:#bfdbfe;
+    --adv-bg:#fdf4ff; --adv-fg:#a21caf; --adv-bd:#f5d0fe;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin:0; background: var(--bg); color: var(--ink);
+    font-family: 'Heebo', sans-serif; line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; }
+
+  header.top {
+    background: linear-gradient(135deg, #0f172a 0%, #0c4a6e 100%);
+    color: #fff; padding: 48px 24px 40px;
+  }
+  .top-inner { max-width: 1000px; margin: 0 auto; }
+  .eyebrow {
+    display:inline-flex; align-items:center; gap:8px;
+    background: rgba(255,255,255,0.12); border:1px solid rgba(255,255,255,0.25);
+    padding:6px 14px; border-radius:20px; font-size:13px; font-weight:600; margin-bottom:16px;
+  }
+  h1.page-title { font-size: 34px; font-weight:800; margin: 0 0 10px; }
+  h1.page-title span { color:#5eead4; }
+  .page-sub { color: #cbd5e1; font-size: 16px; max-width: 760px; margin:0; }
+
+  nav.chipnav {
+    position: sticky; top:58px; z-index:50;
+    background: rgba(248,250,252,0.92); backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border);
+    padding: 12px 24px; overflow-x:auto; white-space:nowrap;
+  }
+  nav.chipnav .chipnav-inner { max-width:1000px; margin:0 auto; display:flex; gap:8px; }
+  .chip {
+    display:inline-flex; align-items:center; gap:6px; text-decoration:none;
+    font-size:13px; font-weight:600; color: var(--ink-soft);
+    background:#fff; border:1px solid var(--border); border-radius:20px;
+    padding:7px 14px; flex:0 0 auto; transition: all .15s ease;
+  }
+  .chip:hover { border-color: var(--brand-blue); color: var(--brand-blue); }
+
+  main { max-width: 1000px; margin: 0 auto; padding: 36px 24px 80px; }
+  .intro { background:#fff; border:1px solid var(--border); border-radius:16px; padding:22px 26px; margin-bottom:36px; color: var(--ink-soft); font-size:15px; }
+  .intro strong { color: var(--ink); }
+
+  .cat-section { margin-bottom: 48px; scroll-margin-top: 90px; }
+  .cat-header { display:flex; gap:16px; align-items:flex-start; margin-bottom:18px; }
+  .cat-icon {
+    flex:0 0 auto; width:48px; height:48px; border-radius:14px;
+    color:#fff; display:flex; align-items:center; justify-content:center; font-size:20px;
+  }
+  .cat-icon.c1 { background: linear-gradient(135deg,#f59e0b,#ea580c); }
+  .cat-icon.c2 { background: linear-gradient(135deg,#ef4444,#b91c1c); }
+  .cat-icon.c3 { background: linear-gradient(135deg,#6366f1,#4338ca); }
+  .cat-icon.c4 { background: linear-gradient(135deg,#0284c7,#0369a1); }
+  .cat-icon.c5 { background: linear-gradient(135deg,#059669,#0d9488); }
+  .cat-icon.c6 { background: linear-gradient(135deg,#a855f7,#7e22ce); }
+  .cat-icon.c7 { background: linear-gradient(135deg,#64748b,#334155); }
+  .cat-icon.c8 { background: linear-gradient(135deg,#ec4899,#db2777); }
+  .cat-eng { font-size:12px; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); font-weight:700; }
+  .cat-header h2 { margin: 2px 0 6px; font-size:21px; font-weight:800; }
+  .cat-subtitle { margin:0; color: var(--muted); font-size:14.5px; max-width:700px; }
+
+  .card-grid { display:grid; grid-template-columns: 1fr; gap:12px; }
+  @media (min-width: 760px) { .card-grid { grid-template-columns: 1fr 1fr; } }
+
+  .card {
+    background: var(--card-bg); border:1px solid var(--border); border-radius:14px;
+    padding:18px 20px;
+  }
+  .card-head { display:flex; align-items:flex-start; justify-content:space-between; gap:10px; }
+  .card-head h3 { margin:0; font-size:15.5px; font-weight:700; line-height:1.4; }
+  .badge { font-size:11px; font-weight:700; padding:3px 10px; border-radius:20px; white-space:nowrap; border:1px solid; flex:0 0 auto; }
+  .badge-easy { background:var(--easy-bg); color:var(--easy-fg); border-color:var(--easy-bd); }
+  .badge-med { background:var(--med-bg); color:var(--med-fg); border-color:var(--med-bd); }
+  .badge-adv { background:var(--adv-bg); color:var(--adv-fg); border-color:var(--adv-bd); }
+  .flow { margin:10px 0 8px; font-size:13.5px; color: var(--ink); background: var(--bg); border-radius:10px; padding:10px 12px; }
+  .flow strong { color: var(--brand-blue); }
+  .card-note { margin:0; font-size:13px; color: var(--muted); }
+  .card-note strong { color: var(--ink-soft); }
+  .card-note + .card-note { margin-top:6px; }
+
+  footer { text-align:center; color: var(--muted); font-size:12.5px; padding: 30px 24px 50px; }
+
+  .sitebar { position:sticky; top:0; z-index:60; background:#020617; border-bottom:1px solid #1e293b; }
+  .sitebar-inner { max-width: 1000px; margin:0 auto; padding: 10px 24px; display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap; }
+  .sitebar-logo { font-weight:800; font-size:15px; color:#f8fafc; text-decoration:none; display:flex; align-items:center; gap:8px; }
+  .sitebar-logo span { color:#5eead4; }
+  .sitebar-logo small { font-weight:500; color:#94a3b8; font-size:11.5px; }
+  .sitebar-links { display:flex; gap:4px; }
+  .sitebar-links a {
+    text-decoration:none; color:#cbd5e1; font-size:13.5px; font-weight:600;
+    padding:7px 14px; border-radius:8px; transition: background .15s ease, color .15s ease;
+  }
+  .sitebar-links a:hover { background: rgba(255,255,255,0.08); color:#fff; }
+  .sitebar-links a.active { background: rgba(94,234,212,0.15); color:#5eead4; }
+
+  @media (max-width: 640px) {
+    h1.page-title { font-size:26px; }
+    .cat-header h2 { font-size:18px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="sitebar"><div class="sitebar-inner">
+  <a href="index.html" class="sitebar-logo">One<span>Home</span> <small>· אתר פנימי</small></a>
+  <div class="sitebar-links">
+    <a href="index.html">בית</a>
+    <a href="vision.html">חזון העסק</a>
+    <a href="products.html">רשימת מוצרים</a>
+    <a href="competitors.html">מתחרים</a>
+    <a href="prds.html">PRD-ים</a>
+    <a href="kb.html">ידע טכני</a>
+    <a href="automations.html" class="active">רעיונות לאוטומציות</a>
+    <a href="nabu-casa.html">Nabu Casa</a>
+    <a href="ohf.html">Open Home Foundation</a>
+  </div>
+</div></div>
+
+<header class="top">
+  <div class="top-inner">
+    <span class="eyebrow">⚡ מאגר חי — נבנה תוך כדי אפיון ולקוחות בשטח</span>
+    <h1 class="page-title">רעיונות ל<span>אוטומציות</span></h1>
+    <p class="page-sub">קטלוג רעיונות לאוטומציות ב-Home Assistant, מחולק ל-8 קטגוריות. כל רעיון בפורמט טריגר ← תנאי ← פעולה, עם ההסבר "למה זה שווה" והחיישנים/הרכיבים שהוא דורש (לפי הקטלוג ב"רשימת מוצרים"). משמש גם כחומר הדגמה ללקוח וגם כ-backlog לרעיונות שנטמיע בהתקנות.</p>
+  </div>
+</header>
+
+<nav class="chipnav"><div class="chipnav-inner">
+  <a href="#cat-1" class="chip"><span>🔆</span><span>אנרגיה ומיזוג</span></a><a href="#cat-2" class="chip"><span>🛟</span><span>בטיחות</span></a><a href="#cat-3" class="chip"><span>🔐</span><span>אבטחה וכניסה</span></a><a href="#cat-4" class="chip"><span>💡</span><span>תאורה ונוכחות</span></a><a href="#cat-5" class="chip"><span>🌿</span><span>אקלים ואיכות אוויר</span></a><a href="#cat-6" class="chip"><span>🧳</span><span>שגרות ומצבי בית</span></a><a href="#cat-7" class="chip"><span>🔧</span><span>תחזוקה והתראות</span></a><a href="#cat-8" class="chip"><span>👨‍👩‍👧</span><span>משפחה ונוחות</span></a>
+</div></nav>
+
+<main>
+
+  <div class="intro">
+    <strong>איך להשתמש בדף הזה:</strong> כל כרטיס הוא רעיון עצמאי שאפשר להריץ ב-Home Assistant. התג בפינה מציין רמת מורכבות ההגדרה (<span style="color:#047857;font-weight:700">קל</span> = אוטומציה סטנדרטית עם החיישנים שכבר נכללים ב-MVP · <span style="color:#1d4ed8;font-weight:700">בינוני</span> = דורש חיישן/רכיב נוסף שלא תמיד קיים · <span style="color:#a21caf;font-weight:700">מתקדם</span> = לוגיקה מורכבת יותר, לרוב עם כמה תנאים/אינטגרציות). הרעיון של גיא (מזגן + חלון פתוח) נמצא בקטגוריה הראשונה.
+  </div>
+
+  <section class="cat-section" id="cat-1">
+    <div class="cat-header">
+      <div class="cat-icon c1">🔆</div>
+      <div>
+        <div class="cat-eng">Energy &amp; Climate</div>
+        <h2>אנרגיה ומיזוג</h2>
+        <p class="cat-subtitle">האוטומציות עם ה-ROI הכי מוחשי ללקוח — הן אלו שהוא "מרגיש" בחשבון החשמל, ולכן חשובות מאוד להדגמה.</p>
+      </div>
+    </div>
+    <div class="card-grid">
+
+      <div class="card">
+        <div class="card-head"><h3>🪟 מזגן פועל + חלון פתוח</h3><span class="badge badge-easy">קל</span></div>
+        <p class="flow"><strong>טריגר:</strong> מזגן עובר למצב "פועל" &nbsp;·&nbsp; <strong>תנאי:</strong> אחד מחיישני חלון/דלת בבית במצב "פתוח" &nbsp;·&nbsp; <strong>פעולה:</strong> נוטיפיקציה לנייד ("המזגן פועל וחלון X פתוח") + הדלקת נורית "צריך בדיקה" בכניסה/מפתח קיר</p>
+        <p class="card-note"><strong>למה זה שווה:</strong> הבזבוז הקלאסי בכל בית — מזגן עובד נגד חלון פתוח. חיסכון מיידי ומורגש, ונקודת "וואו" מצוינת בהדגמה כי היא פשוטה להבין.</p>
+        <p class="card-note"><strong>דורש:</strong> חיישן מגנטי לחלון/דלת (Zigbee), חיישן/תשתית שמזהה מצב מזגן (חיישן חשמל על הקו, או שליטה ישירה ב-AC דרך IR/WiFi), נורית או פלאג חכם לאינדיקציה.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><h3>🚫 אין נוכחות + מזגן פועל</h3><span class="badge badge-easy">קל</span></div>
+        <p class="flow"><strong>טריגר:</strong> חיישן נוכחות בחדר לא מזהה תנועה מעל 20 דקות &nbsp;·&nbsp; <strong>תנאי:</strong> מזגן פועל &nbsp;·&nbsp; <strong>פעולה:</strong> כיבוי אוטומטי + התראה קלה</p>
+        <p class="card-note"><strong>למה זה שווה:</strong> מונע "מזגן ששכחו כבוי" בחדר ריק — אחד מהבזבוזים הכי נפוצים אצל לקוחות שהראיינו אותם.</p>
+        <p class="card-note"><strong>דורש:</strong> חיישן נוכחות/תנועה (mmWave מדויק יותר מ-PIR לחדרים עם ישיבה שקטה), שליטה במזגן.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><h3>🌙 קירור לילי מוקדם (Pre-cooling)</h3><span class="badge badge-adv">מתקדם</span></div>
+        <p class="flow"><strong>טריגר:</strong> תחזית מזג אוויר מראה יום חם למחרת &nbsp;·&nbsp; <strong>תנאי:</strong> תעריף חשמל בשעות הלילה נמוך (זמן-אמת/TOU) &nbsp;·&nbsp; <strong>פעולה:</strong> קירור מוקדם של הבית בשעות הזולות, לפני שהעומס עולה בבוקר</p>
+        <p class="card-note"><strong>למה זה שווה:</strong> "סיפור מכירה" חזק לבתים עם תעריף חשמל משתנה — הבית עצמו הופך לסוג של "סוללה תרמית".</p>
+        <p class="card-note"><strong>דורש:</strong> אינטגרציית מזג אוויר, שליטה מלאה במזגן, ורצוי מונה/תעריף חשמל דינמי מחובר.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><h3>♨️ דוד חשמל דלוק ללא נוכחות</h3><span class="badge badge-easy">קל</span></div>
+        <p class="flow"><strong>טריגר:</strong> דוד חשמל פועל מעל שעה &nbsp;·&nbsp; <strong>תנאי:</strong> אין נוכחות בבית &nbsp;·&nbsp; <strong>פעולה:</strong> כיבוי + התראה ("הדוד נשאר דלוק, כובה אוטומטית")</p>
+        <p class="card-note"><strong>למה זה שווה:</strong> דוד חשמל ששכחו דלוק זה מהבזבוזים הכי גדולים בבית ישראלי טיפוסי — נקודת חיסכון מוחשית שממחירה את המוצר.</p>
+        <p class="card-note"><strong>דורש:</strong> פלאג/ממסר חכם על קו הדוד, זיהוי נוכחות/Geofencing.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><h3>🔌 עומס חשמלי מתקרב למגבלת המונה</h3><span class="badge badge-adv">מתקדם</span></div>
+        <p class="flow"><strong>טריגר:</strong> צריכת חשמל כוללת (מד חשמל חכם) חוצה סף מוגדר &nbsp;·&nbsp; <strong>תנאי:</strong> מכשיר "לא קריטי" פועל (למשל דוד/טעינת רכב) &nbsp;·&nbsp; <strong>פעולה:</strong> השבתה זמנית של המכשיר הלא-קריטי, עד שהעומס יורד</p>
+        <p class="card-note"><strong>למה זה שווה:</strong> מונע "קפיצת פקק" בבתים עם הרבה מכשירי חשמל כבדים בו-זמנית (מזגנים + דוד + טעינת EV).</p>
+        <p class="card-note"><strong>דורש:</strong> מד צריכה כולל בלוח החשמל (CT clamp / חיישן חשמל ראשי), שליטה בכמה מעגלים.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><h3>🚗 טעינת רכב חשמלי בשעות זולות</h3><span class="badge badge-med">בינוני</span></div>
+        <p class="flow"><strong>טריגר:</strong> הרכב מתחבר לעמדת הטעינה &nbsp;·&nbsp; <strong>תנאי:</strong> השעה לא נמצאת בחלון התעריף הזול &nbsp;·&nbsp; <strong>פעולה:</strong> דחיית תחילת הטעינה לשעה הזולה הקרובה, עם עדכון שהטעינה תושלם עד שעה מסוימת</p>
+        <p class="card-note"><strong>למה זה שווה:</strong> חיסכון קבוע וחודשי לבתים עם רכב חשמלי — פיצ'ר premium שמבדל מהמתחרים.</p>
+        <p class="card-note"><strong>דורש:</strong> עמדת טעינה חכמה עם API/אינטגרציה, תעריף חשמל דינמי.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="cat-section" id="cat-2">
+    <div class="cat-header">
+      <div class="cat-icon c2">🛟</div>
+      <div>
+        <div class="cat-eng">Safety</div>
+        <h2>בטיחות</h2>
+        <p class="cat-subtitle">האוטומציות שהערך שלהן הוא לא נוחות אלא מניעת נזק ממשי — הכי חשוב להסביר ללקוח למה הן שוות את המחיר, גם אם "לא קורה כל יום".</p>
+      </div>
+    </div>
+    <div class="card-grid">
+
+      <div class="card">
+        <div class="card-head"><h3>💧 הצפה — סגירת ברז ראשי אוטומטית</h3><span class="badge badge-med">בינוני</span></div>
+        <p class="flow"><strong>טריגר:</strong> חיישן הצפה מזהה מים על הרצפה &nbsp;·&nbsp; <strong>תנאי:</strong> ללא תנאי — פעולה מיידית &nbsp;·&nbsp; <strong>פעולה:</strong> סגירת שסתום מים חשמלי ראשי + התראה קריטית לכל בני הבית</p>
+        <p class="card-note"><strong>למה זה שווה:</strong> נזק הצפה יכול לעלות עשרות אלפי ש"ח — האוטומציה הזו "מחזירה את עצמה" בפעם אחת שהיא מונעת אירוע.</p>
+        <p class="card-note"><strong>דורש:</strong> חיישן הצפה (לרוב 2-3 יחידות: מטבח, מכונת כביסה, דוד/ממ"ד), שסתום סגירת מים חשמלי בכניסת המים לבית.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><h3>🔥 עשן/CO — פינוי ונראות</h3><span class="badge badge-med">בינוני</span></div>
+        <p class="flow"><strong>טריגר:</strong> גלאי עשן/CO מזהה אירוע &nbsp;·&nbsp; <strong>תנאי:</strong> ללא תנאי &nbsp;·&nbsp; <strong>פעולה:</strong> הדלקת כל התאורה בבית במקסימום (לניווט מוצא), פתיחת מנעולים חשמליים, התראה קריטית עם מיקום הגלאי שהתריע</p>
+        <p class="card-note"><strong>למה זה שווה:</strong> שניות קריטיות בפינוי — תאורה מלאה ומנעולים פתוחים יכולים להיות ההבדל במקרה אמיתי.</p>
+        <p class="card-note"><strong>דורש:</strong> גלאי עשן/CO מקושר (Zigbee/WiFi), מנעולים חשמליים, שליטה בכל התאורה.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><h3>🍳 כיריים דלוקות ללא נוכחות במטבח</h3><span class="badge badge-med">בינוני</span></div>
+        <p class="flow"><strong>טריגר:</strong> חיישן חשמל/גז על הכיריים מראה "פועל" מעל 15 דקות &nbsp;·&nbsp; <strong>תנאי:</strong> חיישן נוכחות במטבח לא מזהה אף אחד &nbsp;·&nbsp; <strong>פעולה:</strong> התראה חזקה (קול + נוטיפיקציה) לבדיקה</p>
+        <p class="card-note"><strong>למה זה שווה:</strong> אחד התסריטים הנפוצים ביותר לשריפות בית — רלוונטי מאוד להורים לילדים קטנים ולבתים עם קשישים.</p>
+        <p class="card-note"><strong>דורש:</strong> חיישן זרם/מגע לכיריים חשמליות, או חיישן גז לכיריים גז, חיישן נוכחות במטבח.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><h3>❄️ סכנת קפיאת צנרת</h3><span class="badge badge-easy">קל</span></div>
+        <p class="flow"><strong>טריגר:</strong> חיישן טמפרטורה בחדר עם צנרת חוץ/מרתף יורד מתחת ל-2°C &nbsp;·&nbsp; <strong>תנאי:</strong> ללא תנאי &nbsp;·&nbsp; <strong>פעולה:</strong> התראה + (אופציונלי) הפעלת חימום נקודתי קטן</p>
+        <p class="card-note"><strong>למה זה שווה:</strong> רלוונטי לבתים באזורים קרים או ממ"דים/מרתפים לא מבודדים — מונע נזק צנרת יקר.</p>
+        <p class="card-note"><strong>דורש:</strong> חיישן טמפרטורה נקודתי.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><h3>🌡️ חדר תינוקות — התראת חריגת טמפרטורה</h3><span class="badge badge-easy">קל</span></div>
+        <p class="flow"><strong>טריגר:</strong> חיישן טמפרטורה/לחות בחדר התינוק חוצה סף (חם/קר מדי) &nbsp;·&nbsp; <strong>תנאי:</strong> ללא תנאי &nbsp;·&nbsp; <strong>פעולה:</strong> נוטיפיקציה מיידית להורים</p>
+        <p class="card-note"><strong>למה זה שווה:</strong> "שקט נפשי" הוא אחד ממניעי הרכישה החזקים ביותר להורים טריים — נקודת מכירה רגשית מאוד.</p>
+        <p class="card-note"><strong>דורש:</strong> חיישן טמפרטורה/לחות בחדר הרלוונטי.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="cat-section" id="cat-3">
+    <div class="cat-header">
+      <div class="cat-icon c3">🔐</div>
+      <div>
+        <div class="cat-eng">Security &amp; Access</div>
+        <h2>אבטחה וכניסה</h2>
+        <p class="cat-subtitle">מסתמכות על נוכחות/Geofencing ועל חיישני דלת-חלון ומנעולים חשמליים — קטגוריה חזקה להדגמה כי התוצאה מוחשית וברורה.</p>
+      </div>
+    </div>
+    <div class="card-grid">
+
+      <div class="card">
+        <div class="card-head"><h3>🚪 עזבו את הבית ודלת/חלון נשארו פתוחים</h3><span class="badge badge-easy">קל</span></div>
+        <p class="flow"><strong>טריגר:</strong> כל בני הבית עזבו (Geofencing/נוכחות) &nbsp;·&nbsp; <strong>תנאי:</strong> חיישן דלת/חלון כלשהו מראה "פתוח" &nbsp;·&nbsp; <strong>פעולה:</strong> נוטיפיקציה "לא נעלת את X" עם שם הפתח הספציפי</p>
+        <p class="card-note"><strong>למה זה שווה:</strong> התסריט הכי נפוץ של "עזבתי בחיפזון" — פותר חשש יומיומי אמיתי, לא תיאורטי.</p>
+        <p class="card-note"><strong>דורש:</strong> חיישני מגע לכל דלת/חלון רלוונטי, Geofencing באפליקציה או חיישן נוכחות פנימי.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><h3>👀 תנועה בבית במצב "לא בבית"</h3><span class="badge badge-easy">קל</span></div>
+        <p class="flow"><strong>טריגר:</strong> חיישן תנועה פנימי מזהה תנועה &nbsp;·&nbsp; <strong>תנאי:</strong> מצב הבית מוגדר כ"לא בבית"/חופשה &nbsp;·&nbsp; <strong>פעולה:</strong> התראה קריטית מיידית + (אם יש מצלמה) קישור לצפייה חיה</p>
+        <p class="card-note"><strong>למה זה שווה:</strong> ליבת ה"אבטחה חכמה" שכל לקוח שואל עליה — קל להדגים ומרגיש כמו מוצר premium.</p>
+        <p class="card-note"><strong>דורש:</strong> חיישן תנועה פנימי, הגדרת מצבי בית (Home/Away), אופציונלי: מצלמה מחוברת.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><h3>🔓 מנעול לא נסגר אחרי נעילת בית ריק</h3><span class="badge badge-med">בינוני</span></div>
+        <p class="flow"><strong>טריגר:</strong> חלפו 5 דקות ממעבר למצב "לא בבית" &nbsp;·&nbsp; <strong>תנאי:</strong> מנעול חשמלי במצב "פתוח" &nbsp;·&nbsp; <strong>פעולה:</strong> תזכורת + אופציה ללחוץ מהנוטיפיקציה ולנעול מרחוק</p>
+        <p class="card-note"><strong>למה זה שווה:</strong> משדרג את המנעול החכם ממכשיר נוחות לרכיב אבטחה אקטיבי.</p>
+        <p class="card-note"><strong>דורש:</strong> מנעול חשמלי חכם עם דיווח מצב.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><h3>🎫 קוד גישה זמני לאורח/בעל מקצוע</h3><span class="badge badge-med">בינוני</span></div>
+        <p class="flow"><strong>טריגר:</strong> יצירת קוד גישה חד-פעמי מהאפליקציה &nbsp;·&nbsp; <strong>תנאי:</strong> תקף לחלון זמן/תאריך מוגדר מראש &nbsp;·&nbsp; <strong>פעולה:</strong> הקוד מתבטל אוטומטית בסוף החלון, עם לוג של מי נכנס ומתי</p>
+        <p class="card-note"><strong>למה זה שווה:</strong> פותר בעיה יומיומית של ניקיון/שיפוצים/חוגים לילדים בלי להעביר מפתח פיזי או לזכור לבטל קוד.</p>
+        <p class="card-note"><strong>דורש:</strong> מנעול חשמלי עם תמיכה בקודים מרובים.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><h3>🌃 אור דלוק בבית ריק בשעות הלילה</h3><span class="badge badge-easy">קל</span></div>
+        <p class="flow"><strong>טריגר:</strong> השעה עברה 23:00 &nbsp;·&nbsp; <strong>תנאי:</strong> מצב הבית "לא בבית" וגוף תאורה כלשהו דלוק &nbsp;·&nbsp; <strong>פעולה:</strong> כיבוי אוטומטי + לוג לבדיקה (למניעת false-positive)</p>
+        <p class="card-note"><strong>למה זה שווה:</strong> ניקיון תפעולי קטן שגם חוסך חשמל וגם מונע "איתות" שהבית ריק לאורך זמן.</p>
+        <p class="card-note"><strong>דורש:</strong> שליטה בתאורה, הגדרת מצבי בית.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="cat-section" id="cat-4">
+    <div class="cat-header">
+      <div class="cat-icon c4">💡</div>
+      <div>
+        <div class="cat-eng">Lighting &amp; Presence</div>
+        <h2>תאורה ונוכחות</h2>
+        <p class="cat-subtitle">הקטגוריה עם ההרגשה הכי "קסומה" בהדגמה חיה — אור שנדלק ונכבה מעצמו, בעצימות ובצבע הנכונים.</p>
+      </div>
+    </div>
+    <div class="card-grid">
+
+      <div class="card">
+        <div class="card-head"><h3>🚶 תאורה לפי נוכחות ושעה</h3><span class="badge badge-easy">קל</span></div>
+        <p class="flow"><strong>טריגר:</strong> חיישן נוכחות מזהה כניסה לחדר &nbsp;·&nbsp; <strong>תנאי:</strong> שעות חושך &nbsp;·&nbsp; <strong>פעולה:</strong> תאורה נדלקת בעצימות/חמימות צבע לפי השעה (עמום וחם בלילה, חד ולבן ביום)</p>
+        <p class="card-note"><strong>למה זה שווה:</strong> ה"רגע וואו" הקלאסי של בית חכם — פשוט לראות, פשוט להבין, ומוריד לחיצה על מפסקים לחלוטין.</p>
+        <p class="card-note"><strong>דורש:</strong> חיישן נוכחות (mmWave מומלץ לחדרי ישיבה), נורות/דימרים חכמים עם תמיכה בטמפרטורת צבע.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><h3>🎭 סימולציית נוכחות בזמן חופשה</h3><span class="badge badge-med">בינוני</span></div>
+        <p class="flow"><strong>טריגר:</strong> מצב "חופשה" מופעל &nbsp;·&nbsp; <strong>תנאי:</strong> שקיעה &nbsp;·&nbsp; <strong>פעולה:</strong> הדלקה/כיבוי אקראי-למראית-עין של תאורה בחללים שונים, כאילו יש מישהו בבית</p>
+        <p class="card-note"><strong>למה זה שווה:</strong> הרתעה פשוטה וזולה לגניבות — פיצ'ר שקל למכור ל"מרתיע" בלי לדבר על מצלמות ופרטיות.</p>
+        <p class="card-note"><strong>דורש:</strong> שליטה בכמה גופי תאורה בחללים נפרדים.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><h3>🌙 תאורת לילה אוטומטית למעברים</h3><span class="badge badge-easy">קל</span></div>
+        <p class="flow"><strong>טריגר:</strong> חיישן תנועה במעבר/מדרגות מזהה תנועה &nbsp;·&nbsp; <strong>תנאי:</strong> שעות לילה (למשל 23:00–06:00) &nbsp;·&nbsp; <strong>פעולה:</strong> תאורת לילה עמומה מאוד (לא לפגוע בעיניים) נדלקת לזמן קצוב ונכבית</p>
+        <p class="card-note"><strong>למה זה שווה:</strong> נקודת מכירה חזקה מאוד לבתים עם ילדים קטנים או קשישים — מונע נפילות בדרך לשירותים בלילה.</p>
+        <p class="card-note"><strong>דורש:</strong> חיישן תנועה במעבר, תאורת LED שקית/רצועה עמומה.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><h3>🔋 חיסכון: כיבוי חדר ריק</h3><span class="badge badge-easy">קל</span></div>
+        <p class="flow"><strong>טריגר:</strong> חיישן נוכחות לא מזהה תנועה בחדר מעל 10 דקות &nbsp;·&nbsp; <strong>תנאי:</strong> תאורה בחדר דלוקה &nbsp;·&nbsp; <strong>פעולה:</strong> כיבוי אוטומטי (עם דעיכה הדרגתית, לא כיבוי חד)</p>
+        <p class="card-note"><strong>למה זה שווה:</strong> קלאסיקה שכל לקוח מכיר ("תמיד משאירים אור דלוק") — פשוטה, ברורה, וחוסכת בפועל.</p>
+        <p class="card-note"><strong>דורש:</strong> חיישן נוכחות, גוף תאורה חכם/ממסר.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><h3>🚪 כפתור "יציאה מהבית"</h3><span class="badge badge-med">בינוני</span></div>
+        <p class="flow"><strong>טריגר:</strong> לחיצה על כפתור פיזי ליד הדלת &nbsp;·&nbsp; <strong>תנאי:</strong> ללא תנאי &nbsp;·&nbsp; <strong>פעולה:</strong> כיבוי כל התאורה והמזגנים, נעילת דלת ראשית, הפעלת מצב "לא בבית"</p>
+        <p class="card-note"><strong>למה זה שווה:</strong> פעולה אחת שמחליפה 5-6 בדיקות ידניות — הפיצ'ר ה"נוחות" שגורם ללקוח להרגיש שהבית עובד בשבילו.</p>
+        <p class="card-note"><strong>דורש:</strong> כפתור פיזי חכם (Zigbee scene button), אינטגרציה עם תאורה/מזגנים/מנעול.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="cat-section" id="cat-5">
+    <div class="cat-header">
+      <div class="cat-icon c5">🌿</div>
+      <div>
+        <div class="cat-eng">Climate &amp; Air Quality</div>
+        <h2>אקלים ואיכות אוויר</h2>
+        <p class="cat-subtitle">קטגוריה שקשה למכור "מהבטן" אבל מאוד אפקטיבית כשמדגימים אותה עם מספרים אמיתיים (CO2, לחות, PM2.5) — נותנת תחושת מדעיות למוצר.</p>
+      </div>
+    </div>
+    <div class="card-grid">
+
+      <div class="card">
+        <div class="card-head"><h3>🫁 CO2 גבוה בחדר שינה/סלון</h3><span class="badge badge-med">בינוני</span></div>
+        <p class="flow"><strong>טריגר:</strong> חיישן CO2 חוצה סף (למשל 1000ppm) &nbsp;·&nbsp; <strong>תנאי:</strong> חלון בחדר סגור &nbsp;·&nbsp; <strong>פעולה:</strong> התראה לפתוח חלון, או הפעלת יחידת אוורור/מזגן במצב פרש אייר אם קיים</p>
+        <p class="card-note"><strong>למה זה שווה:</strong> ריכוז CO2 גבוה פוגע באיכות שינה וריכוז — נקודת מכירה חזקה להורים ולחדרי עבודה/שינה.</p>
+        <p class="card-note"><strong>דורש:</strong> חיישן CO2 (יקר יותר מחיישני נוכחות רגילים — לתמחר בהתאם), חיישן חלון.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><h3>🚿 לחות גבוהה באמבטיה</h3><span class="badge badge-easy">קל</span></div>
+        <p class="flow"><strong>טריגר:</strong> חיישן לחות באמבטיה חוצה סף &nbsp;·&nbsp; <strong>תנאי:</strong> ללא תנאי &nbsp;·&nbsp; <strong>פעולה:</strong> הפעלת יחידת אוורור/מאוורר תקרה לזמן קצוב, כיבוי אוטומטי כשהלחות חוזרת לנורמה</p>
+        <p class="card-note"><strong>למה זה שווה:</strong> מונע עובש ולחות תקועה — בעיה נפוצה בדירות ישראליות עם אוורור חלש, וקל להדגים בזמן אמת.</p>
+        <p class="card-note"><strong>דורש:</strong> חיישן לחות, שליטה במאוורר/יחידת אוורור.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><h3>😮‍💨 זיהום אוויר בחוץ + חלונות פתוחים</h3><span class="badge badge-adv">מתקדם</span></div>
+        <p class="flow"><strong>טריגר:</strong> חיישן/מקור חיצוני של PM2.5 עולה מעל סף &nbsp;·&nbsp; <strong>תנאי:</strong> יש חלון פתוח בבית &nbsp;·&nbsp; <strong>פעולה:</strong> התראה לסגור חלונות, ואם קיים — הפעלת טיהור אוויר פנימי</p>
+        <p class="card-note"><strong>למה זה שווה:</strong> רלוונטי מאוד בימי שרב/אבק גבוה או שריפות — פיצ'ר בריאותי שמבדל מבתים "חכמים" בסיסיים.</p>
+        <p class="card-note"><strong>דורש:</strong> חיישן איכות אוויר חיצוני (או API חיצוני), חיישני חלון, אופציונלי מטהר אוויר חכם.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><h3>🌡️ טמפרטורה קיצונית בחדר תינוק/ילד</h3><span class="badge badge-easy">קל</span></div>
+        <p class="flow"><strong>טריגר:</strong> חיישן טמפרטורה חוצה סף עליון/תחתון &nbsp;·&nbsp; <strong>תנאי:</strong> ללא תנאי &nbsp;·&nbsp; <strong>פעולה:</strong> נוטיפיקציה מיידית + הפעלה אוטומטית של מזגן/תנור בהתאם</p>
+        <p class="card-note"><strong>למה זה שווה:</strong> חוזר על עצמו כמניע רכישה חזק בקטגוריית "בטיחות/בריאות" — כפילות מכוונת עם קטגוריה 2 כי מדובר בשני קהלים: הורים (כאן) ובטיחות כללית.</p>
+        <p class="card-note"><strong>דורש:</strong> חיישן טמפרטורה בחדר, שליטה במזגן/תנור.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="cat-section" id="cat-6">
+    <div class="cat-header">
+      <div class="cat-icon c6">🧳</div>
+      <div>
+        <div class="cat-eng">Routines &amp; Home Modes</div>
+        <h2>שגרות ומצבי בית</h2>
+        <p class="cat-subtitle">אוטומציות "מרובות שכבות" שמפעילות כמה רכיבים בבת אחת לפי מצב בית אחד — הדרך הכי טובה להראות שהבית "חושב כמערכת" ולא כמכשירים בודדים.</p>
+      </div>
+    </div>
+    <div class="card-grid">
+
+      <div class="card">
+        <div class="card-head"><h3>☀️ שגרת בוקר</h3><span class="badge badge-med">בינוני</span></div>
+        <p class="flow"><strong>טריגר:</strong> שעון מעורר בטלפון / שעה קבועה &nbsp;·&nbsp; <strong>תנאי:</strong> יום חול &nbsp;·&nbsp; <strong>פעולה:</strong> תאורה עולה בהדרגה (Wake-up light), פתיחת וילונות/תריסים חשמליים, הפעלת דוד לחימום מים</p>
+        <p class="card-note"><strong>למה זה שווה:</strong> חוויית "בית שמתעורר איתך" — הרבה יותר מרשים בהדגמה מכל אוטומציה בודדת.</p>
+        <p class="card-note"><strong>דורש:</strong> דימרים/תאורה חכמה, תריסים/וילונות חשמליים, פלאג לדוד.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><h3>🌙 שגרת לילה</h3><span class="badge badge-med">בינוני</span></div>
+        <p class="flow"><strong>טריגר:</strong> כפתור "לילה טוב" / שעה קבועה &nbsp;·&nbsp; <strong>תנאי:</strong> ללא תנאי &nbsp;·&nbsp; <strong>פעולה:</strong> נעילת כל הדלתות, כיבוי כל התאורה חוץ ממסלול לילה, מזגנים למצב שינה (טמפ' וטיימר)</p>
+        <p class="card-note"><strong>למה זה שווה:</strong> "פעולה אחת שמסגירה את הבית" — פותרת את החשש הכי נפוץ (שכחתי לנעול/לכבות משהו) בלחיצה אחת.</p>
+        <p class="card-note"><strong>דורש:</strong> מנעולים חשמליים, שליטה בתאורה ומזגנים.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><h3>🏖️ מצב חופשה</h3><span class="badge badge-adv">מתקדם</span></div>
+        <p class="flow"><strong>טריגר:</strong> הפעלה ידנית מהאפליקציה לפני נסיעה &nbsp;·&nbsp; <strong>תנאי:</strong> נשאר פעיל עד ביטול &nbsp;·&nbsp; <strong>פעולה:</strong> סימולציית נוכחות, רגישות מוגברת להתראות הצפה/גז/תנועה, השבתת מכשירים לא הכרחיים, ניטור מרוכז מהנייד</p>
+        <p class="card-note"><strong>למה זה שווה:</strong> מוצר premium ברור — "אני יכול לנסוע בראש שקט" זה בדיוק המסר השיווקי המרכזי של OneHome.</p>
+        <p class="card-note"><strong>דורש:</strong> שילוב של כל החיישנים הקיימים בבית + תאורה + התראות.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><h3>🎉 מצב אירוח</h3><span class="badge badge-med">בינוני</span></div>
+        <p class="flow"><strong>טריגר:</strong> הפעלה ידנית (סצנה/כפתור) &nbsp;·&nbsp; <strong>תנאי:</strong> ללא תנאי &nbsp;·&nbsp; <strong>פעולה:</strong> נעילת חדרים פרטיים, תאורת אווירה בסלון, קוד Wi-Fi זמני לאורחים</p>
+        <p class="card-note"><strong>למה זה שווה:</strong> נקודת מכירה "לייפסטייל" נחמדה — מראה שהמערכת לא רק בטיחות ואנרגיה אלא גם חוויה.</p>
+        <p class="card-note"><strong>דורש:</strong> מנעולים חשמליים על חדרים פרטיים, תאורה חכמה, ראוטר עם תמיכה ברשת אורחים.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><h3>🌧️ גשם מתחיל + תריס/סוכך פתוח</h3><span class="badge badge-easy">קל</span></div>
+        <p class="flow"><strong>טריגר:</strong> חיישן גשם / תחזית מזג אוויר מזהה גשם &nbsp;·&nbsp; <strong>תנאי:</strong> תריס/סוכך חשמלי במצב פתוח &nbsp;·&nbsp; <strong>פעולה:</strong> סגירה אוטומטית + התראה</p>
+        <p class="card-note"><strong>למה זה שווה:</strong> מונע נזק ישיר (רהיטים, פרקט) ופשוט להדגים כי התוצאה ברורה מיד.</p>
+        <p class="card-note"><strong>דורש:</strong> חיישן גשם או אינטגרציית מזג אוויר, תריסים/סוכך חשמליים.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="cat-section" id="cat-7">
+    <div class="cat-header">
+      <div class="cat-icon c7">🔧</div>
+      <div>
+        <div class="cat-eng">Maintenance &amp; System Health</div>
+        <h2>תחזוקה והתראות מערכת</h2>
+        <p class="cat-subtitle">אוטומציות "פנימיות" שלא מיועדות להדגמה ללקוח אלא לשירות עצמו — שומרות שהמערכת תמשיך לעבוד נכון בלי שגיא יצטרך לזכור לבדוק ידנית.</p>
+      </div>
+    </div>
+    <div class="card-grid">
+
+      <div class="card">
+        <div class="card-head"><h3>🔋 סוללות חיישנים חלשות</h3><span class="badge badge-easy">קל</span></div>
+        <p class="flow"><strong>טריגר:</strong> רמת סוללה של חיישן כלשהו יורדת מתחת ל-20% &nbsp;·&nbsp; <strong>תנאי:</strong> ללא תנאי &nbsp;·&nbsp; <strong>פעולה:</strong> התראה מרוכזת שבועית (לא בכל התקנה בנפרד) עם רשימת החיישנים שצריך להחליף להם סוללה</p>
+        <p class="card-note"><strong>למה זה שווה:</strong> מונע "עיוורון" שקט של המערכת — חיישן בלי סוללה הוא חיישן שלא עובד, ובלי התראה מרוכזת קל לפספס.</p>
+        <p class="card-note"><strong>דורש:</strong> כל חיישני Zigbee/Zwave עם דיווח מצב סוללה (ברירת מחדל ברוב הדגמים).</p>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><h3>📡 מכשיר/חיישן שירד מהרשת</h3><span class="badge badge-easy">קל</span></div>
+        <p class="flow"><strong>טריגר:</strong> חיישן/מכשיר לא מדווח סטטוס מעל שעה &nbsp;·&nbsp; <strong>תנאי:</strong> ללא תנאי &nbsp;·&nbsp; <strong>פעולה:</strong> התראה לגיא (לא ללקוח) לבדיקה מרחוק לפני שהלקוח שם לב</p>
+        <p class="card-note"><strong>למה זה שווה:</strong> שירות פרואקטיבי — "פנינו ללקוח לפני שהוא פנה אלינו" הוא בדיוק ה-differentiator שמתחרים לא עושים.</p>
+        <p class="card-note"><strong>דורש:</strong> מוניטורינג ברמת Home Assistant (last_seen / availability sensor).</p>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><h3>🌬️ תזכורת החלפת מסנן מזגן</h3><span class="badge badge-med">בינוני</span></div>
+        <p class="flow"><strong>טריגר:</strong> סכימת שעות פעולה של המזגן חוצה סף (למשל 500 שעות) &nbsp;·&nbsp; <strong>תנאי:</strong> ללא תנאי &nbsp;·&nbsp; <strong>פעולה:</strong> תזכורת ללקוח (ולגיא) שהגיע הזמן לניקוי/החלפת מסנן</p>
+        <p class="card-note"><strong>למה זה שווה:</strong> תחזוקה מונעת שמרגישה כמו שירות VIP — קל להפוך לחלק מחוזה ריטיינר.</p>
+        <p class="card-note"><strong>דורש:</strong> מדידת שעות פעולה (חיישן זרם על קו המזגן, או חיווי ישיר מהיחידה אם יש אינטגרציה).</p>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><h3>🆕 עדכון גרסה זמין</h3><span class="badge badge-easy">קל</span></div>
+        <p class="flow"><strong>טריגר:</strong> עדכון חדש ל-Home Assistant Core/Add-on/תוסף זמין &nbsp;·&nbsp; <strong>תנאי:</strong> ללא תנאי &nbsp;·&nbsp; <strong>פעולה:</strong> התראה שבועית מרוכזת לגיא, לא עדכון אוטומטי (כדי לא לשבור אוטומציות בלי בקרה)</p>
+        <p class="card-note"><strong>למה זה שווה:</strong> שומר על המערכות מעודכנות ומאובטחות בלי לפוצץ 40 בתים בבת אחת אם עדכון שובר משהו.</p>
+        <p class="card-note"><strong>דורש:</strong> ללא חיישן — מוניטורינג פנימי של Home Assistant בלבד.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="cat-section" id="cat-8">
+    <div class="cat-header">
+      <div class="cat-icon c8">👨‍👩‍👧</div>
+      <div>
+        <div class="cat-eng">Family &amp; Convenience</div>
+        <h2>משפחה ונוחות</h2>
+        <p class="cat-subtitle">אוטומציות שממקדות את המערכת בבני אדם ובחיות מחמד, לא רק ברכיבים — הכי טוב לשיח מכירה עם משפחות עם ילדים קטנים או הורים מזדקנים.</p>
+      </div>
+    </div>
+    <div class="card-grid">
+
+      <div class="card">
+        <div class="card-head"><h3>👶 בכי בחדר תינוק</h3><span class="badge badge-adv">מתקדם</span></div>
+        <p class="flow"><strong>טריגר:</strong> חיישן קול/מיקרופון בחדר התינוק מזהה בכי &nbsp;·&nbsp; <strong>תנאי:</strong> ההורים לא בחדר (לפי חיישן נוכחות) &nbsp;·&nbsp; <strong>פעולה:</strong> נוטיפיקציה מיידית + הדלקת תאורת לילה עמומה בחדר</p>
+        <p class="card-note"><strong>למה זה שווה:</strong> משלים מוניטור תינוקות רגיל עם אינטגרציה לשאר הבית (תאורה, התראה גם כשההורים בקומה אחרת).</p>
+        <p class="card-note"><strong>דורש:</strong> חיישן קול/מיקרופון עם זיהוי בכי (או אינטגרציה למוניטור תינוקות קיים), חיישן נוכחות.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><h3>👴 בדיקת "אין תנועה" לקשיש בבית</h3><span class="badge badge-adv">מתקדם</span></div>
+        <p class="flow"><strong>טריגר:</strong> אין תנועה בבית כלל במשך שעות היום הרגילות (למשל 4+ שעות בין 9:00–20:00) &nbsp;·&nbsp; <strong>תנאי:</strong> אמור להיות בבית (לפי לו"ז/Geofencing) &nbsp;·&nbsp; <strong>פעולה:</strong> נוטיפיקציה לבן משפחה מוגדר מראש לבדיקה טלפונית</p>
+        <p class="card-note"><strong>למה זה שווה:</strong> פיצ'ר "aging in place" חזק מאוד רגשית ומעשית — שוק שצומח, ומבדל מבתים חכמים "רגילים" שלא חושבים על זה.</p>
+        <p class="card-note"><strong>דורש:</strong> כיסוי חיישני נוכחות/תנועה טוב בכל הבית, לא רק בחדר אחד.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><h3>🐾 דלת חצר לחיית מחמד נשארה פתוחה</h3><span class="badge badge-easy">קל</span></div>
+        <p class="flow"><strong>טריגר:</strong> חיישן דלת/פתח לחצר במצב "פתוח" מעל 15 דקות &nbsp;·&nbsp; <strong>תנאי:</strong> טמפרטורת חוץ קיצונית (חם/קר מאוד) &nbsp;·&nbsp; <strong>פעולה:</strong> התראה לבדיקה</p>
+        <p class="card-note"><strong>למה זה שווה:</strong> נקודת מכירה נחמדה למשפחות עם חיות מחמד — מראה שהמוצר חושב על כל בני הבית, לא רק על בני האדם.</p>
+        <p class="card-note"><strong>דורש:</strong> חיישן מגע על פתח החצר, חיישן/מקור טמפרטורת חוץ.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><h3>🆘 כפתור SOS פיזי</h3><span class="badge badge-med">בינוני</span></div>
+        <p class="flow"><strong>טריגר:</strong> לחיצה על כפתור פיזי (בחדר שינה/מקלחת, למשל) &nbsp;·&nbsp; <strong>תנאי:</strong> ללא תנאי &nbsp;·&nbsp; <strong>פעולה:</strong> התראה מיידית לאיש קשר מוגדר + הדלקת כל התאורה בבית לניווט מהיר</p>
+        <p class="card-note"><strong>למה זה שווה:</strong> רלוונטי מאוד לבתים עם קשישים או ילדים — פתרון פשוט ופיזי, בלי צורך בטלפון או דיבור.</p>
+        <p class="card-note"><strong>דורש:</strong> כפתור Zigbee חכם (עמיד למים אם למקלחת), אינטגרציית התראות (SMS/וואטסאפ/נוטיפיקציה).</p>
+      </div>
+
+    </div>
+  </section>
+
+</main>
+
+<footer>עודכן 17/09/2026 · דף חי — כל רעיון חדש שעולה בשיחה עם לקוח או בהתקנה בשטח נכנס לכאן</footer>
+
+</body>
+</html>

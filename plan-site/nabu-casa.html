@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nabu Casa — השוואת שירותים — OneHome</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0f172a; --ink-soft: #475569; --muted: #64748b;
+    --bg: #f8fafc; --card-bg: #ffffff; --border: #e2e8f0;
+    --brand-blue: #0284c7; --brand-green: #059669;
+    --crit-bg: #fef2f2; --crit-fg: #b91c1c; --crit-bd:#fecaca;
+    --rec-bg: #ecfdf5; --rec-fg: #047857; --rec-bd:#a7f3d0;
+    --alt-bg: #f1f5f9; --alt-fg: #475569; --alt-bd:#e2e8f0;
+    --amber-bg:#fffbeb; --amber-fg:#92400e; --amber-bd:#fde68a;
+  }
+  * { box-sizing: border-box; }
+  body { margin:0; background: var(--bg); color: var(--ink); font-family:'Heebo',sans-serif; line-height:1.65; -webkit-font-smoothing:antialiased; }
+  a { color: inherit; }
+
+  .sitebar { position:sticky; top:0; z-index:60; background:#020617; border-bottom:1px solid #1e293b; }
+  .sitebar-inner { max-width: 1080px; margin:0 auto; padding: 10px 24px; display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap; }
+  .sitebar-logo { font-weight:800; font-size:15px; color:#f8fafc; text-decoration:none; display:flex; align-items:center; gap:8px; }
+  .sitebar-logo span { color:#5eead4; }
+  .sitebar-logo small { font-weight:500; color:#94a3b8; font-size:11.5px; }
+  .sitebar-links { display:flex; gap:4px; }
+  .sitebar-links a { text-decoration:none; color:#cbd5e1; font-size:13.5px; font-weight:600; padding:7px 14px; border-radius:8px; transition: background .15s ease, color .15s ease; }
+  .sitebar-links a:hover { background: rgba(255,255,255,0.08); color:#fff; }
+  .sitebar-links a.active { background: rgba(94,234,212,0.15); color:#5eead4; }
+
+  header.top { background: linear-gradient(135deg, #0f172a 0%, #0c4a6e 100%); color: #fff; padding: 48px 24px 40px; }
+  .top-inner { max-width: 1080px; margin: 0 auto; }
+  .eyebrow { display:inline-flex; align-items:center; gap:8px; background: rgba(255,255,255,0.12); border:1px solid rgba(255,255,255,0.25); padding:6px 14px; border-radius:20px; font-size:13px; font-weight:600; margin-bottom:16px; }
+  h1.page-title { font-size: 32px; font-weight:800; margin: 0 0 10px; }
+  .page-sub { color: #cbd5e1; font-size: 15.5px; max-width: 760px; margin:0; }
+
+  nav.chipnav { position: sticky; top:58px; z-index:50; background: rgba(248,250,252,0.92); backdrop-filter: blur(8px); border-bottom: 1px solid var(--border); padding: 12px 24px; overflow-x:auto; white-space:nowrap; }
+  nav.chipnav .chipnav-inner { max-width:1080px; margin:0 auto; display:flex; gap:8px; }
+  .chip { display:inline-flex; align-items:center; gap:6px; text-decoration:none; font-size:13px; font-weight:600; color: var(--ink-soft); background:#fff; border:1px solid var(--border); border-radius:20px; padding:7px 14px; flex:0 0 auto; }
+  .chip:hover { border-color: var(--brand-blue); color: var(--brand-blue); }
+
+  main { max-width: 1080px; margin: 0 auto; padding: 36px 24px 80px; }
+
+  .insight-box { background: linear-gradient(135deg,#0f172a,#0c4a6e); color:#fff; border-radius:18px; padding:28px 30px; margin-bottom:40px; }
+  .insight-box .tag { font-size:12px; letter-spacing:.06em; text-transform:uppercase; color:#5eead4; font-weight:700; margin-bottom:10px; }
+  .insight-box p { margin:0; font-size:17px; font-weight:600; line-height:1.6; color:#f1f5f9; }
+  .insight-box .src { display:block; margin-top:12px; font-size:12.5px; font-weight:500; color:#94a3b8; }
+  .insight-box .src a { color:#7dd3fc; text-decoration:underline; }
+
+  .section-title-row { display:flex; align-items:baseline; gap:10px; margin: 44px 0 6px; scroll-margin-top: 130px; }
+  .section-title-row h2 { margin:0; font-size:22px; font-weight:800; }
+  .section-sub { color: var(--muted); font-size:14px; margin: 0 0 18px; }
+
+  .comp-grid { display:grid; grid-template-columns: 1fr; gap:14px; }
+  @media (min-width: 720px) { .comp-grid { grid-template-columns: 1fr 1fr; } }
+
+  .comp-card { background: var(--card-bg); border:1px solid var(--border); border-radius:16px; padding:18px 20px; }
+  .comp-head { display:flex; align-items:flex-start; justify-content:space-between; gap:10px; margin-bottom:10px; flex-wrap:wrap; }
+  .comp-head h3 { margin:0; font-size:16.5px; font-weight:800; }
+
+  .badge { font-size:11px; font-weight:700; padding:3px 10px; border-radius:20px; white-space:nowrap; border:1px solid; }
+  .badge-default { background: var(--rec-bg); color: var(--rec-fg); border-color: var(--rec-bd); }
+  .badge-optional { background: var(--amber-bg); color: var(--amber-fg); border-color: var(--amber-bd); }
+  .badge-case { background: var(--alt-bg); color: var(--alt-fg); border-color: var(--alt-bd); }
+
+  .comp-role { margin:0 0 10px; font-size:14px; color: var(--ink-soft); }
+  .comp-row { display:flex; gap:8px; font-size:13.5px; margin-bottom:6px; align-items:flex-start; }
+  .comp-label { flex:0 0 auto; min-width:70px; font-weight:700; color: var(--muted); font-size:12px; padding-top:1px; }
+  .comp-strength span:last-child { color: var(--rec-fg); }
+  .comp-weakness span:last-child { color: var(--crit-fg); }
+  .comp-note { margin-top:8px; background:var(--amber-bg); border:1px solid var(--amber-bd); color:var(--amber-fg); border-radius:10px; padding:8px 12px; font-size:12.5px; font-weight:700; }
+
+  .compare-wrap { overflow-x:auto; border:1px solid var(--border); border-radius:16px; background:#fff; margin: 14px 0 10px; }
+  table.compare-table { width:100%; border-collapse:collapse; font-size:13.5px; min-width:760px; }
+  .compare-table th { text-align:right; background:var(--alt-bg); color:var(--ink-soft); font-weight:800; font-size:12px; padding:12px 14px; border-bottom:1px solid var(--border); white-space:nowrap; }
+  .compare-table td { padding:12px 14px; border-bottom:1px solid var(--border); vertical-align:top; }
+  .compare-table tr:last-child td { border-bottom:none; }
+  .compare-table td.comp-name { font-weight:800; white-space:nowrap; }
+  .compare-table .adv { color: var(--rec-fg); }
+  .compare-table .dis { color: var(--crit-fg); }
+
+  .trend-box { background:#fff; border:1px solid var(--border); border-radius:16px; padding:22px 26px; margin: 14px 0 10px; }
+  .trend-box ul { margin:0; padding-inline-start:20px; }
+  .trend-box li { margin-bottom:10px; font-size:14.5px; color: var(--ink-soft); }
+  .trend-box li strong { color: var(--ink); }
+
+  .conclusions { background: linear-gradient(135deg,#ecfdf5,#eff6ff); border:1px solid #bbf7d0; border-radius:18px; padding:26px 28px; margin-top:10px; }
+  .conclusions h2 { margin:0 0 14px; font-size:20px; }
+  .conclusions ul { margin:0; padding-inline-start:22px; }
+  .conclusions li { margin-bottom:12px; font-size:14.5px; color: var(--ink-soft); }
+  .conclusions li strong { color: var(--ink); }
+
+  .sources-box { margin-top:44px; background:#fff; border:1px dashed var(--border); border-radius:14px; padding:20px 24px; }
+  .sources-box h3 { margin:0 0 10px; font-size:13px; color: var(--muted); font-weight:800; text-transform:uppercase; letter-spacing:.04em; }
+  .sources-box ul { margin:0; padding-inline-start:20px; columns: 1; font-size:12.5px; }
+  @media (min-width:720px) { .sources-box ul { columns: 2; } }
+  .sources-box li { margin-bottom:8px; word-break: break-all; }
+  .sources-box a { color: var(--brand-blue); text-decoration:none; }
+  .sources-box a:hover { text-decoration:underline; }
+
+  footer { text-align:center; color: var(--muted); font-size:12.5px; padding: 30px 24px 50px; }
+
+  @media (max-width: 640px) { h1.page-title { font-size:24px; } }
+</style>
+</head>
+<body>
+
+<div class="sitebar"><div class="sitebar-inner">
+  <a href="index.html" class="sitebar-logo">One<span>Home</span> <small>· אתר פנימי</small></a>
+  <div class="sitebar-links">
+    <a href="index.html">בית</a>
+    <a href="vision.html">חזון העסק</a>
+    <a href="products.html">רשימת מוצרים</a>
+    <a href="competitors.html">מתחרים</a>
+    <a href="prds.html">PRD-ים</a>
+    <a href="kb.html">ידע טכני</a>
+    <a href="automations.html">רעיונות לאוטומציות</a>
+    <a href="nabu-casa.html" class="active">Nabu Casa</a>
+    <a href="ohf.html">Open Home Foundation</a>
+  </div>
+</div></div>
+
+<header class="top">
+  <div class="top-inner">
+    <span class="eyebrow">☁️ ספק — נבדק 17–18/09/2026</span>
+    <h1 class="page-title">Nabu Casa (Home Assistant Cloud) — כל השירותים, יתרון מול חיסרון</h1>
+    <p class="page-sub">מנוי אחד, 7 שירותים שונים — לא כולם צריכים להיות דלוקים כברירת מחדל אצל כל לקוח. הדף הזה מרכז בפורמט השוואתי החלטות שמתועדות בנפרד בפרויקט Claude (ניתוח הרשת/אבטחה ובחירת השירותים).</p>
+  </div>
+</header>
+
+<nav class="chipnav"><div class="chipnav-inner">
+  <a href="#pricing" class="chip"><span>💰</span><span>תמחור</span></a>
+  <a href="#services" class="chip"><span>🧩</span><span>7 השירותים</span></a>
+  <a href="#compare" class="chip"><span>⚖️</span><span>טבלה מרוכזת</span></a>
+  <a href="#local" class="chip"><span>🏠</span><span>מה נשאר מקומי לגמרי</span></a>
+  <a href="#conclusions" class="chip"><span>🎯</span><span>מסקנות</span></a>
+</div></nav>
+
+<main>
+
+  <div id="pricing" class="insight-box">
+    <div class="tag">תמחור — מחיר רשמי, נבדק 17/09/2026</div>
+    <p>6.50$ לחודש, או 65$ לשנה (יוצא כ-5.42$/חודש) — מחיר בינלאומי אחד לכל 7 השירותים ביחד. אין תמחור נפרד לכל פיצ'ר, ואין הנחת נפח למתקינים שידועה כרגע (ממתינים לתשובת Nabu Casa למכתב שנשלח).</p>
+    <span class="src">מקור: <a href="https://www.nabucasa.com/pricing/" target="_blank" rel="noopener">nabucasa.com/pricing ↗</a> · רשימת שירותים: <a href="https://support.nabucasa.com/hc/en-us/categories/24734619902749-Home-Assistant-Cloud" target="_blank" rel="noopener">support.nabucasa.com ↗</a></span>
+  </div>
+
+  <div id="services" class="section-title-row"><h2>🧩 7 השירותים במנוי — יתרון מול חיסרון</h2></div>
+  <p class="section-sub">כולם עוברים דרך שרתי הענן של Nabu Casa — השאלה היא לא "בטוח/לא בטוח" באופן גורף, אלא איזה מהם מתאים כברירת מחדל לכל לקוח, ואיזה צריך להישאר בחירה מוצהרת.</p>
+
+  <div class="comp-grid">
+
+    <article class="comp-card">
+      <div class="comp-head">
+        <h3>🔐 גישה מרחוק (Remote UI)</h3>
+        <span class="badge badge-optional">אופציונלי ללקוח</span>
+      </div>
+      <p class="comp-role">פתיחת דשבורד ה-HA ושליטה בו מכל מקום, בכתובת קבועה שלא תלויה ב-IP הביתי.</p>
+      <div class="comp-row comp-strength"><span class="comp-label">יתרון</span><span>הצפנה אמיתית מקצה לקצה (ספריית snitun — המפתח הפרטי נשאר על ה-HA, גם Nabu Casa לא יכולה לפענח). אין פתיחת פורטים, אפס תחזוקה.</span></div>
+      <div class="comp-row comp-weakness"><span class="comp-label">חיסרון</span><span>תלות בזמינות השירות של Nabu Casa; עלות שוטפת שלא כולם צריכים.</span></div>
+      <div class="comp-note">ברירת מחדל בכל התקנה: גישה מרשת פנימית בלבד + Push notifications. זו תוספת בתשלום, לא חלק מהבסיס.</div>
+    </article>
+
+    <article class="comp-card">
+      <div class="comp-head">
+        <h3>🗣️ Google Assistant / Alexa</h3>
+        <span class="badge badge-optional">אופציונלי ללקוח</span>
+      </div>
+      <p class="comp-role">חיבור ה-HA לעוזרים הקוליים המסחריים (מכשירי Google Home / Amazon Echo שכבר יש ללקוח).</p>
+      <div class="comp-row comp-strength"><span class="comp-label">יתרון</span><span>האלטרנטיבה המעשית היחידה — עצמאית דורשת Developer Console נפרד אצל גוגל/אמזון ותהליך אימות מורכב.</span></div>
+      <div class="comp-row comp-weakness"><span class="comp-label">חיסרון</span><span>תלות בענן גוגל/אמזון בנוסף לענן Nabu Casa; לא רלוונטי ללקוח שרוצה שליטה קולית מקומית בלבד.</span></div>
+      <div class="comp-note">שימושי רק ללקוח שכבר משתמש ב-Google Home/Alexa ורוצה לשלב אותם — לא קשור ל-Home Assistant Voice PE (ראו "מה נשאר מקומי" למטה).</div>
+    </article>
+
+    <article class="comp-card">
+      <div class="comp-head">
+        <h3>💾 גיבוי ענן</h3>
+        <span class="badge badge-default">כן — כשכבה נוספת</span>
+      </div>
+      <p class="comp-role">שמירת גיבוי HA אוטומטי בענן של Nabu Casa, מוצפן.</p>
+      <div class="comp-row comp-strength"><span class="comp-label">יתרון</span><span>אפס תצורה, כלול באותו מחיר, מוצפן מקצה לקצה.</span></div>
+      <div class="comp-row comp-weakness"><span class="comp-label">חיסרון</span><span>שומר רק את הגיבוי <strong>האחרון</strong> — אין היסטוריה של כמה גרסאות.</span></div>
+      <div class="comp-note">כדאי לשלב יעד גיבוי נוסף (Google Drive/OneDrive/NAS) לצד זה, לא במקומו — למי שרוצה גם לחזור אחורה בזמן.</div>
+    </article>
+
+    <article class="comp-card">
+      <div class="comp-head">
+        <h3>🔊 Text-to-Speech (TTS)</h3>
+        <span class="badge badge-case">לא כברירת מחדל</span>
+      </div>
+      <p class="comp-role">הפקת קול טבעי לתשובות/הודעות קוליות של ה-HA, מעובד בענן.</p>
+      <div class="comp-row comp-strength"><span class="comp-label">יתרון</span><span>איכות קול טבעית משמעותית יותר מהפתרון המקומי החינמי (Piper).</span></div>
+      <div class="comp-row comp-weakness"><span class="comp-label">חיסרון</span><span>מתנגש עם המסר השיווקי הקיים ל-Voice PE ("Local Voice Control... ללא חדירה לפרטיות") — טקסט יוצא לענן.</span></div>
+      <div class="comp-note">ברירת מחדל למכשירי Voice PE: Piper מקומי. TTS ענני — רק תוספת מוצהרת למי שמעדיף איכות קול על פני פרטיות מלאה.</div>
+    </article>
+
+    <article class="comp-card">
+      <div class="comp-head">
+        <h3>🎙️ Speech-to-Text (STT)</h3>
+        <span class="badge badge-case">לא כברירת מחדל</span>
+      </div>
+      <p class="comp-role">זיהוי דיבור — הקלטת הקול הנכנס מעובדת בענן כדי להפוך לטקסט.</p>
+      <div class="comp-row comp-strength"><span class="comp-label">יתרון</span><span>דיוק זיהוי גבוה יותר מ-Whisper המקומי במקרים מסוימים.</span></div>
+      <div class="comp-row comp-weakness"><span class="comp-label">חיסרון</span><span>הפיצ'ר הקולי הכי רגיש מבחינת פרטיות — לא רק טקסט, ההקלטה הקולית עצמה יוצאת לענן. אותה התנגשות עם Voice PE כמו TTS.</span></div>
+      <div class="comp-note">ברירת מחדל: Whisper מקומי, אותו PC שכבר בתכנון. ענני — רק תוספת מוצהרת.</div>
+    </article>
+
+    <article class="comp-card">
+      <div class="comp-head">
+        <h3>🔗 Webhook Triggers</h3>
+        <span class="badge badge-default">כן — לפי צורך</span>
+      </div>
+      <p class="comp-role">כתובת URL ציבורית קבועה שמאפשרת לשירות חיצוני להפעיל אוטומציה ב-HA.</p>
+      <div class="comp-row comp-strength"><span class="comp-label">יתרון</span><span>מנגנון הפעלה חיצוני פשוט, בלי לפתוח פורט או לחשוף את ה-HA ישירות.</span></div>
+      <div class="comp-row comp-weakness"><span class="comp-label">חיסרון</span><span>ה-payload שנשלח עובר דרך הענן — תלוי מה בדיוק שולחים, לא נושא נתוני לקוח רגישים כשלעצמו.</span></div>
+      <div class="comp-note">אין סיבה להימנע — להפעיל נקודתית לפי צורך אוטומציה ספציפי, לבדוק תוכן ה-payload בכל מקרה.</div>
+    </article>
+
+    <article class="comp-card">
+      <div class="comp-head">
+        <h3>📹 WebRTC Camera Streaming</h3>
+        <span class="badge badge-case">לא כברירת מחדל</span>
+      </div>
+      <p class="comp-role">שיפור סטרימינג מצלמות לצפייה חיה וחלקה כשהלקוח מרחוק.</p>
+      <div class="comp-row comp-strength"><span class="comp-label">יתרון</span><span>צפייה חיה משמעותית יותר חלקה/מהירה כשהלקוח בחוץ, מול פתרונות ניתוב סטנדרטיים.</span></div>
+      <div class="comp-row comp-weakness"><span class="comp-label">חיסרון</span><span>מצלמות הן הקטגוריה הכי רגישה בכל הדיון הזה — הפיד עובר דרך שרתי ענן חיצוניים.</span></div>
+      <div class="comp-note">הקלטה/זיהוי AI (Frigate/Coral AI) נשארים מקומיים לגמרי בכל מקרה. זה רק לצפייה חיה מרחוק — תוספת מוצהרת, לא ברירת מחדל אוטומטית לכל לקוח עם מצלמה.</div>
+    </article>
+
+  </div>
+
+  <div id="compare" class="section-title-row"><h2>⚖️ טבלה מרוכזת — כל 7 השירותים</h2></div>
+  <div class="compare-wrap">
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th>שירות</th>
+          <th>נתונים שיוצאים לענן</th>
+          <th>יתרון עיקרי</th>
+          <th>חיסרון עיקרי</th>
+          <th>המלצה</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td class="comp-name">גישה מרחוק</td><td>שליטה/צפייה בדשבורד (מוצפן מקצה לקצה)</td><td class="adv">אפס תחזוקה, כתובת קבועה</td><td class="dis">תלות בזמינות Nabu Casa</td><td>אופציונלי ללקוח</td></tr>
+        <tr><td class="comp-name">Alexa/Google</td><td>פקודות/סטטוס מכשירים</td><td class="adv">אין חלופה מעשית עצמאית</td><td class="dis">תלות ענן כפולה (Nabu Casa + גוגל/אמזון)</td><td>אופציונלי ללקוח</td></tr>
+        <tr><td class="comp-name">גיבוי ענן</td><td>גיבוי HA מלא, מוצפן</td><td class="adv">אפס תצורה</td><td class="dis">רק הגיבוי האחרון, לא היסטוריה</td><td>כן, כשכבה נוספת</td></tr>
+        <tr><td class="comp-name">TTS</td><td>טקסט לסינתזת דיבור</td><td class="adv">איכות קול טבעית</td><td class="dis">סותר מסר Local Voice של Voice PE</td><td>לא כברירת מחדל</td></tr>
+        <tr><td class="comp-name">STT</td><td>הקלטת קול גולמית</td><td class="adv">דיוק זיהוי גבוה</td><td class="dis">הפיצ'ר הקולי הכי רגיש</td><td>לא כברירת מחדל</td></tr>
+        <tr><td class="comp-name">Webhooks</td><td>payload האוטומציה בלבד</td><td class="adv">הפעלה חיצונית פשוטה</td><td class="dis">תלוי בתוכן ה-payload</td><td>כן, לפי צורך</td></tr>
+        <tr><td class="comp-name">WebRTC מצלמות</td><td>פיד וידאו חי</td><td class="adv">צפייה חיה חלקה</td><td class="dis">הקטגוריה הכי רגישה (מצלמות)</td><td>לא כברירת מחדל</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div id="local" class="section-title-row"><h2>🏠 מה נשאר מקומי לגמרי, בכל מקרה</h2></div>
+  <div class="trend-box">
+    <ul>
+      <li><strong>אוטומציות, חיישנים, בקרת מכשירים</strong> — תמיד רצות מקומית על ה-HA עצמו, לא תלויות בענן בכלל, גם אם האינטרנט נופל.</li>
+      <li><strong>התראות חירום (הצפה/עשן/נוכחות חריגה)</strong> — Push חד-כיווני דרך Firebase/Apple, לא דרך Nabu Casa, עובד גם ב"מקומי בלבד".</li>
+      <li><strong>זיהוי/הקלטת מצלמות</strong> — Frigate + Coral AI על ה-Mini PC, מקומי לגמרי, לא קשור ל-WebRTC streaming של Nabu Casa.</li>
+      <li><strong>פייפליין קולי ל-Voice PE</strong> — Whisper (STT) + Piper (TTS), שניהם מקומיים, ברירת המחדל שמצדיקה את המסר "ללא חדירה לפרטיות".</li>
+    </ul>
+  </div>
+
+  <div id="conclusions" class="conclusions">
+    <h2>🎯 מסקנות</h2>
+    <ul>
+      <li><strong>עיקרון כללי:</strong> להשתמש בסל המלא של Nabu Casa כברירת מחדל — זה חוסך תחזוקה, וזה ספק אחד עם DPA אחד במקום כמה ספקים נקודתיים.</li>
+      <li><strong>שני חריגים מפורשים:</strong> TTS/STT ו-WebRTC camera streaming לא דלוקים כברירת מחדל — כי הם מתנגשים עם מסרים שיווקיים קיימים (Voice PE) או נוגעים בקטגוריית הנתונים הכי רגישה (מצלמות).</li>
+      <li><strong>שאר השירותים</strong> (גישה מרחוק, Alexa/Google, גיבוי, Webhooks) — תוספות אופציונליות תקינות ומומלצות, כל אחת מהסיבה שלה.</li>
+      <li><strong>ל-PRD 3 (Onboarding)</strong> — צריך checkbox נפרד לכל שירות, לא מתג "Nabu Casa: כן/לא" גורף אחד.</li>
+      <li><strong>מי מחזיק את המנוי (עודכן 18/09):</strong> כרגע כל לקוח פותח ומשלם בעצמו על ה-Nabu Casa subscription, וגיא מלווה בהתקנה — זהו מודל זמני. Andy Gill (Nabu Casa, Business Development) אישר במייל שתוכנית מתקינים/אינטגרטורים בפיתוח, ותכלול ככל הנראה ניהול Cloud מרוכז ללקוחות וגם מרווח על חומרה מעל ה-MSRP, עם תשתית חיוב parent/child שכמעט גמורה — אך בלי תאריכים ובלי תמחור בשלב זה. ראו <code>decision-network-access.md</code>.</li>
+    </ul>
+  </div>
+
+  <div class="sources-box">
+    <h3>מקורות</h3>
+    <ul>
+      <li><a href="https://www.nabucasa.com/pricing/" target="_blank" rel="noopener">nabucasa.com/pricing</a></li>
+      <li><a href="https://support.nabucasa.com/hc/en-us/categories/24734619902749-Home-Assistant-Cloud" target="_blank" rel="noopener">support.nabucasa.com — Home Assistant Cloud</a></li>
+      <li><a href="https://support.nabucasa.com/hc/en-us/articles/26260474250269" target="_blank" rel="noopener">support.nabucasa.com — List of Home Assistant Cloud features</a></li>
+      <li><a href="https://support.nabucasa.com/hc/en-us/articles/26508882007581-Remote-access-Security-aspects" target="_blank" rel="noopener">support.nabucasa.com — Remote access security aspects</a></li>
+      <li><a href="https://github.com/NabuCasa/snitun/" target="_blank" rel="noopener">github.com/NabuCasa/snitun</a></li>
+    </ul>
+  </div>
+
+</main>
+
+<footer>נוצר 18/09/2026 · מבוסס על decision-network-access.md ו-decision-nabu-casa-services.md · מתעדכן לפי החלטות גיא</footer>
+
+</body>
+</html>

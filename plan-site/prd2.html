@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PRD 2 — חוויית הלקוח — OneHome</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0f172a; --ink-soft: #475569; --muted: #64748b; --bg: #f8fafc;
+    --card-bg: #ffffff; --border: #e2e8f0; --brand-blue: #0284c7; --brand-green: #059669;
+    --draft-bg: #fffbeb; --draft-fg: #92400e; --draft-bd: #fde68a;
+    --done-bg: #ecfdf5; --done-fg: #047857; --done-bd: #a7f3d0;
+    --empty-bg: #f1f5f9; --empty-fg: #64748b; --empty-bd: #e2e8f0;
+  }
+  * { box-sizing: border-box; }
+  body { margin:0; background: var(--bg); color: var(--ink); font-family: 'Heebo', sans-serif; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+  a { color: inherit; }
+  header.top { background: linear-gradient(135deg, #0f172a 0%, #0c4a6e 100%); color: #fff; padding: 52px 24px 44px; }
+  .top-inner { max-width: 880px; margin: 0 auto; }
+  .eyebrow { display:inline-flex; align-items:center; gap:8px; background: rgba(255,255,255,0.12); border:1px solid rgba(255,255,255,0.25); padding:6px 14px; border-radius:20px; font-size:13px; font-weight:600; margin-bottom:16px; }
+  h1.page-title { font-size: 36px; font-weight:800; margin: 0 0 10px; }
+  h1.page-title span { color:#5eead4; }
+  .page-sub { color: #cbd5e1; font-size: 15.5px; max-width: 640px; margin:0; }
+  .breadcrumb { max-width:880px; margin:0 auto; padding: 14px 24px 0; }
+  .breadcrumb a { font-size:13px; font-weight:600; color:#7dd3fc; text-decoration:none; }
+  .breadcrumb a:hover { text-decoration:underline; }
+  main { max-width: 880px; margin: 0 auto; padding: 40px 24px 80px; }
+  section.block { background:#fff; border:1px solid var(--border); border-radius:18px; padding: 28px 30px; margin-bottom: 22px; }
+  .block-head { display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:14px; }
+  .block-head-left { display:flex; align-items:center; gap:14px; }
+  .letter-badge { flex:0 0 auto; width:42px; height:42px; border-radius:12px; background: linear-gradient(135deg, var(--brand-blue), var(--brand-green)); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:17px; }
+  .block-head h2 { margin:0; font-size:20px; font-weight:800; }
+  .status { font-size:11.5px; font-weight:700; padding:4px 12px; border-radius:20px; border:1px solid; white-space:nowrap; }
+  .status-draft { background: var(--draft-bg); color: var(--draft-fg); border-color: var(--draft-bd); }
+  .status-empty { background: var(--empty-bg); color: var(--empty-fg); border-color: var(--empty-bd); }
+  .block p { margin: 0 0 10px; color: var(--ink-soft); font-size:15px; }
+  .block ul { margin: 8px 0 0; padding-inline-start: 22px; }
+  .block li { margin-bottom: 9px; font-size:15px; color: var(--ink-soft); }
+  .block li strong { color: var(--ink); }
+  .idea-box { background: var(--bg); border:1px dashed var(--border); border-radius:14px; padding:18px 22px; margin-top:8px; }
+  .idea-box h3 { margin:0 0 8px; font-size:14px; color: var(--brand-blue); font-weight:800; }
+  .placeholder-list { display:grid; grid-template-columns: 1fr; gap:10px; margin-top:10px; }
+  @media (min-width: 640px) { .placeholder-list { grid-template-columns: 1fr 1fr; } }
+  .ph-item { background: var(--bg); border:1px dashed var(--border); border-radius:10px; padding:12px 14px; font-size:13.5px; color: var(--muted); }
+  footer { text-align:center; color: var(--muted); font-size:12.5px; padding: 10px 24px 50px; }
+  .sitebar { position:sticky; top:0; z-index:60; background:#020617; border-bottom:1px solid #1e293b; }
+  .sitebar-inner { max-width: 1000px; margin:0 auto; padding: 10px 24px; display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap; }
+  .sitebar-logo { font-weight:800; font-size:15px; color:#f8fafc; text-decoration:none; display:flex; align-items:center; gap:8px; }
+  .sitebar-logo span { color:#5eead4; }
+  .sitebar-logo small { font-weight:500; color:#94a3b8; font-size:11.5px; }
+  .sitebar-links { display:flex; gap:4px; }
+  .sitebar-links a { text-decoration:none; color:#cbd5e1; font-size:13.5px; font-weight:600; padding:7px 14px; border-radius:8px; transition: background .15s ease, color .15s ease; }
+  .sitebar-links a:hover { background: rgba(255,255,255,0.08); color:#fff; }
+  .sitebar-links a.active { background: rgba(94,234,212,0.15); color:#5eead4; }
+</style>
+</head>
+<body>
+<div class="sitebar"><div class="sitebar-inner">
+  <a href="index.html" class="sitebar-logo">One<span>Home</span> <small>· אתר פנימי</small></a>
+  <div class="sitebar-links">
+    <a href="index.html">בית</a>
+    <a href="vision.html">חזון העסק</a>
+    <a href="products.html">רשימת מוצרים</a>
+    <a href="competitors.html">מתחרים</a>
+    <a href="prds.html" class="active">PRD-ים</a>
+    <a href="kb.html">ידע טכני</a>
+    <a href="automations.html">רעיונות לאוטומציות</a>
+    <a href="nabu-casa.html">Nabu Casa</a>
+    <a href="ohf.html">Open Home Foundation</a>
+  </div>
+</div></div>
+
+<div class="breadcrumb"><a href="prds.html">← כל ה-PRD-ים</a></div>
+
+<header class="top">
+  <div class="top-inner">
+    <span class="eyebrow">📱 PRD 2 — רק זרע רעיון, טרם התחלנו לבנות</span>
+    <h1 class="page-title">חוויית הלקוח</h1>
+    <p class="page-sub">איך הלקוח בפועל רואה ומרגיש את השירות ביום-יום — דשבורד? ערוץ תקשורת? עדיין לא נדון לעומק. נפתח את זה בהמשך; בינתיים נשמר כאן רעיון אחד שעלה בשיחה על PRD 1, כדי שלא נאבד אותו.</p>
+  </div>
+</header>
+
+<main>
+
+  <section class="block">
+    <div class="block-head">
+      <div class="block-head-left"><div class="letter-badge">💡</div><h2>רעיון שנשמר — שקיפות ערך הריטיינר ללקוח</h2></div>
+      <span class="status status-draft">✎ רעיון ראשוני — מ-16/09</span>
+    </div>
+    <p>הבעיה: אחרי ההתקנה, לקוח שלא מבין בתוכנה לא תמיד מבין למה הוא ממשיך לשלם ריטיינר חודשי — השירות ה"עובד טוב" הוא בלתי נראה, בדיוק כמו ביטוח או שירות רכב.</p>
+    <div class="idea-box">
+      <h3>הצעה מרכזית — דוח ערך חודשי אוטומטי ב-WhatsApp</h3>
+      <p style="margin:0">הודעה קצרה כל חודש עם 3-4 מספרים קונקרטיים, מנתונים שכבר קיימים במערכת בלי עלות נוספת (HEMS, לוג גיבויים, לוג עדכונים): כמה ₪ נחסכו בחשמל החודש (בקרת דוד/מזגן), כמה גיבויים הושלמו בהצלחה, כמה עדכוני אבטחה הותקנו, וכמה תקלות קריטיות היו (ואיך טופלו). הופך "מה שקורה ברקע" למשהו שהלקוח מקבל בפועל, כמו קבלה על מה שהוא משלם עליו.</p>
+    </div>
+    <ul style="margin-top:14px">
+      <li><strong>מסגור בשיחת המכירה, לא רק אחרי:</strong> ההתקנה = החומרה; הריטיינר = מה ששומר עליה עובדת/מעודכנת/מגובה — אנלוגיה לשירות רכב/ביטוח שהלקוח כבר מכיר ומקבל.</li>
+      <li><strong>דיבור על מניעת סיכון, לא רק נוחות:</strong> "בלי הריטיינר — פרצת אבטחה לא מתוקנת, חיישן הצפה שנפל לא מזוהה" — שפת מניעת הפסד, לרוב משכנעת יותר.</li>
+    </ul>
+  </section>
+
+  <div class="idea-box" style="text-align:center;color:var(--muted);font-size:13.5px">
+    שאר ה-PRD (משתמשים, Scope, דרישות פונקציונליות, דרישות לא-פונקציונליות וכו') ייבנה בשיחה נפרדת, באותה שיטה שהשתמשנו בה ב-PRD 1.
+  </div>
+
+</main>
+
+<footer>נוצר 16/09/2026 · PRD 2 — רעיון ראשוני בלבד</footer>
+
+</body>
+</html>

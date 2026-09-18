@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PRD-ים — OneHome</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0f172a;
+    --ink-soft: #475569;
+    --muted: #64748b;
+    --bg: #f8fafc;
+    --card-bg: #ffffff;
+    --border: #e2e8f0;
+    --brand-blue: #0284c7;
+    --brand-green: #059669;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin:0; background: var(--bg); color: var(--ink);
+    font-family: 'Heebo', sans-serif; line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; }
+
+  .sitebar { position:sticky; top:0; z-index:60; background:#020617; border-bottom:1px solid #1e293b; }
+  .sitebar-inner { max-width: 1000px; margin:0 auto; padding: 10px 24px; display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap; }
+  .sitebar-logo { font-weight:800; font-size:15px; color:#f8fafc; text-decoration:none; display:flex; align-items:center; gap:8px; }
+  .sitebar-logo span { color:#5eead4; }
+  .sitebar-logo small { font-weight:500; color:#94a3b8; font-size:11.5px; }
+  .sitebar-links { display:flex; gap:4px; }
+  .sitebar-links a {
+    text-decoration:none; color:#cbd5e1; font-size:13.5px; font-weight:600;
+    padding:7px 14px; border-radius:8px; transition: background .15s ease, color .15s ease;
+  }
+  .sitebar-links a:hover { background: rgba(255,255,255,0.08); color:#fff; }
+  .sitebar-links a.active { background: rgba(94,234,212,0.15); color:#5eead4; }
+
+  header.top {
+    background: linear-gradient(135deg, #0f172a 0%, #0c4a6e 100%);
+    color: #fff; padding: 64px 24px 56px; text-align:center;
+  }
+  .top-inner { max-width: 720px; margin: 0 auto; }
+  .eyebrow {
+    display:inline-flex; align-items:center; gap:8px;
+    background: rgba(255,255,255,0.12); border:1px solid rgba(255,255,255,0.25);
+    padding:6px 14px; border-radius:20px; font-size:13px; font-weight:600; margin-bottom:18px;
+  }
+  h1.page-title { font-size: 38px; font-weight:800; margin: 0 0 12px; }
+  h1.page-title span { color:#5eead4; }
+  .page-sub { color: #cbd5e1; font-size: 16px; margin:0; }
+
+  main { max-width: 880px; margin: 0 auto; padding: 44px 24px 80px; }
+
+  .grid { display:grid; grid-template-columns: 1fr; gap:16px; }
+  @media (min-width: 640px) { .grid { grid-template-columns: 1fr 1fr; } }
+
+  .page-card {
+    display:block; text-decoration:none; color:inherit; position:relative;
+    background: var(--card-bg); border:1px solid var(--border); border-radius:18px;
+    padding: 26px 28px; transition: transform .15s ease, border-color .15s ease, box-shadow .15s ease;
+  }
+  .page-card:hover { transform: translateY(-3px); border-color: var(--brand-blue); box-shadow: 0 12px 28px -8px rgba(2,132,199,0.25); }
+  .page-card .icon {
+    width:46px; height:46px; border-radius:13px; display:flex; align-items:center; justify-content:center;
+    font-size:22px; background: linear-gradient(135deg, var(--brand-blue), var(--brand-green)); margin-bottom:16px;
+  }
+  .page-card h2 { margin:0 0 8px; font-size:19px; font-weight:800; }
+  .page-card p { margin:0 0 14px; font-size:14px; color: var(--ink-soft); }
+  .page-card .go { font-size:13px; font-weight:700; color: var(--brand-blue); }
+
+  .page-card.soon { cursor:default; border-style:dashed; opacity:.7; }
+  .page-card.soon:hover { transform:none; box-shadow:none; border-color:var(--border); }
+  .page-card.soon .icon { background: #e2e8f0; color:#94a3b8; }
+  .page-card.soon .go { color: var(--muted); }
+
+  .pill { position:absolute; top:22px; left:24px; font-size:11px; font-weight:700; padding:4px 11px; border-radius:20px; }
+  .pill-progress { background:#fffbeb; color:#92400e; border:1px solid #fde68a; }
+  .pill-todo { background:#f1f5f9; color:#64748b; border:1px solid var(--border); }
+
+  footer { text-align:center; color: var(--muted); font-size:12.5px; padding: 10px 24px 50px; }
+
+  @media (max-width: 640px) {
+    h1.page-title { font-size:28px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="sitebar"><div class="sitebar-inner">
+  <a href="index.html" class="sitebar-logo">One<span>Home</span> <small>· אתר פנימי</small></a>
+  <div class="sitebar-links">
+    <a href="index.html">בית</a>
+    <a href="vision.html">חזון העסק</a>
+    <a href="products.html">רשימת מוצרים</a>
+    <a href="competitors.html">מתחרים</a>
+    <a href="prds.html" class="active">PRD-ים</a>
+    <a href="kb.html">ידע טכני</a>
+    <a href="automations.html">רעיונות לאוטומציות</a>
+    <a href="nabu-casa.html">Nabu Casa</a>
+    <a href="ohf.html">Open Home Foundation</a>
+  </div>
+</div></div>
+
+<header class="top">
+  <div class="top-inner">
+    <span class="eyebrow">📋 מסמכי דרישות מוצר — עבודה בתהליך</span>
+    <h1 class="page-title">PRD-ים — One<span>Home</span></h1>
+    <p class="page-sub">אפיון המוצר מפוצל לפי רכיב: כל PRD מגדיר scope, דרישות ומדדי הצלחה לחלק אחד מהמערכת, כדי שאפשר יהיה לבנות ולבדוק כל חלק בנפרד בלי לטבוע במסמך אחד ענק.</p>
+  </div>
+</header>
+
+<main>
+  <div class="grid">
+
+    <a href="prd1.html" class="page-card">
+      <span class="pill" style="background:#ecfdf5;color:#047857;border:1px solid #a7f3d0">טיוטה ראשונה מוכנה</span>
+      <div class="icon">🧩</div>
+      <h2>PRD 1 — שירות הליבה</h2>
+      <p>התקנה + ריטיינר חודשי: הרכב חבילות לפי 9 קטגוריות, SLA, תמחור, פרטיות וגיבויים — סגור לשלב הביקורת. נותר לאמת מול חשמלאי בפועל.</p>
+      <div class="go">לפתוח ←</div>
+    </a>
+
+    <a href="prd2.html" class="page-card">
+      <span class="pill" style="background:#fffbeb;color:#92400e;border:1px solid #fde68a">רעיון ראשון נשמר</span>
+      <div class="icon">📱</div>
+      <h2>PRD 2 — חוויית הלקוח</h2>
+      <p>דשבורד / ערוץ תקשורת — איך הלקוח רואה ומרגיש את השירות. נשמר רעיון על שקיפות ערך הריטיינר; שאר ה-PRD טרם נבנה.</p>
+      <div class="go">לפתוח ←</div>
+    </a>
+
+    <div class="page-card soon">
+      <span class="pill pill-todo">טרם התחלנו</span>
+      <div class="icon">🛠️</div>
+      <h2>PRD 3 — Onboarding והתקנה</h2>
+      <p>ה-SOP המלא: מפגישת מכירה ראשונה ועד "הבית חי" — סדר עבודה, checklist, מסירה ללקוח.</p>
+      <div class="go">בקרוב</div>
+    </div>
+
+    <a href="prd4.html" class="page-card">
+      <span class="pill" style="background:#fffbeb;color:#92400e;border:1px solid #fde68a">רעיון ראשון נשמר</span>
+      <div class="icon">🗂️</div>
+      <h2>PRD 4 — כלי ניהול פנימי</h2>
+      <p>Fleet/Ops — איך גיא עוקב אחרי כמה בתים במקביל. כולל את החלטת הארכיטקטורה של Watchman (הועברה מ-PRD 1) ורעיון על ניהול שגיאות תוכנה (Sentry); שאר ה-PRD טרם נבנה.</p>
+      <div class="go">לפתוח ←</div>
+    </a>
+
+    <a href="prd5.html" class="page-card">
+      <span class="pill" style="background:#fffbeb;color:#92400e;border:1px solid #fde68a">רעיון ראשון נשמר</span>
+      <div class="icon">🛍️</div>
+      <h2>PRD 5 — חנות תוספות למנויים</h2>
+      <p>מוצרים המתחברים ל-Home Assistant (משלוח + הגדרה מרחוק) ומוצרים עצמאיים מיוחדים (אחריות יצרן בלבד) — למנויים קיימים דרך האתר. לא חוסם את PRD 3.</p>
+      <div class="go">לפתוח ←</div>
+    </a>
+
+  </div>
+</main>
+
+<footer>עודכן 17/09/2026 · אתר עבודה פנימי, מתעדכן לפי החלטות גיא</footer>
+
+</body>
+</html>
