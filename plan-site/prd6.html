@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PRD 2 — חוויית הלקוח: דשבורד — OneHome</title>
+<title>PRD 6 — ערוץ תקשורת — OneHome</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -77,24 +77,53 @@
 
 <header class="top">
   <div class="top-inner">
-    <span class="eyebrow">📱 PRD 2 — רק זרע רעיון, טרם התחלנו לבנות</span>
-    <h1 class="page-title">חוויית הלקוח — <span>דשבורד</span></h1>
-    <p class="page-sub">איך הלקוח רואה ושולט בבית ביום-יום. החלק המרכזי בחוויית הלקוח, שאותו מתכננים לעצב בקפידה כך שיהיה נגיש ונוח לשימוש. ערוץ התקשורת עבר ל-PRD 6.</p>
+    <span class="eyebrow">💬 PRD 6 — רק זרע רעיון, טרם התחלנו לבנות</span>
+    <h1 class="page-title">ערוץ <span>תקשורת</span></h1>
+    <p class="page-sub">איך הלקוח מדבר איתנו ואיך אנחנו מדברים איתו לאורך חיי השירות: תמיכה, עדכונים ושקיפות ערך הריטיינר. חלק מרכזי ביצירת לקוחות מרוצים.</p>
   </div>
 </header>
 
 <main>
   <section class="block">
     <div class="block-head">
-      <div class="block-head-left"><div class="letter-badge">🖥️</div><h2>הדשבורד — החלק המרכזי בחוויית הלקוח</h2></div>
-      <span class="status status-draft">✎ הוגדר 19/09</span>
+      <div class="block-head-left"><div class="letter-badge">💬</div><h2>למה PRD נפרד</h2></div>
+      <span class="status status-draft">✎ הוחלט 19/09</span>
     </div>
-    <p>הדשבורד הוא המקום שבו הלקוח רואה ושולט בבית שלו, ולכן הוא מקבל PRD משלו ולא משותף עם ערוץ התקשורת. הכיוון שהוגדר: להשקיע בעיצוב שלו ולהפוך אותו לנגיש ונוח באמת לשימוש יומיומי.</p>
+    <p>ערוץ התקשורת עם הלקוח הוא חלק מהותי משירות הלקוח ומיצירת לקוחות מרוצים, גם אם ההיקף שלו קטן יחסית לדשבורד. לכן הוא מקבל PRD משלו ולא נשאר סעיף בתוך PRD אחר. הוא פוצל מ-<a href="prd2.html" style="color:var(--brand-blue);font-weight:700">PRD 2 — דשבורד</a>.</p>
+  </section>
+  <section class="block">
+    <div class="block-head">
+      <div class="block-head-left"><div class="letter-badge">📌</div><h2>מה כבר הוחלט ב-PRD 1 (נשאר בתוקף)</h2></div>
+      <span class="status status-done">נסגר ב-PRD 1</span>
+    </div>
+    <ul>
+      <li><strong>תמיכה מול הלקוח:</strong> WhatsApp Business App עם מענה ידני של גיא בשלב זה. WhatsApp Business API עם בוט/אוטומציה נדחה כי אינו מוצדק ל-3 לקוחות.</li>
+      <li><strong>התראה פנימית לגיא:</strong> Push דרך אפליקציית Home Assistant Companion.</li>
+      <li><strong>מדידת שביעות רצון:</strong> צ'ק-אין קצר ב-WhatsApp מדי חודש, והמדד האמיתי הוא חידוש הריטיינר. בלי סקר NPS פורמלי לפני שלב 3 הלקוחות.</li>
+      <li><strong>SLA לפי חומרת אירוע:</strong> מוגדר ב-PRD 1, וה-PRD הזה לא משנה אותו.</li>
+    </ul>
+  </section>
+  <section class="block">
+    <div class="block-head">
+      <div class="block-head-left"><div class="letter-badge">💡</div><h2>רעיון שנשמר — שקיפות ערך הריטיינר ללקוח</h2></div>
+      <span class="status status-draft">✎ רעיון ראשוני — מ-16/09</span>
+    </div>
+    <p>הבעיה: אחרי ההתקנה, לקוח שלא מבין בתוכנה לא תמיד מבין למה הוא ממשיך לשלם ריטיינר חודשי — השירות ה"עובד טוב" הוא בלתי נראה, בדיוק כמו ביטוח או שירות רכב.</p>
     <div class="idea-box">
-      <h3>הפיצול מ-PRD 2 המקורי — 19/09</h3>
-      <p style="margin:0">PRD 2 המקורי ("חוויית הלקוח") כלל גם דשבורד וגם ערוץ תקשורת. הוא פוצל לשניים: הדשבורד נשאר כאן, וערוץ התקשורת (כולל רעיון דוח הערך החודשי ב-WhatsApp) עבר ל-<a href="prd6.html" style="color:var(--brand-blue);font-weight:700">PRD 6 — ערוץ תקשורת</a>.</p>
+      <h3>הצעה מרכזית — דוח ערך חודשי אוטומטי ב-WhatsApp</h3>
+      <p style="margin:0">הודעה קצרה כל חודש עם 3-4 מספרים קונקרטיים, מנתונים שכבר קיימים במערכת בלי עלות נוספת (HEMS, לוג גיבויים, לוג עדכונים): כמה ₪ נחסכו בחשמל החודש (בקרת דוד/מזגן), כמה גיבויים הושלמו בהצלחה, כמה עדכוני אבטחה הותקנו, וכמה תקלות קריטיות היו (ואיך טופלו). הופך "מה שקורה ברקע" למשהו שהלקוח מקבל בפועל, כמו קבלה על מה שהוא משלם עליו.</p>
     </div>
-    <p style="margin-top:12px">נקודת חיבור לשקול בהמשך: אפשר להציג את נתוני דוח הערך גם כרטיס בדשבורד, לא רק כהודעה ב-WhatsApp.</p>
+    <ul style="margin-top:14px">
+      <li><strong>מסגור בשיחת המכירה, לא רק אחרי:</strong> ההתקנה = החומרה; הריטיינר = מה ששומר עליה עובדת/מעודכנת/מגובה — אנלוגיה לשירות רכב/ביטוח שהלקוח כבר מכיר ומקבל.</li>
+      <li><strong>דיבור על מניעת סיכון, לא רק נוחות:</strong> "בלי הריטיינר — פרצת אבטחה לא מתוקנת, חיישן הצפה שנפל לא מזוהה" — שפת מניעת הפסד, לרוב משכנעת יותר.</li>
+    </ul>
+  </section>
+  <section class="block">
+    <div class="block-head">
+      <div class="block-head-left"><div class="letter-badge">🤖</div><h2>כיוון עתידי שהוזכר ב-PRD 1 — בוט טריאז'</h2></div>
+      <span class="status status-empty">כיוון עתידי, לא MVP</span>
+    </div>
+    <p>בוט שעושה טריאז' בסיסי לפני שהפנייה מגיעה לגיא. זה כיוון שנשקל בעתיד ולא חלק מהשלב הנוכחי. סוכן AI שמנסה לתקן תקלות אצל הלקוח באופן אוטונומי הוא חזון רחוק יותר ומחוץ ל-Scope.</p>
   </section>
   <section class="block">
     <div class="block-head">
@@ -116,7 +145,7 @@
   </div>
 </main>
 
-<footer>עודכן 19/09/2026 · PRD 2 — דשבורד (פוצל מ-PRD 2 המקורי) · רעיון ראשוני בלבד</footer>
+<footer>נוצר 19/09/2026 · PRD 6 — פוצל מ-PRD 2 המקורי · רעיון ראשוני בלבד</footer>
 
 </body>
 </html>
