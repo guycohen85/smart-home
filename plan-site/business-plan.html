@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>תוכנית עסקית — OneHome</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0f172a; --ink-soft: #475569; --muted: #64748b; --bg: #f8fafc;
+    --card-bg: #ffffff; --border: #e2e8f0; --brand-blue: #0284c7; --brand-green: #059669;
+    --src: #059669; --new: #d97706;
+    --draft-bg: #fffbeb; --draft-fg: #92400e; --draft-bd: #fde68a;
+    --done-bg: #ecfdf5; --done-fg: #047857; --done-bd: #a7f3d0;
+    --bad: #b91c1c; --bad-bg: #fef2f2;
+  }
+  * { box-sizing: border-box; }
+  body { margin:0; background: var(--bg); color: var(--ink); font-family: 'Heebo', sans-serif; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+  a { color: inherit; }
+  :focus-visible { outline: 3px solid #5eead4; outline-offset: 2px; }
+
+  .sitebar { position:sticky; top:0; z-index:60; background:#020617; border-bottom:1px solid #1e293b; }
+  .sitebar-inner { max-width: 1120px; margin:0 auto; padding: 10px 24px; display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap; }
+  .sitebar-logo { font-weight:800; font-size:15px; color:#f8fafc; text-decoration:none; display:flex; align-items:center; gap:8px; }
+  .sitebar-logo span { color:#5eead4; }
+  .sitebar-logo small { font-weight:500; color:#94a3b8; font-size:11.5px; }
+  .sitebar-links { display:flex; gap:4px; flex-wrap:wrap; }
+  .sitebar-links a { text-decoration:none; color:#cbd5e1; font-size:13.5px; font-weight:600; padding:7px 14px; border-radius:8px; transition: background .15s ease, color .15s ease; }
+  .sitebar-links a:hover { background: rgba(255,255,255,0.08); color:#fff; }
+  .sitebar-links a.active { background: rgba(94,234,212,0.15); color:#5eead4; }
+
+  header.top { background: linear-gradient(135deg, #0f172a 0%, #0c4a6e 100%); color: #fff; padding: 52px 24px 44px; }
+  .top-inner { max-width: 1120px; margin: 0 auto; }
+  .eyebrow { display:inline-flex; align-items:center; gap:8px; background: rgba(255,255,255,0.12); border:1px solid rgba(255,255,255,0.25); padding:6px 14px; border-radius:20px; font-size:13px; font-weight:600; margin-bottom:16px; }
+  h1.page-title { font-size: 36px; font-weight:800; margin: 0 0 10px; }
+  h1.page-title span { color:#5eead4; }
+  .page-sub { color: #cbd5e1; font-size: 15.5px; max-width: 700px; margin:0; }
+
+  main { max-width: 1120px; margin: 0 auto; padding: 32px 24px 80px; }
+
+  .legend { display:flex; flex-wrap:wrap; gap:8px 22px; align-items:center; background:#fff; border:1px solid var(--border); border-radius:14px; padding:14px 20px; margin-bottom:18px; font-size:13.5px; color:var(--ink-soft); }
+  .legend b { color: var(--ink); }
+  .dot { display:inline-block; width:9px; height:9px; border-radius:50%; margin-inline-end:7px; vertical-align:middle; }
+  .dot.src { background: var(--src); } .dot.new { background: var(--new); }
+
+  .toc { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:26px; }
+  .toc a { text-decoration:none; font-size:13px; font-weight:700; color: var(--brand-blue); background:#fff; border:1px solid var(--border); padding:6px 14px; border-radius:20px; }
+  .toc a:hover { border-color: var(--brand-blue); }
+
+  section.block { background:#fff; border:1px solid var(--border); border-radius:18px; padding: 28px 30px; margin-bottom: 22px; scroll-margin-top: 70px; }
+  .block-head { display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:14px; }
+  .block-head-left { display:flex; align-items:center; gap:14px; }
+  .letter-badge { flex:0 0 auto; width:42px; height:42px; border-radius:12px; background: linear-gradient(135deg, var(--brand-blue), var(--brand-green)); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:17px; }
+  .block-head h2 { margin:0; font-size:20px; font-weight:800; }
+  .status { font-size:11.5px; font-weight:700; padding:4px 12px; border-radius:20px; border:1px solid; white-space:nowrap; }
+  .status-draft { background: var(--draft-bg); color: var(--draft-fg); border-color: var(--draft-bd); }
+  .status-done { background: var(--done-bg); color: var(--done-fg); border-color: var(--done-bd); }
+  .block p { margin: 0 0 10px; color: var(--ink-soft); font-size:15px; max-width: 78ch; }
+  .block p strong, .block li strong { color: var(--ink); }
+  .block a.inline { color: var(--brand-blue); font-weight:600; }
+
+  /* ---------- Lean Canvas ---------- */
+  .canvas { display:grid; gap:12px; grid-template-columns: repeat(5, 1fr);
+    grid-template-areas:
+      "problem solution uvp unfair customers"
+      "problem metrics  uvp channels customers"
+      "costs costs costs revenue revenue"; }
+  .cv { background: var(--bg); border:1px solid var(--border); border-top: 3px solid var(--brand-blue); border-radius:12px; padding:14px 16px 12px; min-width:0; }
+  .cv h3 { margin:0 0 8px; font-size:15px; font-weight:800; }
+  .cv ul { list-style:none; margin:0; padding:0; }
+  .cv li { position:relative; padding-inline-start:16px; margin-bottom:7px; font-size:13px; line-height:1.55; color: var(--ink-soft); }
+  .cv li::before { content:""; position:absolute; inset-inline-start:0; top:8px; width:7px; height:7px; border-radius:50%; background: var(--src); }
+  .cv li.n::before { background: var(--new); }
+  .cv.uvp { border-top-color: var(--brand-green); background:#f0fdf4; }
+  .cv.uvp .big { font-size:16px; font-weight:800; color:var(--ink); line-height:1.5; margin:0 0 10px; }
+  .cv.money { border-top-color:#7c3aed; }
+  .cv-problem{grid-area:problem} .cv-solution{grid-area:solution} .cv-uvp{grid-area:uvp} .cv-unfair{grid-area:unfair}
+  .cv-customers{grid-area:customers} .cv-metrics{grid-area:metrics} .cv-channels{grid-area:channels}
+  .cv-costs{grid-area:costs} .cv-revenue{grid-area:revenue}
+  @media (max-width: 1000px) {
+    .canvas { grid-template-columns: 1fr; grid-template-areas: "customers" "problem" "uvp" "solution" "channels" "revenue" "costs" "metrics" "unfair"; }
+  }
+
+  /* ---------- tables ---------- */
+  .tbl-wrap { overflow-x:auto; margin-top:10px; }
+  table { width:100%; border-collapse:collapse; font-size:14px; }
+  th, td { text-align:start; padding:10px 12px; border-bottom:1px solid var(--border); vertical-align:top; color: var(--ink-soft); }
+  th { background: var(--bg); color: var(--ink); font-weight:700; font-size:13px; white-space:nowrap; }
+  td strong { color: var(--ink); }
+  td.num, th.num { text-align:end; font-variant-numeric: tabular-nums; white-space:nowrap; }
+  tr.warnrow td { background: var(--bad-bg); }
+  .pill { display:inline-block; font-size:11.5px; font-weight:700; padding:2px 10px; border-radius:20px; border:1px solid; white-space:nowrap; }
+  .pill.done { background: var(--done-bg); color: var(--done-fg); border-color: var(--done-bd); }
+  .pill.open { background: var(--draft-bg); color: var(--draft-fg); border-color: var(--draft-bd); }
+
+  .idea-box { background: var(--bg); border:1px dashed var(--border); border-radius:14px; padding:16px 20px; margin-top:12px; }
+  .idea-box h3 { margin:0 0 6px; font-size:14px; color: var(--brand-blue); font-weight:800; }
+  .idea-box.warn h3 { color:#b45309; }
+  .idea-box p { font-size:14px; }
+  .steps { list-style:none; margin:10px 0 0; padding:0; display:grid; gap:10px; }
+  .steps li { border:1px solid var(--border); border-radius:12px; padding:12px 16px; background:var(--bg); font-size:14.5px; color:var(--ink-soft); }
+  .steps li strong { color:var(--ink); display:block; margin-bottom:2px; }
+
+  /* ---------- calculator ---------- */
+  .calc-grid { display:grid; grid-template-columns: 1fr 1fr; gap:22px; margin-top:6px; }
+  @media (max-width: 900px) { .calc-grid { grid-template-columns: 1fr; } }
+  fieldset { border:1px solid var(--border); border-radius:14px; padding:14px 18px 16px; margin:0; min-width:0; }
+  legend { font-weight:800; font-size:14px; padding:0 8px; color:var(--ink); }
+  .fld { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:8px; font-size:13.5px; color:var(--ink-soft); }
+  .fld label { flex:1; }
+  .fld input[type=number] { width:96px; font: inherit; font-size:14px; padding:5px 8px; border:1px solid var(--border); border-radius:8px; text-align:end; background:#fff; color:var(--ink); }
+  .fld input.hyp { background: var(--draft-bg); border-color: var(--draft-bd); }
+  .fld input.fromdoc { background: var(--done-bg); border-color: var(--done-bd); }
+  .fld input[type=range] { width:150px; accent-color: var(--brand-blue); }
+  .fld output { min-width:44px; text-align:end; font-weight:700; color:var(--ink); font-variant-numeric: tabular-nums; }
+  .tier-table input { width:78px; font: inherit; font-size:13.5px; padding:4px 6px; border:1px solid var(--border); border-radius:8px; text-align:end; }
+  .tier-table input.hyp { background: var(--draft-bg); border-color: var(--draft-bd); }
+  .tier-table input.fromdoc { background: var(--done-bg); border-color: var(--done-bd); }
+  .tier-table td, .tier-table th { padding:6px 8px; }
+  .tier-table { min-width: 380px; }
+  .tier-table td:first-child { min-width: 150px; }
+
+  .kpis { display:grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap:12px; margin-top:16px; }
+  .kpi { border:1px solid var(--border); border-radius:14px; padding:14px 16px; background:#fff; }
+  .kpi .v { font-size:24px; font-weight:800; color:var(--ink); font-variant-numeric: tabular-nums; line-height:1.3; }
+  .kpi .l { font-size:13px; color:var(--ink-soft); }
+  .kpi .s { font-size:12px; color:var(--muted); margin-top:4px; }
+  .kpi.good { border-color: var(--done-bd); background: var(--done-bg); }
+  .kpi.bad { border-color:#fecaca; background: var(--bad-bg); }
+  .kpi.bad .v { color: var(--bad); }
+  .kpi.warn { border-color: var(--draft-bd); background: var(--draft-bg); }
+
+  .charts { display:grid; grid-template-columns: 1fr 1fr; gap:16px; margin-top:18px; }
+  @media (max-width: 900px) { .charts { grid-template-columns: 1fr; } }
+  .chart-card { border:1px solid var(--border); border-radius:14px; padding:14px 16px 10px; }
+  .chart-card h3 { margin:0 0 6px; font-size:14px; font-weight:800; }
+  .chart-card svg { width:100%; height:auto; direction:ltr; display:block; }
+  .chart-legend { display:flex; gap:16px; font-size:12px; color:var(--ink-soft); margin-top:4px; }
+  .chart-legend i { display:inline-block; width:10px; height:10px; border-radius:2px; margin-inline-end:6px; vertical-align:middle; }
+
+  footer { text-align:center; color: var(--muted); font-size:12.5px; padding: 10px 24px 50px; }
+  @media (max-width: 640px) { h1.page-title { font-size:28px; } section.block { padding:22px 18px; } }
+</style>
+</head>
+<body>
+
+<div class="sitebar"><div class="sitebar-inner">
+  <a href="index.html" class="sitebar-logo">One<span>Home</span> <small>· אתר פנימי</small></a>
+  <div class="sitebar-links">
+    <a href="index.html">בית</a>
+    <a href="vision.html">חזון העסק</a>
+    <a href="business-plan.html" class="active">תוכנית עסקית</a>
+    <a href="products.html">רשימת מוצרים</a>
+    <a href="competitors.html">מתחרים</a>
+    <a href="prds.html">PRD-ים</a>
+    <a href="kb.html">ידע טכני</a>
+    <a href="automations.html">רעיונות לאוטומציות</a>
+    <a href="nabu-casa.html">Nabu Casa</a>
+    <a href="ohf.html">Open Home Foundation</a>
+  </div>
+</div></div>
+
+<header class="top">
+  <div class="top-inner">
+    <span class="eyebrow">🔒 מסמך עבודה פנימי — טיוטה ראשונה</span>
+    <h1 class="page-title">תוכנית עסקית — One<span>Home</span></h1>
+    <p class="page-sub">קנבס עסקי (Lean Canvas) של עמוד אחד ותחזית פיננסית פשוטה. מה שכבר הוחלט באתר מחובר לכאן; מה שחסר מסומן כהצעה, ומספרי התחזית הם הנחות עבודה שאפשר לשנות.</p>
+  </div>
+</header>
+
+<main>
+
+  <div class="legend">
+    <span><span class="dot src"></span><b>ירוק</b> — מבוסס על החלטה או מסמך קיים באתר</span>
+    <span><span class="dot new"></span><b>כתום</b> — הצעה חדשה, טעונה אישור</span>
+    <span>שדות צהובים בתחזית = הנחה שלא אומתה מול נתוני אמת</span>
+  </div>
+
+  <nav class="toc" aria-label="תוכן עניינים">
+    <a href="#canvas">קנבס עסקי</a>
+    <a href="#market">לקוח יעד ושוק</a>
+    <a href="#gtm">השגת לקוחות</a>
+    <a href="#finance">תחזית פיננסית</a>
+    <a href="#risks">סיכונים</a>
+    <a href="#next">צעדים הבאים</a>
+  </nav>
+
+  <!-- ===================== A. CANVAS ===================== -->
+  <section class="block" id="canvas">
+    <div class="block-head">
+      <div class="block-head-left"><div class="letter-badge">A</div><h2>קנבס עסקי — העסק על עמוד אחד</h2></div>
+      <span class="status status-draft">✎ טיוטה — לאישור</span>
+    </div>
+    <p>תשעת הרכיבים של Lean Canvas, ממולאים מתוך <a class="inline" href="vision.html">החזון</a>, <a class="inline" href="prd1.html">PRD 1</a>, <a class="inline" href="competitors.html">המתחרים</a> והחלטות Nabu Casa.</p>
+
+    <div class="canvas" style="margin-top:14px">
+
+      <div class="cv cv-problem">
+        <h3>בעיה</h3>
+        <ul>
+          <li>מתקינים קלאסיים חזקים בחומרה וחלשים בניטור ותחזוקה שוטפים; חובבי DIY חזקים בתוכנה אך בלי משמעת הנדסית.</li>
+          <li>כל המתחרים בישראל עובדים בהתקנה חד-פעמית — אף אחד לא מוכר ניטור ותחזוקה כשירות מתמשך.</li>
+          <li>מודלים של נעילת ספק ותלות בענן (<bdi>Control4, SmartThings</bdi>) פוגעים בלקוח כשהספק משנה תנאים.</li>
+          <li><strong>חלופות קיימות:</strong> התקנה חד-פעמית אצל מתקין, הרכבה עצמית ב-DIY, מערכות ענן כמו Google Home.</li>
+        </ul>
+      </div>
+
+      <div class="cv cv-solution">
+        <h3>פתרון</h3>
+        <ul>
+          <li>שירות בית חכם מנוהל על Home Assistant מקומי: התקנה חד-פעמית וריטיינר חודשי.</li>
+          <li>ניטור פרואקטיבי (<bdi>Watchman</bdi>), גיבוי מוצפן ל-Cloudflare R2 לכל לקוח, עדכוני קושחה מרחוק בלילה.</li>
+          <li>SLA אחיד לפי חומרה — אירוע קריטי: תגובה תוך יום עסקים.</li>
+          <li>התראות Push תמיד פעילות; הבית ממשיך לעבוד גם בלי אינטרנט.</li>
+        </ul>
+      </div>
+
+      <div class="cv uvp cv-uvp">
+        <h3>הצעת ערך</h3>
+        <p class="big">אמינות, פרטיות וחיסכון ברמת Enterprise לבית הישראלי — בלי לוותר על החום והפשטות של בית.</p>
+        <ul>
+          <li>הלקוח משלם על שקט נפשי ותחזוקה, לא על גאדג'טים.</li>
+          <li>לא נועלים לקוח מחוץ למערכת שלו: גם אחרי הפסקת תשלום האוטומציות ממשיכות לרוץ מקומית.</li>
+          <li>אין ברירת מחדל של ענן — גישה מרחוק היא תוספת מודעת, לא תנאי.</li>
+          <li class="n">אנלוגיה מהעולם: <bdi>Vivint</bdi> ו-<bdi>Brilliant Max</bdi> מוכיחים שהמודל עובד; כאן בגרסה מקומית ופרטית.</li>
+        </ul>
+      </div>
+
+      <div class="cv cv-unfair">
+        <h3>יתרון לא הוגן</h3>
+        <ul>
+          <li class="n"><strong>כרגע חלש, ולכן צריך לבנות אותו:</strong> אין חסם טכנולוגי, ו-<bdi>Homeii</bdi> קרוב מאוד טכנית ויכול להוסיף ריטיינר.</li>
+          <li class="n">מה אפשר לצבור: SOP-ים ומאגר ידע מהשטח, נתוני תקלות בין לקוחות (<bdi>PRD 4</bdi>), מוניטין והפניות.</li>
+        </ul>
+      </div>
+
+      <div class="cv cv-customers">
+        <h3>פלחי לקוחות</h3>
+        <ul>
+          <li>משפחות בדירות ובבתים פרטיים שמחפשות נוחות ויעילות.</li>
+          <li>שלושה מסלולים: EcoHome (דירות), SafeHome (משפחות), EliteHome (וילות).</li>
+          <li><strong>לקוחות חלוץ:</strong> 3 לקוחות ראשונים מהרשת האישית של גיא.</li>
+          <li class="n">פרופיל הפתיחה הסביר ביותר: בעלי דוד שמש, מזגנים או רכב חשמלי — שם החיסכון באנרגיה ברור ומממן את הריטיינר.</li>
+        </ul>
+      </div>
+
+      <div class="cv cv-metrics">
+        <h3>מדדי מפתח</h3>
+        <ul>
+          <li>חידוש ריטיינר מדי חודש.</li>
+          <li>אירועים קריטיים שחורגים מה-SLA: יעד 0.</li>
+          <li>3 לקוחות ראשונים סגורים.</li>
+          <li class="n">שעות בפועל להתקנה ולתמיכה לכל לקוח — מזין את התחזית.</li>
+          <li class="n">זמן מסקר הבית ועד "הבית חי".</li>
+        </ul>
+      </div>
+
+      <div class="cv cv-channels">
+        <h3>ערוצים</h3>
+        <ul>
+          <li>שלב א: הרשת האישית, בלי שיווק ופרסום.</li>
+          <li>אחרי 3 לקוחות מרוצים: דף נחיתה והרשמה מסודרת.</li>
+          <li class="n">הפניות מלקוחות קיימים.</li>
+          <li class="n">שותפויות עם חשמלאי קבוע ומעצבי פנים.</li>
+        </ul>
+      </div>
+
+      <div class="cv money cv-costs">
+        <h3>מבנה עלויות</h3>
+        <ul>
+          <li>חומרה לפי 9 הקטגוריות — כלולה במחיר ההתקנה.</li>
+          <li>חשמלאי מוסמך כקבלן משנה, לפי עבודה.</li>
+          <li>זמן של גיא: התקנה, תמיכה, עדכונים.</li>
+          <li>Cloudflare R2 לגיבויים וכלי ניטור (<bdi>Sentry</bdi>) — סכום קטן לכל לקוח.</li>
+          <li><strong>Nabu Casa אינה עלות שלנו:</strong> הלקוח משלם ישירות (6.50$ לחודש או 65$ לשנה), כי אין תוכנית מתקינים.</li>
+          <li class="n">ביטוח אחריות מקצועית, דומיין וכלי עבודה — לבדוק.</li>
+          <li class="n">מי סופג החלפת ציוד תקול בשנה הראשונה — להחליט.</li>
+        </ul>
+      </div>
+
+      <div class="cv money cv-revenue">
+        <h3>מקורות הכנסה</h3>
+        <ul>
+          <li><strong>התקנה:</strong> 5,700 / 8,700 / 13,150 ₪.</li>
+          <li><strong>ריטיינר חודשי:</strong> 160 / 220 / 350 ₪.</li>
+          <li><strong>הרחבות:</strong> עלות חומרה ×1.3 + 180 ₪ לשעה (+495 ₪ אם נדרש חשמלאי).</li>
+          <li>חנות תוספות למנויים (<bdi>PRD 5</bdi>) — רעיון לעתיד, נבדק קודם ידנית.</li>
+        </ul>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ===================== B. MARKET ===================== -->
+  <section class="block" id="market">
+    <div class="block-head">
+      <div class="block-head-left"><div class="letter-badge">B</div><h2>לקוח יעד ושוק</h2></div>
+      <span class="status status-draft">✎ טיוטה</span>
+    </div>
+
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>מסלול</th><th>מי הלקוח</th><th>מה הוא קונה</th><th class="num">התקנה</th><th class="num">ריטיינר</th></tr></thead>
+        <tbody>
+          <tr><td><strong>EcoHome</strong></td><td>דירות בעיר</td><td>בטיחות בסיסית (הצפה, עשן, נוכחות), אנרגיה ותאורה</td><td class="num">5,700 ₪</td><td class="num">160 ₪</td></tr>
+          <tr><td><strong>SafeHome</strong></td><td>משפחות — דגש על הגנה</td><td>הוספת ניתוק אוטומטי בלוח, איכות אוויר ועמעום</td><td class="num">8,700 ₪</td><td class="num">220 ₪</td></tr>
+          <tr><td><strong>EliteHome</strong></td><td>וילות ופרימיום</td><td>כיסוי נוכחות רחב, מדידת חשמל תלת-פאזית</td><td class="num">13,150 ₪</td><td class="num">350 ₪</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="idea-box warn">
+      <h3>גודל שוק — למה המספרים הגדולים לא מכריעים כאן</h3>
+      <p>תחזית של <a class="inline" href="https://www.statista.com/outlook/dmo/smart-home/israel" target="_blank" rel="noopener">Statista</a> (שנוצרה ב-2022) מדברת על כ-0.6 מיליון משקי בית עם בית חכם בישראל ב-2026, כ-21% חדירה. מקורות אחרים נותנים מספרים גבוהים בהרבה, כי ההגדרה של "בית חכם" רחבה (כל מכשיר מחובר). הקהל של OneHome צר בהרבה: משפחות שמוכנות לשלם על התקנה מקצועית וריטיינר.</p>
+      <p>לעסק של אדם אחד השוק אינו החסם — <strong>הקיבולת היא החסם</strong>. התחזית בסעיף D מראה כמה לקוחות אפשר לשרת לפי שעות העבודה הפנויות.</p>
+    </div>
+    <div class="idea-box">
+      <h3>הצעה: חישוב שוק ניתן להשגה (<bdi>SAM</bdi>) — אחרי 3 הלקוחות הראשונים</h3>
+      <p>משקי בית בטווח נסיעה סביר × בעלי דירה או בית × שיעור המוכנים לשלם ריטיינר. את השיעור האחרון אי אפשר להעריך משולחן — הוא ייקבע מנתוני ההמרה האמיתיים של הרשת האישית.</p>
+    </div>
+  </section>
+
+  <!-- ===================== C. GTM ===================== -->
+  <section class="block" id="gtm">
+    <div class="block-head">
+      <div class="block-head-left"><div class="letter-badge">C</div><h2>תוכנית השגת לקוחות</h2></div>
+      <span class="status status-draft">✎ טיוטה — שלבים א–ב מהחזון, ג–ד הצעה</span>
+    </div>
+    <ul class="steps">
+      <li><strong>שלב א — עכשיו עד Q4 2026: 3 לקוחות מהרשת האישית, בלי שיווק</strong>
+        המטרה איננה הכנסה אלא הוכחה: 3 חידושי ריטיינר, מדידת שעות אמיתית, ותיעוד ראשון של חיסכון בשקלים ושל צילומי בית.</li>
+      <li><strong>שלב ב — אחרי 3 לקוחות מרוצים: דף נחיתה והרשמה מסודרת</strong>
+        דף ה-pre-launch כבר קיים ותוקן מהבטחות-יתר. תנאי מקדים: PRD 3 (<bdi>Onboarding</bdi>) סגור, כדי שאפשר לשחזר התקנה בלי לחשוב מחדש.</li>
+      <li><strong>שלב ג — הצעה: הפניות ושותפים</strong>
+        הפניות מלקוחות קיימים (למשל חודש ריטיינר כהטבה — לבדיקה), והחשמלאי הקבוע כערוץ הפניות, כי הוא כבר נמצא בבתים לפני ואחרי ההתקנה.</li>
+      <li><strong>שלב ד — סביב חודש 12 ואילך: נקודת החלטה</strong>
+        התקרבות לתקרת עוסק פטור (122,833 ₪ ל-2026), ואז החלטה בין בוטיק (מעט לקוחות, מחיר גבוה) לבין בניית תשתית להעברה לטכנאי שכיר. ראו <a class="inline" href="vision.html">ציר הזמן בחזון</a>.</li>
+    </ul>
+  </section>
+
+  <!-- ===================== D. FINANCE ===================== -->
+  <section class="block" id="finance">
+    <div class="block-head">
+      <div class="block-head-left"><div class="letter-badge">D</div><h2>תחזית פיננסית ל-12 חודשים</h2></div>
+      <span class="status status-draft">✎ הנחות עבודה — להחליף בנתוני האקסל</span>
+    </div>
+    <p>המחירים (שדות ירוקים) לקוחים מ-PRD 1. <strong>עלויות החומרה, שעות העבודה והעלות של החשמלאי הן הערכות גסות שלי</strong> (שדות צהובים) כי הן לא מופיעות באתר — יש להחליף אותן במספרים מ-<code>OneHome_pricing_model.xlsx</code>. הכול ללא התייחסות למס. שנו כל שדה והתחזית מתעדכנת.</p>
+
+    <div class="calc-grid">
+      <fieldset>
+        <legend>לפי מסלול</legend>
+        <div class="tbl-wrap">
+        <table class="tier-table">
+          <thead><tr><th></th><th class="num">Eco</th><th class="num">Safe</th><th class="num">Elite</th></tr></thead>
+          <tbody>
+            <tr><td>מחיר התקנה (₪)</td>
+              <td><input type="number" id="eco-install" value="5700" class="fromdoc"></td>
+              <td><input type="number" id="safe-install" value="8700" class="fromdoc"></td>
+              <td><input type="number" id="elite-install" value="13150" class="fromdoc"></td></tr>
+            <tr><td>ריטיינר חודשי (₪)</td>
+              <td><input type="number" id="eco-ret" value="160" class="fromdoc"></td>
+              <td><input type="number" id="safe-ret" value="220" class="fromdoc"></td>
+              <td><input type="number" id="elite-ret" value="350" class="fromdoc"></td></tr>
+            <tr><td>עלות חומרה כולל מע"מ (₪)</td>
+              <td><input type="number" id="eco-hw" value="3000" class="hyp"></td>
+              <td><input type="number" id="safe-hw" value="4600" class="hyp"></td>
+              <td><input type="number" id="elite-hw" value="6500" class="hyp"></td></tr>
+            <tr><td>עלות חשמלאי (₪)</td>
+              <td><input type="number" id="eco-elec" value="500" class="hyp"></td>
+              <td><input type="number" id="safe-elec" value="800" class="hyp"></td>
+              <td><input type="number" id="elite-elec" value="1200" class="hyp"></td></tr>
+            <tr><td>שעות עבודה בהתקנה</td>
+              <td><input type="number" id="eco-hi" value="12" class="hyp"></td>
+              <td><input type="number" id="safe-hi" value="16" class="hyp"></td>
+              <td><input type="number" id="elite-hi" value="24" class="hyp"></td></tr>
+            <tr><td>שעות תמיכה בחודש</td>
+              <td><input type="number" id="eco-hs" value="1" step="0.5" class="hyp"></td>
+              <td><input type="number" id="safe-hs" value="1" step="0.5" class="hyp"></td>
+              <td><input type="number" id="elite-hs" value="1.5" step="0.5" class="hyp"></td></tr>
+            <tr><td>תמהיל לקוחות חדשים (%)</td>
+              <td><input type="number" id="eco-mix" value="40" class="hyp"></td>
+              <td><input type="number" id="safe-mix" value="40" class="hyp"></td>
+              <td><input type="number" id="elite-mix" value="20" class="hyp"></td></tr>
+          </tbody>
+        </table>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>הנחות כלליות</legend>
+        <div class="fld"><label for="newpm">לקוחות חדשים בחודש</label><input type="range" id="newpm" min="0.5" max="4" step="0.5" value="1"><output id="newpm-o">1</output></div>
+        <div class="fld"><label for="churn">נטישה חודשית (%)</label><input type="range" id="churn" min="0" max="10" step="0.5" value="2"><output id="churn-o">2%</output></div>
+        <div class="fld"><label for="avail">שעות פנויות לעסק בחודש</label><input type="number" id="avail" value="40" class="hyp"></div>
+        <div class="fld"><label for="rate">שווי שעת עבודה של גיא (₪)</label><input type="number" id="rate" value="180" class="fromdoc"></div>
+        <div class="fld"><label for="varc">עלות משתנה ללקוח בחודש (₪) — R2, כלים</label><input type="number" id="varc" value="10" class="hyp"></div>
+        <div class="fld"><label for="fixed">עלויות קבועות בחודש (₪) — ביטוח, דומיין, כלים</label><input type="number" id="fixed" value="200" class="hyp"></div>
+        <div class="fld"><label for="ceil">תקרת עוסק פטור שנתית (₪)</label><input type="number" id="ceil" value="122833" class="fromdoc"></div>
+      </fieldset>
+    </div>
+
+    <div class="kpis" id="kpis" aria-live="polite"></div>
+
+    <div class="charts">
+      <div class="chart-card">
+        <h3>הכנסות מול עלויות מזומן, לפי חודש (₪)</h3>
+        <svg id="chart-money" viewBox="0 0 520 230" role="img" aria-label="גרף הכנסות מול עלויות מזומן לפי חודש"></svg>
+        <div class="chart-legend"><span><i style="background:#0284c7"></i>הכנסות</span><span><i style="background:#94a3b8"></i>עלויות מזומן (חומרה, חשמלאי, כלים)</span></div>
+      </div>
+      <div class="chart-card">
+        <h3>שעות עבודה נדרשות מול שעות פנויות, לפי חודש</h3>
+        <svg id="chart-hours" viewBox="0 0 520 230" role="img" aria-label="גרף שעות עבודה נדרשות מול שעות פנויות"></svg>
+        <div class="chart-legend"><span><i style="background:#059669"></i>התקנות</span><span><i style="background:#7c3aed"></i>תמיכה</span><span><i style="background:#dc2626"></i>קו השעות הפנויות</span></div>
+      </div>
+    </div>
+
+    <h3 style="margin:26px 0 0;font-size:16px">כלכלה של לקוח בודד</h3>
+    <p style="margin-top:4px">כמה מרוויחים <strong>לשעת עבודה</strong> בכל מסלול. שורה אדומה = פחות משווי שעת העבודה שהגדרתם.</p>
+    <div class="tbl-wrap"><table id="unit"></table></div>
+
+    <div class="idea-box">
+      <h3>איך לקרוא את זה</h3>
+      <p>שני מספרים נפרדים חשובים: <strong>רווח לפני שכר עצמי</strong> הוא מה שנשאר בכיס, ו<strong>רווח אחרי שכר עצמי</strong> מתמחר את שעות העבודה של גיא. אם הרווח חיובי רק לפני השכר, העסק הוא בפועל תחביב בתשלום ולא עסק שאפשר להעביר לטכנאי שכיר.</p>
+    </div>
+  </section>
+
+  <!-- ===================== E. RISKS ===================== -->
+  <section class="block" id="risks">
+    <div class="block-head">
+      <div class="block-head-left"><div class="letter-badge">E</div><h2>סיכונים ומענה</h2></div>
+      <span class="status status-draft">✎ טיוטה</span>
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>סיכון</th><th>למה זה חשוב</th><th>מענה</th><th>סטטוס</th></tr></thead>
+        <tbody>
+          <tr><td><strong>קיבולת של אדם אחד</strong></td><td>כל התקנה, כל קריאה וכל התראה עוברים דרך גיא. אין עדיין SOP להעברה לטכנאי שכיר.</td><td>PRD 3 (<bdi>Onboarding</bdi>) ו-PRD 4 (ניהול צי), ומדידת שעות בפועל. הגרף בסעיף D מראה באיזה חודש חוצים את השעות הפנויות.</td><td><span class="pill open">פתוח</span></td></tr>
+          <tr><td><strong>תלות בחשמלאי</strong></td><td>קטגוריות 5 ו-6 כמעט תמיד דורשות חשמלאי מוסמך.</td><td>חשמלאי קבוע + איש קשר גיבוי, תשלום לפי עבודה, תעודה בתוקף והבהרה כתובה על אחריות וביטוח (PRD 1, סעיף G).</td><td><span class="pill open">בחירת חשמלאי פתוחה</span></td></tr>
+          <tr><td><strong>תלות ב-Nabu Casa</strong></td><td>אין תוכנית מתקינים או הנחות נפח, והמחיר יכול להשתנות. כל לקוח חייב חשבון משלו.</td><td>גישה מרחוק היא תוספת ולא ליבת השירות; ההתראות והאוטומציות עובדות מקומית בלי זה.</td><td><span class="pill done">הוחלט</span></td></tr>
+          <tr><td><strong>מתחרה עם מיצוב דומה</strong></td><td>Homeii כבר Local-first; חסר לו רק הריטיינר, שקל להעתיק.</td><td>מהירות, מוניטין והצטברות של SOP ונתוני שטח. מעקב תקופתי אחרי Homeii.</td><td><span class="pill open">מעקב</span></td></tr>
+          <tr><td><strong>ריטיינר נמוך מדי מול זמן התמיכה</strong></td><td>160 ₪ בחודש קונים בערך פחות משעת עבודה אחת. אם התמיכה בפועל חורגת, ההכנסה החוזרת שוחקת.</td><td>למדוד שעות תמיכה ב-3 הלקוחות הראשונים ולעדכן מחירים לפני הפתיחה לציבור. כלכלת הלקוח בסעיף D מראה את הסף.</td><td><span class="pill open">למדוד</span></td></tr>
+          <tr><td><strong>אחריות משפטית וביטוחית</strong></td><td>נזק שלא זוהה (הצפה, שריפה) עלול להיות מיוחס לשירות. חוק הגנת הפרטיות ומסמך פרטיות הם חובה כשמחזיקים נתוני לקוח.</td><td>הבהרה קיימת ב-PRD 1: שכבת ניטור והתראה ולא תגובת חירום. להוסיף: ביטוח אחריות מקצועית, חוזה מסודר וייעוץ משפטי. (לא ייעוץ משפטי — לאמת עם עו"ד.)</td><td><span class="pill open">לבדוק</span></td></tr>
+          <tr><td><strong>עוסק פטור: תקרה ומע"מ</strong></td><td>ב-1 לקוח בחודש מתקרבים לתקרה כבר בסוף השנה הראשונה. בנוסף, עוסק פטור בדרך כלל לא מקזז מע"מ על רכישת חומרה, כך שהיא עלות מלאה.</td><td>לתכנן מראש את נקודת ההחלטה למעבר לעוסק מורשה, ולוודא עם רו"ח את ההשלכות על התמחור.</td><td><span class="pill open">לבדוק עם רו"ח</span></td></tr>
+          <tr><td><strong>תזרים: חומרה משולמת לפני שהלקוח משלם</strong></td><td>הזמנת ציוד לפני קבלת תשלום ממשית גורמת למימון עצמי, ומסכנת את העסק אם לקוח מתחרט.</td><td>הצעה: מקדמה שמכסה לפחות את עלות החומרה, לפני הזמנת הציוד.</td><td><span class="pill open">להחליט</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ===================== F. NEXT ===================== -->
+  <section class="block" id="next">
+    <div class="block-head">
+      <div class="block-head-left"><div class="letter-badge">F</div><h2>צעדים הבאים</h2></div>
+      <span class="status status-draft">✎ לפי סדר עדיפות</span>
+    </div>
+    <ul class="steps">
+      <li><strong>להחליף את הנחות התחזית במספרים אמיתיים</strong>
+        עלויות חומרה, שעות התקנה ותמיכה — מתוך <code>OneHome_pricing_model.xlsx</code>. עד אז המספרים בסעיף D הם רק הדגמה של המודל.</li>
+      <li><strong>לבנות את PRD 3 — Onboarding והתקנה</strong>
+        הצעד הבא המומלץ מלפני, והחסם האמיתי ליעד 3 הלקוחות. כולל ליווי הלקוח בפתיחת חשבון Nabu Casa משלו.</li>
+      <li><strong>להחליט על מקדמה ועל מסלול תשלום שנתי</strong>
+        משפיעים ישירות על התזרים בשלב שבו גיא מממן את החומרה.</li>
+      <li><strong>לבדוק ביטוח אחריות מקצועית ולפגוש רו"ח</strong>
+        עוסק פטור מול מורשה, מע"מ על חומרה, ותקרה של 122,833 ₪.</li>
+      <li><strong>למדוד שעות בפועל בלקוח הראשון</strong>
+        זה המספר שמחליט אם הריטיינר מתומחר נכון.</li>
+      <li><strong>פתוח, לא דחוף: תשובה ל-Andy Gill מ-Nabu Casa</strong>
+        תיאור קצר של העסק, כדי להישאר בשורה הראשונה אם ישיקו תוכנית למתקינים.</li>
+    </ul>
+  </section>
+
+</main>
+
+<footer>עודכן 19/09/2026 · תוכנית עסקית — טיוטה ראשונה, מתעדכנת לפי החלטות גיא</footer>
+
+<script>
+(function () {
+  const $ = id => document.getElementById(id);
+  const fmt = n => Math.round(n).toLocaleString('he-IL');
+  const num = id => { const v = parseFloat($(id).value); return isNaN(v) ? 0 : v; };
+  const tiers = ['eco', 'safe', 'elite'];
+  const names = { eco: 'EcoHome', safe: 'SafeHome', elite: 'EliteHome' };
+  const MONTHS = 12;
+
+  function read() {
+    const T = {};
+    let mixSum = 0;
+    tiers.forEach(t => {
+      T[t] = { install: num(t + '-install'), ret: num(t + '-ret'), hw: num(t + '-hw'), elec: num(t + '-elec'),
+               hi: num(t + '-hi'), hs: num(t + '-hs'), mix: num(t + '-mix') };
+      mixSum += T[t].mix;
+    });
+    tiers.forEach(t => { T[t].mix = mixSum > 0 ? T[t].mix / mixSum : 1 / 3; });
+    return { T, rate: num('rate'), varc: num('varc'), fixed: num('fixed'), newpm: num('newpm'),
+             churn: num('churn') / 100, avail: num('avail'), ceil: num('ceil') };
+  }
+
+  function simulate(p) {
+    const active = { eco: 0, safe: 0, elite: 0 };
+    const rows = [];
+    let cum = 0, cumAfter = 0;
+    for (let m = 1; m <= MONTHS; m++) {
+      let retRev = 0, instRev = 0, hwCost = 0, varCost = 0, hInst = 0, hSup = 0, prevCust = 0;
+      tiers.forEach(t => {
+        const tt = p.T[t];
+        const prev = active[t] * (1 - p.churn);
+        const fresh = p.newpm * tt.mix;
+        retRev += prev * tt.ret;
+        instRev += fresh * tt.install;
+        hwCost += fresh * (tt.hw + tt.elec);
+        varCost += prev * p.varc;
+        hInst += fresh * tt.hi;
+        hSup += prev * tt.hs;
+        prevCust += prev;
+        active[t] = prev + fresh;
+      });
+      const rev = retRev + instRev;
+      const cash = hwCost + varCost + p.fixed;
+      const hours = hInst + hSup;
+      const before = rev - cash;
+      const after = before - hours * p.rate;
+      cum += before;
+      cumAfter += after;
+      rows.push({ m, rev, cash, hours, hInst, hSup, before, after, cum, cumAfter,
+                  cust: active.eco + active.safe + active.elite });
+    }
+    return rows;
+  }
+
+  function kpi(cls, v, l, s) {
+    return '<div class="kpi ' + cls + '"><div class="v">' + v + '</div><div class="l">' + l + '</div>' + (s ? '<div class="s">' + s + '</div>' : '') + '</div>';
+  }
+
+  function renderKpis(p, rows) {
+    const sum = k => rows.reduce((a, r) => a + r[k], 0);
+    const rev = sum('rev'), before = sum('before'), after = sum('after'), hours = sum('hours');
+    const last = rows[rows.length - 1];
+    const pct = p.ceil > 0 ? rev / p.ceil * 100 : 0;
+    const overHour = rows.find(r => r.hours > p.avail);
+    const beMonth = rows.find(r => r.cumAfter >= 0);
+    const effective = hours > 0 ? before / hours : 0;
+    let html = '';
+    html += kpi('', fmt(rev) + ' ₪', 'הכנסות ב-12 חודשים', 'התקנות + ריטיינר');
+    html += kpi(pct >= 100 ? 'bad' : pct >= 80 ? 'warn' : '', Math.round(pct) + '%', 'מתוך תקרת עוסק פטור', pct >= 100 ? 'חוצים את התקרה — נדרשת החלטה' : 'תקרה: ' + fmt(p.ceil) + ' ₪');
+    html += kpi(before >= 0 ? 'good' : 'bad', fmt(before) + ' ₪', 'רווח לפני שכר עצמי', 'הכנסות פחות חומרה, חשמלאי וכלים');
+    html += kpi(after >= 0 ? 'good' : 'bad', fmt(after) + ' ₪', 'רווח אחרי שכר עצמי', 'כולל ' + fmt(hours) + ' שעות × ' + fmt(p.rate) + ' ₪');
+    html += kpi(effective >= p.rate ? 'good' : 'bad', fmt(effective) + ' ₪', 'שכר אפקטיבי לשעה', 'רווח לפני שכר ÷ שעות עבודה');
+    html += kpi('', (Math.round(last.cust * 10) / 10).toString(), 'לקוחות פעילים בחודש 12', 'אחרי נטישה של ' + (p.churn * 100).toFixed(1).replace('.0', '') + '% בחודש');
+    html += kpi(overHour ? 'bad' : 'good', overHour ? 'חודש ' + overHour.m : 'לא חוצים', 'חציית השעות הפנויות', overHour ? 'מעבר לכך גיא לא מספיק לבד' : 'עד ' + fmt(p.avail) + ' שעות בחודש');
+    html += kpi(beMonth ? '' : 'bad', beMonth ? 'חודש ' + beMonth.m : 'אחרי חודש 12', 'הרווח המצטבר אחרי שכר עצמי הופך חיובי', 'כולל שעות העבודה של גיא');
+    $('kpis').innerHTML = html;
+  }
+
+  function barChart(svgId, rows, series, opts) {
+    const W = 520, H = 230, padL = 46, padR = 10, padT = 12, padB = 26;
+    const iw = W - padL - padR, ih = H - padT - padB;
+    let max = opts.line || 0;
+    rows.forEach(r => { let s = 0; series.forEach(se => { const v = r[se.key]; if (opts.stack) s += v; else max = Math.max(max, v); }); if (opts.stack) max = Math.max(max, s); });
+    max = max <= 0 ? 1 : max * 1.12;
+    const y = v => padT + ih - (v / max) * ih;
+    let out = '';
+    for (let i = 0; i <= 4; i++) {
+      const v = max * i / 4, yy = y(v);
+      out += '<line x1="' + padL + '" x2="' + (W - padR) + '" y1="' + yy + '" y2="' + yy + '" stroke="#e2e8f0"/>';
+      out += '<text x="' + (padL - 6) + '" y="' + (yy + 4) + '" font-size="10" text-anchor="end" fill="#64748b">' + fmt(v) + '</text>';
+    }
+    const gw = iw / rows.length;
+    rows.forEach((r, i) => {
+      const gx = padL + i * gw;
+      if (opts.stack) {
+        let acc = 0;
+        const bw = gw * 0.6;
+        series.forEach(se => {
+          const h = (r[se.key] / max) * ih;
+          out += '<rect x="' + (gx + (gw - bw) / 2) + '" y="' + (y(acc) - h) + '" width="' + bw + '" height="' + Math.max(h, 0) + '" fill="' + se.color + '"/>';
+          acc += r[se.key];
+        });
+      } else {
+        const bw = gw * 0.36;
+        series.forEach((se, k) => {
+          const h = (r[se.key] / max) * ih;
+          out += '<rect x="' + (gx + gw * 0.08 + k * (bw + 2)) + '" y="' + (padT + ih - h) + '" width="' + bw + '" height="' + Math.max(h, 0) + '" fill="' + se.color + '"/>';
+        });
+      }
+      out += '<text x="' + (gx + gw / 2) + '" y="' + (H - 8) + '" font-size="10" text-anchor="middle" fill="#64748b">' + r.m + '</text>';
+    });
+    if (opts.line) {
+      out += '<line x1="' + padL + '" x2="' + (W - padR) + '" y1="' + y(opts.line) + '" y2="' + y(opts.line) + '" stroke="#dc2626" stroke-width="1.5" stroke-dasharray="5 4"/>';
+    }
+    $(svgId).innerHTML = out;
+  }
+
+  function renderUnit(p) {
+    let h = '<thead><tr><th>מסלול</th><th class="num">רווח מהתקנה (לפני שכר)</th><th class="num">שעות התקנה</th><th class="num">₪ לשעה בהתקנה</th><th class="num">רווח חודשי מריטיינר</th><th class="num">שעות תמיכה</th><th class="num">₪ לשעה בריטיינר</th></tr></thead><tbody>';
+    tiers.forEach(t => {
+      const x = p.T[t];
+      const im = x.install - x.hw - x.elec;
+      const ie = x.hi > 0 ? im / x.hi : 0;
+      const rm = x.ret - p.varc;
+      const re = x.hs > 0 ? rm / x.hs : 0;
+      const bad = ie < p.rate || re < p.rate;
+      h += '<tr' + (bad ? ' class="warnrow"' : '') + '><td><strong>' + names[t] + '</strong></td><td class="num">' + fmt(im) + ' ₪</td><td class="num">' + x.hi + '</td><td class="num"><strong>' + fmt(ie) + ' ₪</strong></td><td class="num">' + fmt(rm) + ' ₪</td><td class="num">' + x.hs + '</td><td class="num"><strong>' + fmt(re) + ' ₪</strong></td></tr>';
+    });
+    $('unit').innerHTML = h + '</tbody>';
+  }
+
+  function update() {
+    $('newpm-o').textContent = num('newpm');
+    $('churn-o').textContent = num('churn') + '%';
+    const p = read();
+    const rows = simulate(p);
+    renderKpis(p, rows);
+    barChart('chart-money', rows, [{ key: 'rev', color: '#0284c7' }, { key: 'cash', color: '#94a3b8' }], {});
+    barChart('chart-hours', rows, [{ key: 'hInst', color: '#059669' }, { key: 'hSup', color: '#7c3aed' }], { stack: true, line: p.avail });
+    renderUnit(p);
+  }
+
+  document.querySelectorAll('#finance input').forEach(el => el.addEventListener('input', update));
+  update();
+})();
+</script>
+
+</body>
+</html>
