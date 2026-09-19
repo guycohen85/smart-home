@@ -223,7 +223,7 @@
       <div class="split-card in">
         <div class="label">✓ בתוך ה-Scope</div>
         <ul style="margin-top:0">
-          <li>ארכיטקטורת Local-First — VLAN מבודד, כתובות סטטיות, Cloudflare Tunnel</li>
+          <li>ארכיטקטורת Local-First — VLAN מבודד, כתובות סטטיות; גישה מרשת פנימית בלבד כברירת מחדל (גישה מרחוק דרך Nabu Casa היא תוספת אופציונלית ללקוח)</li>
           <li>ניטור פרואקטיבי (Watchman) — לפי How בחזון</li>
           <li>גיבויים מוצפנים אוטומטיים</li>
           <li>עדכוני אבטחה שוטפים</li>
@@ -283,7 +283,7 @@
       <div class="req-table-wrap">
         <table class="req-table">
           <tr><th>קטגוריה</th><th>EcoHome</th><th>SafeHome</th><th>EliteHome</th></tr>
-          <tr><td class="rowlabel">1. בקר מרכזי, קישוריות ושרתים</td><td colspan="3" style="text-align:center">זהה בכל המסלולים: HA Green + SkyConnect + Cloudflare Tunnel / Nabu Casa</td></tr>
+          <tr><td class="rowlabel">1. בקר מרכזי, קישוריות ושרתים</td><td colspan="3" style="text-align:center">זהה בכל המסלולים: HA Green + SkyConnect. גישה מרחוק דרך Nabu Casa: תוספת אופציונלית שהלקוח משלם עליה ישירות</td></tr>
           <tr><td class="rowlabel">2. חיישני נוכחות ותנועה</td><td>FP2 ~2-3 יח' + PIR במעברים</td><td>FP2 ~4-5 יח' + PIR במעברים/כניסות</td><td>FP2 6+ יח' + PIR בכל מעבר</td></tr>
           <tr><td class="rowlabel">3. אקלים, איכות אוויר ובריאות</td><td>Broadlink RM4 + חיישן Aqara טמפ'/לחות</td><td>+ IKEA VINDSTYRKA (איכות אוויר)</td><td>+ IKEA VINDSTYRKA (איכות אוויר)</td></tr>
           <tr><td class="rowlabel">4. בטיחות, הצפה והגנה אקטיבית</td><td>חיישן הצפה + גלאי עשן</td><td>+ Shelly Pro DIN-Rail (ניתוק אוטומטי)</td><td>+ Shelly Pro DIN-Rail (ניתוק אוטומטי)</td></tr>
@@ -347,7 +347,7 @@
     </div>
     <ul>
       <li><strong>קבלן משנה לחשמל</strong> — תלות בזמינות חשמלאי מוסמך לכמעט כל עבודה שדורשת חשמל (ראו סעיף F). <strong>תוכנית:</strong> בשלב 3 הלקוחות הראשונים — חשמלאי קבוע אחד (המלצה מהרשת האישית) + איש קשר גיבוי, תשלום פר-עבודה, בלי חוזה בלעדיות. עם גדילה בקצב ההתקנות — מעבר להסכם קבוע (תעריף + זמינות מועדפת) ושמירה על 2-3 חשמלאים ברוטציה. לוודא בכל שלב: תעודת "חשמלאי מוסמך" בתוקף + הבהרה כתובה על חלוקת אחריות/ביטוח. (פירוט תהליך מלא — ב-PRD 3, Onboarding).</li>
-      <li><strong>תלות בספקים חיצוניים</strong> — Nabu Casa / Cloudflare (Tunnel + R2) לגישה מרחוק וגיבויים, Home Assistant כפלטפורמת ליבה.</li>
+      <li><strong>תלות בספקים חיצוניים</strong> — Nabu Casa (גישה מרחוק — תוספת אופציונלית, בחשבון של הלקוח) ו-Cloudflare R2 (גיבויים), Home Assistant כפלטפורמת ליבה.</li>
       <li><strong>קיבולת יחיד</strong> — כרגע גיא לבד עונה לכל תקלה/התראה; אין עדיין SOP להעברה לטכנאי שכיר.</li>
     </ul>
   </section>
