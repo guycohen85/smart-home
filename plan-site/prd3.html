@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PRD 3 — Onboarding והתקנה — OneHome</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0f172a;
+    --ink-soft: #475569;
+    --muted: #64748b;
+    --bg: #f8fafc;
+    --card-bg: #ffffff;
+    --border: #e2e8f0;
+    --brand-blue: #0284c7;
+    --brand-green: #059669;
+    --draft-bg: #fffbeb; --draft-fg: #92400e; --draft-bd: #fde68a;
+    --done-bg: #ecfdf5; --done-fg: #047857; --done-bd: #a7f3d0;
+    --empty-bg: #f1f5f9; --empty-fg: #64748b; --empty-bd: #e2e8f0;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin:0; background: var(--bg); color: var(--ink);
+    font-family: 'Heebo', sans-serif; line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; }
+  header.top {
+    background: linear-gradient(135deg, #0f172a 0%, #0c4a6e 100%);
+    color: #fff; padding: 52px 24px 44px;
+  }
+  .top-inner { max-width: 880px; margin: 0 auto; }
+  .eyebrow {
+    display:inline-flex; align-items:center; gap:8px;
+    background: rgba(255,255,255,0.12); border:1px solid rgba(255,255,255,0.25);
+    padding:6px 14px; border-radius:20px; font-size:13px; font-weight:600; margin-bottom:16px;
+  }
+  h1.page-title { font-size: 36px; font-weight:800; margin: 0 0 10px; }
+  h1.page-title span { color:#5eead4; }
+  .page-sub { color: #cbd5e1; font-size: 15.5px; max-width: 640px; margin:0; }
+
+  .breadcrumb { max-width:880px; margin:0 auto; padding: 14px 24px 0; }
+  .breadcrumb a { font-size:13px; font-weight:600; color:#7dd3fc; text-decoration:none; }
+  .breadcrumb a:hover { text-decoration:underline; }
+
+  nav.chipnav {
+    position: sticky; top:58px; z-index:50;
+    background: rgba(248,250,252,0.92); backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border);
+    padding: 12px 24px; overflow-x:auto; white-space:nowrap;
+  }
+  nav.chipnav .chipnav-inner { max-width:880px; margin:0 auto; display:flex; gap:8px; }
+  .chip {
+    display:inline-flex; align-items:center; gap:6px; text-decoration:none;
+    font-size:13px; font-weight:600; color: var(--ink-soft);
+    background:#fff; border:1px solid var(--border); border-radius:20px;
+    padding:7px 14px; flex:0 0 auto; transition: all .15s ease;
+  }
+  .chip:hover { border-color: var(--brand-blue); color: var(--brand-blue); }
+
+  main { max-width: 880px; margin: 0 auto; padding: 40px 24px 80px; }
+
+  section.block {
+    background:#fff; border:1px solid var(--border); border-radius:18px;
+    padding: 28px 30px; margin-bottom: 22px; scroll-margin-top: 90px;
+  }
+  .block-head { display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:14px; }
+  .block-head-left { display:flex; align-items:center; gap:14px; }
+  .letter-badge {
+    flex:0 0 auto; width:42px; height:42px; border-radius:12px;
+    background: linear-gradient(135deg, var(--brand-blue), var(--brand-green));
+    color:#fff; display:flex; align-items:center; justify-content:center;
+    font-weight:800; font-size:17px;
+  }
+  .block-head h2 { margin:0; font-size:20px; font-weight:800; }
+  .status {
+    font-size:11.5px; font-weight:700; padding:4px 12px; border-radius:20px; border:1px solid; white-space:nowrap;
+  }
+  .status-draft { background: var(--draft-bg); color: var(--draft-fg); border-color: var(--draft-bd); }
+  .status-done { background: var(--done-bg); color: var(--done-fg); border-color: var(--done-bd); }
+  .status-empty { background: var(--empty-bg); color: var(--empty-fg); border-color: var(--empty-bd); }
+
+  .block p { margin: 0 0 10px; color: var(--ink-soft); font-size:15px; }
+  .block ul { margin: 8px 0 0; padding-inline-start: 22px; }
+  .block li { margin-bottom: 9px; font-size:15px; color: var(--ink-soft); }
+  .block li strong { color: var(--ink); }
+
+  .persona-grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(190px,1fr)); gap:12px; margin-top:14px; }
+  .persona-card { background: var(--bg); border:1px solid var(--border); border-radius:12px; padding:14px 16px; }
+  .persona-card .name { font-weight:800; font-size:14.5px; margin-bottom:4px; }
+  .persona-card .desc { font-size:13px; color: var(--muted); }
+
+  .split { display:grid; grid-template-columns: 1fr; gap:14px; margin-top:6px; }
+  @media (min-width: 640px) { .split { grid-template-columns: 1fr 1fr; } }
+  .split-card { background: var(--bg); border:1px solid var(--border); border-radius:12px; padding:16px 18px; }
+  .split-card .label { font-size:12px; font-weight:800; letter-spacing:.04em; text-transform:uppercase; margin-bottom:8px; }
+  .split-card.in .label { color: var(--brand-green); }
+  .split-card.out .label { color: #b91c1c; }
+
+  .qbox { background: var(--bg); border:1px dashed var(--border); border-radius:12px; padding:14px 18px; margin-top:10px; }
+  .qbox .qlabel { font-size:11.5px; font-weight:800; text-transform:uppercase; letter-spacing:.04em; color: var(--muted); margin-bottom:6px; }
+  .qbox p { margin:0; font-size:14.5px; color: var(--ink-soft); }
+
+  .req-table { width:100%; border-collapse:collapse; margin-top:14px; font-size:13.5px; }
+  .req-table th, .req-table td { border:1px solid var(--border); padding:10px 12px; text-align:right; vertical-align:top; }
+  .req-table th { background: var(--bg); font-weight:800; font-size:12.5px; }
+  .req-table td.tbd { color: var(--muted); font-style:italic; }
+  .req-table .rowlabel { font-weight:700; white-space:nowrap; background: #fafcff; }
+  .req-table-wrap { overflow-x:auto; }
+
+  ol.open-q { margin: 8px 0 0; padding-inline-start: 22px; }
+  ol.open-q li { margin-bottom: 12px; font-size:15px; color: var(--ink-soft); }
+  ol.open-q li strong { color: var(--ink); }
+
+  .bg-note { background:#fff; border:1px dashed var(--border); border-radius:14px; padding:18px 22px; margin-top:8px; }
+  .bg-note h3 { margin:0 0 10px; font-size:14px; color: var(--muted); font-weight:800; text-transform:uppercase; letter-spacing:.04em; }
+  .bg-note ul { margin:0; padding-inline-start: 20px; }
+  .bg-note li { font-size:13.5px; color: var(--muted); margin-bottom:8px; }
+
+  footer { text-align:center; color: var(--muted); font-size:12.5px; padding: 10px 24px 50px; }
+
+  @media (max-width: 640px) {
+    h1.page-title { font-size:27px; }
+    .block-head h2 { font-size:17px; }
+  }
+
+  .sitebar { position:sticky; top:0; z-index:60; background:#020617; border-bottom:1px solid #1e293b; }
+  .sitebar-inner { max-width: 1000px; margin:0 auto; padding: 10px 24px; display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap; }
+  .sitebar-logo { font-weight:800; font-size:15px; color:#f8fafc; text-decoration:none; display:flex; align-items:center; gap:8px; }
+  .sitebar-logo span { color:#5eead4; }
+  .sitebar-logo small { font-weight:500; color:#94a3b8; font-size:11.5px; }
+  .sitebar-links { display:flex; gap:4px; }
+  .sitebar-links a {
+    text-decoration:none; color:#cbd5e1; font-size:13.5px; font-weight:600;
+    padding:7px 14px; border-radius:8px; transition: background .15s ease, color .15s ease;
+  }
+  .sitebar-links a:hover { background: rgba(255,255,255,0.08); color:#fff; }
+  .sitebar-links a.active { background: rgba(94,234,212,0.15); color:#5eead4; }
+  .chk { list-style:none; padding:0 !important; margin:10px 0 0; }
+  .chk li { position:relative; padding:5px 26px 5px 0; }
+  .chk li::before { content:"☐"; position:absolute; right:0; top:5px; color:var(--muted); }
+  .tag { display:inline-block; font-size:11px; font-weight:700; padding:1px 8px; border-radius:20px; margin-inline-start:6px; vertical-align:middle; }
+  .tag-ok { background:#ecfdf5; color:#047857; border:1px solid #a7f3d0; }
+  .tag-new { background:#fffbeb; color:#92400e; border:1px solid #fde68a; }
+  .grp { margin:22px 0 4px; font-size:15.5px; font-weight:800; }
+</style>
+</head>
+<body>
+<div class="sitebar"><div class="sitebar-inner">
+  <a href="index.html" class="sitebar-logo">One<span>Home</span> <small>· אתר פנימי</small></a>
+  <div class="sitebar-links">
+    <a href="index.html">בית</a>
+    <a href="vision.html">חזון העסק</a>
+    <a href="business-plan.html">תוכנית עסקית</a>
+    <a href="products.html">רשימת מוצרים</a>
+    <a href="competitors.html">מתחרים</a>
+    <a href="prds.html" class="active">PRD-ים</a>
+    <a href="kb.html">ידע טכני</a>
+    <a href="automations.html">רעיונות לאוטומציות</a>
+    <a href="nabu-casa.html">Nabu Casa</a>
+    <a href="ohf.html">Open Home Foundation</a>
+  </div>
+</div></div>
+
+<div class="breadcrumb"><a href="prds.html">← כל ה-PRD-ים</a></div>
+
+<header class="top">
+  <div class="top-inner">
+    <span class="eyebrow">🛠️ PRD 3 — טיוטה ראשונה</span>
+    <h1 class="page-title">Onboarding והתקנה</h1>
+    <p class="page-sub">ה-SOP המלא: מפגישת מכירה ראשונה ועד "הבית חי" — סדר עבודה, checklist התקנה ומסירה ללקוח. זה מה שמאפשר לשחזר התקנה בלי לחשוב מחדש, ומה שחוסם את היעד של 3 הלקוחות הראשונים.</p>
+  </div>
+</header>
+
+<nav class="chipnav"><div class="chipnav-inner">
+  <a href="#overview" class="chip"><span>🧭</span><span>רקע</span></a>
+  <a href="#goals" class="chip"><span>🎯</span><span>מטרות ומדדים</span></a>
+  <a href="#flow" class="chip"><span>🔁</span><span>שלבי התהליך</span></a>
+  <a href="#checklist" class="chip"><span>✅</span><span>Checklist התקנה</span></a>
+  <a href="#electrician" class="chip"><span>⚡</span><span>חשמלאי</span></a>
+  <a href="#handover" class="chip"><span>🤝</span><span>מסירה</span></a>
+  <a href="#risks" class="chip"><span>⚠️</span><span>סיכונים</span></a>
+  <a href="#open" class="chip"><span>❓</span><span>שאלות פתוחות</span></a>
+</div></nav>
+
+<main>
+
+  <section id="overview" class="block">
+    <div class="block-head">
+      <div class="block-head-left"><div class="letter-badge">A</div><h2>רקע ובעיה</h2></div>
+      <span class="status status-draft">✎ טיוטה ראשונה — 19/09</span>
+    </div>
+    <p>ב-<a href="prd1.html" style="color:var(--brand-blue);text-decoration:none;font-weight:600">PRD 1</a> הוגדר <em>מה</em> הלקוח מקבל. כאן מוגדר <em>איך</em> זה קורה בפועל: הסדר, מי עושה מה, ומה חייב להיבדק לפני שמוסרים את הבית. בשבוע האחרון התקבלו הרבה החלטות שמחכות להפוך לצעדים מעשיים — רשת, גישה מקומית, Nabu Casa, גיבויים, פרטיות — וכרגע הן פזורות בכמה מסמכים.</p>
+    <p style="margin:0">גיא עובד לבד, והיעד הוא 3 לקוחות מהרשת האישית. לכן המסמך נכתב כדי שההתקנה הראשונה תהיה גם ההתקנה שממנה לומדים: כל שלב מייצר פלט ברור, ושעות העבודה בפועל נמדדות (ראו <a href="business-plan.html" style="color:var(--brand-blue);text-decoration:none;font-weight:600">תוכנית עסקית ←</a>).</p>
+    <div class="bg-note" style="margin-top:14px">
+      <h3>איך לקרוא את המסמך</h3>
+      <ul>
+        <li><span class="tag tag-ok">מתועד</span> — החלטה שכבר התקבלה במסמך אחר באתר, מועתקת לכאן כצעד בתהליך.</li>
+        <li><span class="tag tag-new">הצעה</span> — הצעה חדשה שנכתבה כאן, טרם אושרה. זה מה שדורש ביקורת שלך.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="goals" class="block">
+    <div class="block-head">
+      <div class="block-head-left"><div class="letter-badge">B</div><h2>מטרות ומדדי הצלחה</h2></div>
+      <span class="status status-draft">✎ הצעה — לאישור</span>
+    </div>
+    <div class="qbox"><div class="qlabel">הגדרה מוצעת ל"הבית חי" <span class="tag tag-new">הצעה</span></div><p>הבית נחשב חי רק כשכל אלה מתקיימים: (1) כל המכשירים בחבילה מחוברים, ממוספרים בשמות ברורים ופועלים; (2) הלקוח נכנס לדשבורד מהטלפון שלו כשהוא בבית; (3) התראת Push בדיקה התקבלה בטלפון של הלקוח; (4) גיבוי ראשון הצליח, גם ל-R2 וגם עותק מקומי; (5) מסמך הפרטיות חתום; (6) הלקוח קיבל את חבילת המסירה (סעיף F).</p></div>
+    <div class="qbox"><div class="qlabel">מדד 1 — שעות בפועל לכל שלב <span class="tag tag-ok">מתועד</span></div><p>לרשום שעות אמיתיות לכל שלב בלקוח הראשון. זה המספר שמחליט אם הריטיינר מתומחר נכון (ראו הצעד "למדוד שעות בפועל" בתוכנית העסקית), והוא הבסיס לכל SOP עתידי להעברה לטכנאי שכיר.</p></div>
+    <div class="qbox"><div class="qlabel">מדד 2 — פניות פתוחות בשבועיים הראשונים <span class="tag tag-new">הצעה</span></div><p>כמה פניות של הלקוח נדרשו אחרי המסירה, ומה היה הנושא. פנייה חוזרת על אותו נושא אצל כמה לקוחות = פער ב-checklist או במסירה, לא בעיה של לקוח.</p></div>
+  </section>
+
+  <section id="flow" class="block">
+    <div class="block-head">
+      <div class="block-head-left"><div class="letter-badge">C</div><h2>שלבי התהליך — מפגישה ראשונה ועד "הבית חי"</h2></div>
+      <span class="status status-draft">✎ שלד ראשוני</span>
+    </div>
+    <p>סדר העבודה המוצע. שלב 6 מפורט ב-checklist בסעיף D, ושלב 5 בסעיף E.</p>
+    <div class="req-table-wrap">
+      <table class="req-table">
+        <tr><th>#</th><th>שלב</th><th>מה קורה</th><th>פלט</th></tr>
+        <tr><td class="rowlabel">1</td><td>פגישת מכירה ראשונה</td><td>הבנת הבית והצרכים, בחירת מסלול, הסבר המודל: התקנה + ריטיינר, גישה מקומית כברירת מחדל, SLA לפי חומרה, בלי ביקורי תחזוקה יזומים</td><td>מסלול מוצע (Eco/Safe/Elite)</td></tr>
+        <tr><td class="rowlabel">2</td><td>סקר בית</td><td>כמויות סופיות (למשל חיישני FP2, שנקבעות בסקר לפי PRD 1), מה כבר קיים אצל הלקוח, בדיקת הראוטר (ראו סעיף D), זיהוי עבודות חשמל</td><td>רשימת חומרה סופית + הערכת עבודת חשמל</td></tr>
+        <tr><td class="rowlabel">3</td><td>הצעה, חתימה ותשלום</td><td>הצעת מחיר לפי מסלול + תוספות, מסמך פרטיות חתום, הבהרה כתובה על חלוקת אחריות מול החשמלאי. מקדמה — ראו שאלה 1 בסעיף H</td><td>הצעה וחוזה חתומים</td></tr>
+        <tr><td class="rowlabel">4</td><td>הזמנת ציוד והכנה אצל גיא</td><td>הכנת ה-HA (Green + SkyConnect) מראש: סיסמת הצפנה ייחודית לגיבויים, bucket מבודד ב-R2 (ואם Sentry יאומץ — גם שם environment ייחודי). עדכוני קושחה נבדקים קודם ב-Sandbox של גיא</td><td>HA מוכן להתקנה</td></tr>
+        <tr><td class="rowlabel">5</td><td>עבודת חשמל (אם נדרש)</td><td>חשמלאי מוסמך מבצע כל מה שנוגע בלוח או בחיווט קיים (ראו סעיף E)</td><td>עבודת חשמל גמורה + אישור כתוב</td></tr>
+        <tr><td class="rowlabel">6</td><td>התקנה ורשת אצל הלקוח</td><td>חיבור המכשירים, הגדרת רשת וגישה מקומית, שירותי Nabu Casa אם נבחרו, גיבויים והתראות — לפי ה-checklist בסעיף D</td><td>Checklist מלא מסומן</td></tr>
+        <tr><td class="rowlabel">7</td><td>בדיקות קבלה</td><td>מעבר על הגדרת "הבית חי" (סעיף B), כולל בדיקת התראת Push אמיתית לטלפון הלקוח</td><td>אישור שהבית חי</td></tr>
+        <tr><td class="rowlabel">8</td><td>מסירה והדרכה</td><td>חבילת מסירה (סעיף F) והסבר קצר על פתיחת קריאה, ה-SLA ומה לא כלול</td><td>לקוח מודרך</td></tr>
+        <tr><td class="rowlabel">9</td><td>מעקב אחרי המסירה</td><td>צ'ק-אין חודשי ב-WhatsApp כבר הוחלט ב-PRD 1 (<span class="tag tag-ok">מתועד</span>). בנוסף מוצע צ'ק-אין קצר אחרי כמה ימים ואחרי שבועיים (<span class="tag tag-new">הצעה</span>), כדי לתפוס בעיות בשלב שהלקוח עוד לומד את המערכת</td><td>פניות ראשונות מתועדות (מדד 2)</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <section id="checklist" class="block">
+    <div class="block-head">
+      <div class="block-head-left"><div class="letter-badge">D</div><h2>Checklist התקנה</h2></div>
+      <span class="status status-done">✓ רוב הפריטים מתועדים ממסמכים קיימים</span>
+    </div>
+    <p>הפריטים מרוכזים כאן מההחלטות הקיימות. פריט שמסומן <span class="tag tag-new">הצעה</span> הוא הוספה חדשה.</p>
+
+    <div class="grp">רשת וגישה מקומית — <a href="claude/decision-network-access.md" style="color:var(--brand-blue);text-decoration:none;font-weight:600">מקור: החלטת Network Access</a></div>
+    <ul class="chk">
+      <li><strong>לוודא שאין AP/Client Isolation בראוטר.</strong> הפריט הכי קריטי — ההגדרה שבאמת חוסמת גישה מקומית ותקשורת בין מכשירים <span class="tag tag-ok">מתועד</span></li>
+      <li><strong>רשת שטוחה אחת</strong> כברירת מחדל; VLAN רק ללקוחות מיוחדים (ההגדרה של "מיוחד" עדיין פתוחה ב-PRD 1, סעיף H) <span class="tag tag-ok">מתועד</span></li>
+      <li><strong>DHCP Reservation לפי MAC בראוטר</strong>, לא static IP בתוך ה-HA; ה-IP נרשם בפרטי ההתקנה של הלקוח (PRD 4) <span class="tag tag-ok">מתועד</span></li>
+      <li><strong>Internal URL</strong> מוגדר לפי ה-IP הקבוע, ואפליקציית ה-Companion של הלקוח מזהה נכון את ה-SSID הביתי <span class="tag tag-ok">מתועד</span></li>
+      <li>גישה מהדפדפן במחשב בבית: שמירת ה-Internal URL כמועדף <span class="tag tag-ok">מתועד</span></li>
+      <li>פרופיל הרשת ב-Windows מוגדר Private — משפיע על גילוי מכשירים עתידיים, לא על הגישה היומיומית <span class="tag tag-ok">מתועד</span></li>
+      <li>לוודא מראש שיש גישת אדמין לראוטר של הלקוח (סיסמה, ורשות לשנות הגדרות) <span class="tag tag-new">הצעה</span></li>
+    </ul>
+
+    <div class="grp">גישה מרחוק ו-Nabu Casa — רק אם הלקוח בחר בתוספת <span class="tag tag-ok">מתועד</span></div>
+    <p style="margin:0;font-size:13.5px">שלב זה נכתב כמודול נפרד, כי מודל החיוב הנוכחי זמני (ראו סעיף G).</p>
+    <ul class="chk">
+      <li><strong>הלקוח פותח חשבון Nabu Casa בעצמו</strong> — email וכרטיס אשראי שלו, וגיא מלווה. אין תוכנית מתקינים כרגע, ולכן אין דרך לנהל את זה מרוכז</li>
+      <li>גיא מקשר את החשבון ל-HA של הלקוח ומגדיר External URL</li>
+      <li><strong>checkbox נפרד לכל שירות</strong>, לא מתג אחד "Nabu Casa: כן/לא" — ראו <a href="nabu-casa.html" style="color:var(--brand-blue);text-decoration:none;font-weight:600">דף Nabu Casa ←</a>:
+        <ul style="margin:4px 0 0">
+          <li>Alexa / Google Assistant</li>
+          <li>גיבוי ענן (נשמר רק הגיבוי האחרון, ולכן לא מחליף את הגיבוי ל-R2)</li>
+          <li>Webhooks</li>
+          <li><strong>חריג:</strong> TTS/STT ענני — לא דלוק כברירת מחדל. אם יש Voice PE, ברירת המחדל היא Whisper + Piper מקומיים, והענן רק בבחירה מוצהרת של הלקוח</li>
+          <li><strong>חריג:</strong> WebRTC לסטרימינג מצלמות — לא דלוק אוטומטית, רק בבחירה מוצהרת</li>
+        </ul>
+      </li>
+    </ul>
+
+    <div class="grp">פרטיות וגיבויים — <a href="prd1.html#nonfunctional" style="color:var(--brand-blue);text-decoration:none;font-weight:600">מקור: PRD 1, סעיף F</a></div>
+    <ul class="chk">
+      <li>מסמך הפרטיות נחתם: מה נאסף, איפה נשמר, מי יכול לגשת <span class="tag tag-ok">מתועד</span></li>
+      <li>bucket מבודד ב-R2 עם הרשאות משלו, וסיסמת הצפנה ייחודית ללקוח <span class="tag tag-ok">מתועד</span></li>
+      <li><strong>גיבוי ראשון הצליח</strong> ל-R2 ונשמר עותק מקומי בבית <span class="tag tag-ok">מתועד</span></li>
+      <li>אם Sentry יאומץ (כרגע רעיון ראשוני ב-PRD 4): שם environment ייחודי ללקוח, והגילוי על מטא-דאטה טכני שיוצא מהבית מופיע במסמך הפרטיות <span class="tag tag-new">הצעה</span></li>
+    </ul>
+
+    <div class="grp">התראות ובטיחות</div>
+    <ul class="chk">
+      <li><strong>בדיקת Push אמיתית לטלפון של הלקוח</strong>, כולל כשהוא מחוץ ל-WiFi הביתי. עובד גם בלי Nabu Casa, ולכן זה מה שהופך את "מקומי בלבד" למכירה בטוחה <span class="tag tag-ok">מתועד</span></li>
+      <li>סירנת גלאי העשן המקומית נבדקה <span class="tag tag-new">הצעה</span></li>
+      <li>ניטור על בסיס אינטגרציית Alert המובנית פועל (PRD 4) <span class="tag tag-ok">מתועד</span></li>
+      <li>הלקוח יודע במפורש שכשהאינטרנט בבית נופל, גיא לא מקבל התראה מרחוק — והאוטומציות המקומיות ממשיכות לעבוד <span class="tag tag-ok">מתועד</span></li>
+    </ul>
+  </section>
+
+  <section id="electrician" class="block">
+    <div class="block-head">
+      <div class="block-head-left"><div class="letter-badge">E</div><h2>עבודת חשמל וחשמלאי</h2></div>
+      <span class="status status-draft">✎ טעון אימות מול חשמלאי בפועל</span>
+    </div>
+    <p><a href="prd1.html#risks" style="color:var(--brand-blue);text-decoration:none;font-weight:600">PRD 1, סעיף G</a> הפנה לכאן לפירוט התהליך. מה שכבר הוחלט שם (<span class="tag tag-ok">מתועד</span>):</p>
+    <ul>
+      <li>כל עבודה שנוגעת בלוח חשמל או בחיווט קיים מאחורי מתג/שקע — <strong>אך ורק חשמלאי מוסמך</strong> (קבלן משנה). מכשירים אלחוטיים ומכשירי סוללה — גיא מתקין בעצמו.</li>
+      <li>בפועל: קטגוריות 5 ו-6 (Shelly מאחורי מתגים, צבתות מדידה, DIN-Rail, בקרת דוד) הן כמעט תמיד עבודת חשמלאי. גם Shelly Pro DIN-Rail מקטגוריה 4 (החבילות SafeHome ו-EliteHome).</li>
+      <li>בשלב 3 הלקוחות: חשמלאי קבוע אחד (המלצה מהרשת האישית) + איש קשר גיבוי, תשלום פר-עבודה, בלי חוזה בלעדיות.</li>
+      <li>בכל עבודה: תעודת חשמלאי מוסמך בתוקף + הבהרה כתובה על חלוקת אחריות וביטוח.</li>
+    </ul>
+    <div class="bg-note" style="margin-top:14px">
+      <h3>מה מוצע להוסיף כאן <span class="tag tag-new">הצעה</span></h3>
+      <ul>
+        <li>עבודת החשמל מתבצעת <strong>לפני</strong> שגיא מתקין את המכשירים שתלויים בה, ורק אחרי שהחשמלאי אישר שסיים.</li>
+        <li>בסקר הבית (שלב 2) גיא מסמן על כל פריט אם הוא "חשמלאי" או "גיא", כך שההצעה ללקוח כבר כוללת את עלות החשמלאי.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="handover" class="block">
+    <div class="block-head">
+      <div class="block-head-left"><div class="letter-badge">F</div><h2>מסירה ללקוח</h2></div>
+      <span class="status status-draft">✎ הצעה</span>
+    </div>
+    <p>מה הלקוח מקבל ביום המסירה <span class="tag tag-new">הצעה</span>:</p>
+    <ul class="chk">
+      <li>אפליקציית Companion מותקנת ומחוברת בטלפון שלו (ובטלפונים של בני הבית שהוא מבקש)</li>
+      <li>דשבורד שעובד מהטלפון (העיצוב עצמו — <a href="prd2.html" style="color:var(--brand-blue);text-decoration:none;font-weight:600">PRD 2</a>)</li>
+      <li>הסבר קצר על פתיחת קריאה בוואטסאפ, וטבלת ה-SLA לפי חומרה (ערוץ התקשורת — <a href="prd6.html" style="color:var(--brand-blue);text-decoration:none;font-weight:600">PRD 6</a>)</li>
+      <li>סיכום מה כלול בחבילה, מה לא כלול, ומה באחריות הלקוח (למשל סוללות)</li>
+      <li>עותק של מסמך הפרטיות החתום ושל ההבהרה על חלוקת האחריות מול החשמלאי</li>
+    </ul>
+  </section>
+
+  <section id="risks" class="block">
+    <div class="block-head">
+      <div class="block-head-left"><div class="letter-badge">G</div><h2>תלויות וסיכונים</h2></div>
+      <span class="status status-draft">✎ טיוטה</span>
+    </div>
+    <ul>
+      <li><strong>ראוטר של הלקוח.</strong> כל checklist הרשת מניח שאפשר להיכנס להגדרות הראוטר ולשנות DHCP Reservation ו-AP Isolation. אם הראוטר של ספק האינטרנט מגביל את זה, ההתקנה נתקעת — לבדוק בסקר הבית, לפני החתימה.</li>
+      <li><strong>חשמלאי.</strong> כמעט כל התקנה תלויה בזמינות שלו (ראו PRD 1, סעיף G). עיכוב שלו מעכב את כל התהליך.</li>
+      <li><strong>Nabu Casa דורש מהלקוח לפתוח חשבון ולשלם בעצמו.</strong> לקוח לא-טכני עלול להיתקע בפתיחת חשבון או בתשלום. הסיבה שגיא מלווה בזמן ההתקנה, בנוכחותו.</li>
+      <li><strong>המודל זמני.</strong> Nabu Casa אישרו שתוכנית מתקינים בפיתוח, בלי תאריכים ובלי תמחור (ראו <a href="claude/decision-network-access.md" style="color:var(--brand-blue);text-decoration:none;font-weight:600">מסמך ההחלטה</a>). לכן שלב Nabu Casa בנוי כמודול נפרד ב-checklist.</li>
+      <li><strong>קיבולת של אדם אחד.</strong> אין עדיין SOP להעברה לטכנאי שכיר. המסמך הזה הוא הצעד הראשון בכיוון.</li>
+    </ul>
+  </section>
+
+  <section id="open" class="block">
+    <div class="block-head">
+      <div class="block-head-left"><div class="letter-badge">H</div><h2>שאלות פתוחות להחלטה</h2></div>
+      <span class="status status-empty">❓ 7 שאלות</span>
+    </div>
+    <div class="qbox"><div class="qlabel">1 — מקדמה ומסלול תשלום</div><p>מתי בתהליך נגבית מקדמה, וכמה? הנושא כבר מופיע בצעדים הבאים בתוכנית העסקית, כי גיא מממן את החומרה לפני שהלקוח סיים לשלם.</p></div>
+    <div class="qbox"><div class="qlabel">2 — אישור ההגדרה של "הבית חי"</div><p>ההגדרה המוצעת בסעיף B — האם היא מספיקה, ומה חסר?</p></div>
+    <div class="qbox"><div class="qlabel">3 — הצמדת חיישנים מראש אצל גיא</div><p>אפשר לבדוק אם ניתן להצמיד חיישני Zigbee ל-HA של הלקוח כבר אצל גיא לפני ההתקנה, ולחסוך זמן אצל הלקוח. לא ברור עדיין אם זה עובד בפועל עם ה-SkyConnect — צריך לנסות פעם אחת.</p></div>
+    <div class="qbox"><div class="qlabel">4 — HACS</div><p>דף ה-<a href="ohf.html" style="color:var(--brand-blue);text-decoration:none;font-weight:600">Open Home Foundation</a> מציע להפוך אותו לחלק קבוע מה-checklist. יש מתח מול העיקרון שבבסיס החלטת ה-Watchman (לא להסתמך על קוד צד-שלישי שגיא לא שולט בו) — צריך להחליט אם ובאיזה מקרים.</p></div>
+    <div class="qbox"><div class="qlabel">5 — ראוטר שלא מאפשר את ההגדרות</div><p>מה עושים כשהראוטר של ספק האינטרנט לא מאפשר DHCP Reservation או כיבוי AP Isolation? לבקש מהלקוח לשנות ראוטר? להוסיף ראוטר משלנו? מחיר?</p></div>
+    <div class="qbox"><div class="qlabel">6 — אחריות על עבודת ההתקנה והחומרה</div><p>לוודא מול PRD 1 מה תקופת האחריות על עבודת ההתקנה עצמה ועל החומרה, ולכתוב אותה במסמך המסירה.</p></div>
+    <div class="qbox"><div class="qlabel">7 — בחירת חשמלאי ואימות תקנים</div><p>עדיין פתוח מ-PRD 1: מי החשמלאי הקבוע, ואילו משימות בפועל מחייבות רישיון. לאמת מולו לפני הלקוח הראשון.</p></div>
+  </section>
+
+</main>
+
+<footer>נוצר 19/09/2026 · PRD 3 — טיוטה ראשונה, מתעדכן תוך כדי שיחה עם גיא</footer>
+
+</body>
+</html>
