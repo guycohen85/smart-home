@@ -7,9 +7,9 @@
 | קובץ | מה זה |
 |---|---|
 | `onehome_customer_tracker_SAMPLE.xlsx` | הגיליון עצמו, 6 לשוניות: לקוחות, Checklist, שעות, פניות, חבילות, הסבר |
-| `preview.html` | תצוגה לטלפון של אותו גיליון (כרטיסים במקום 27 עמודות). אמורה להיות נגישה ב-`https://guycohen85.github.io/smart-home/customer-tracker/preview.html` |
+| `index.html` | תצוגה לטלפון של אותו גיליון (כרטיסים במקום 27 עמודות). אמורה להיות נגישה ב-`https://guycohen85.github.io/smart-home/customer-tracker/` |
 | `tools/build_workbook.py` | יוצר מחדש את האקסל. שינויים בגיליון נעשים כאן, לא ידנית באקסל, כדי שהקבצים יישארו זהים |
-| `tools/build_preview.py` + `tools/preview_template.html` | יוצרים מחדש את `preview.html` מתוך האקסל |
+| `tools/build_preview.py` + `tools/preview_template.html` | יוצרים מחדש את `index.html` מתוך האקסל |
 
 ## איך מעדכנים
 
@@ -19,7 +19,7 @@ python3 build_workbook.py                 # יוצר את האקסל
 # חישוב מחדש של הנוסחאות (LibreOffice), כדי שיישמרו ערכים מחושבים בקובץ:
 soffice --headless --convert-to xlsx --outdir /tmp/recalc ../onehome_customer_tracker_SAMPLE.xlsx
 cp /tmp/recalc/onehome_customer_tracker_SAMPLE.xlsx ..
-python3 build_preview.py                  # יוצר את preview.html
+python3 build_preview.py                  # יוצר את index.html
 ```
 
 דרישות: `openpyxl` ו-LibreOffice.

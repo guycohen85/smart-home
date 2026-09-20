@@ -1,4 +1,4 @@
-"""Builds preview.html (mobile view of the workbook) from the recalculated xlsx.
+"""Builds index.html (mobile view of the workbook) from the recalculated xlsx.
 Run after build_workbook.py + recalculation.
 """
 import json
@@ -39,5 +39,5 @@ leg=[wb['הסבר'].cell(r,1).value for r in range(1,20)]
 leg=[x for x in leg]
 data={'H':H,'cust':cust_out,'ids':ids[:nc],'items':items,'prog':[f'{x*100:.0f}%' for x in prog],'hours':hours,'issues':issues,'pk':pk,'sm':sm,'leg':leg}
 tpl=open(HERE/'preview_template.html',encoding='utf-8').read()
-open(ROOT/'preview.html','w',encoding='utf-8').write(tpl.replace('/*DATA*/null',json.dumps(data,ensure_ascii=False)))
+open(ROOT/'index.html','w',encoding='utf-8').write(tpl.replace('/*DATA*/null',json.dumps(data,ensure_ascii=False)))
 print(len(cust_out),nc,len(items),len(hours),len(issues))
