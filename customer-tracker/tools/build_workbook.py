@@ -48,6 +48,8 @@ CUST = [
     ('id', 'מזהה לקוח', 10), ('name', 'שם לקוח', 22), ('phone', 'טלפון', 14), ('city', 'עיר / אזור', 14),
     ('pkg', 'חבילה', 12), ('list_price', 'מחיר חבילה', 12), ('retainer', 'ריטיינר חודשי', 12),
     ('adj', 'תוספות / הנחה (₪)', 13), ('price', 'מחיר בפועל', 12),
+    ('deposit_due', 'מקדמה בחתימה', 12), ('deposit_date', 'תאריך שולמה מקדמה', 14), ('can_order', 'אפשר להזמין ציוד?', 16),
+    ('final_date', 'תאריך שולמה יתרה', 14), ('balance', 'יתרה לגבייה', 12),
     ('d_survey', 'תאריך סקר בית', 13), ('d_install', 'תאריך התקנה', 13), ('d_accept', 'תאריך אישור קבלה', 14),
     ('ret_start', 'תחילת ריטיינר (= אישור קבלה)', 16), ('status', 'סטטוס', 14),
     ('ip', 'IP קבוע', 14), ('mac', 'MAC של ה-HA', 20), ('ha_ver', 'גרסת HA', 11),
@@ -63,7 +65,7 @@ CUST = [
 KEYS = [k for k, _, _ in CUST]
 def col(k): return L(KEYS.index(k) + 1)
 def idx(k): return KEYS.index(k) + 1
-FORMULA_KEYS = {'list_price', 'retainer', 'price', 'ret_start', 'profit', 'progress', 'hours', 'pph', 'support', 'open_issues'}
+FORMULA_KEYS = {'list_price', 'retainer', 'price', 'deposit_due', 'can_order', 'balance', 'ret_start', 'profit', 'progress', 'hours', 'pph', 'support', 'open_issues'}
 FIRST, LAST = 2, 21   # customer rows with ready formulas
 N_CHECK_CUSTOMERS = 5
 
@@ -75,6 +77,10 @@ for r, (n, a, b) in enumerate([('EcoHome', 5700, 160), ('SafeHome', 8700, 220), 
         c = ws_p.cell(r, c_, v); c.font = BLUE; c.number_format = ILS
     for c_ in (1, 2, 3):
         ws_p.cell(r, c_).border = BRD
+ws_p['E1'] = 'אחוז מקדמה בחתימה'; ws_p['E1'].font = HDR; ws_p['E1'].fill = HFILL; ws_p['E1'].alignment = CEN; ws_p['E1'].border = BRD
+ws_p['E2'] = 0.5; ws_p['E2'].font = BLUE; ws_p['E2'].number_format = '0%'; ws_p['E2'].border = BRD
+ws_p['E2'].comment = Comment('הצעה מ-20/09 (PRD 3, שאלה 1): 50% בחתימה לפני הזמנת ציוד, היתרה באישור קבלה חתום. ממתין לבדיקה.', 'Claude')
+ws_p.column_dimensions['E'].width = 18
 ws_p['A6'] = 'מקור המחירים: PRD 1 / תמחור מעודכן ב-16/09/2026. אם התמחור משתנה — לעדכן כאן בלבד (תאים כחולים).'
 ws_p['A6'].font = Font(name=F, size=9, italic=True, color='475569')
 ws_p['A8'] = 'סיכום'; ws_p['A8'].font = BOLD
@@ -86,6 +92,7 @@ summ = [
     ('סה"כ פניות פתוחות', "=COUNTIF('פניות'!$F$2:$F$500,\"פתוחה\")", '0'),
     ('אירועים קריטיים מעבר ל-SLA (יעד: 0)', "=COUNTIFS('פניות'!$E$2:$E$500,\"קריטי\",'פניות'!$K$2:$K$500,\"✗\")", '0'),
     ('סה"כ שעות התקנה (ללא תמיכה)', f"=SUM('שעות'!$D$2:$D$500)-SUMIFS('שעות'!$D$2:$D$500,'שעות'!$B$2:$B$500,\"{SUPPORT}\")", '0.0'),
+    ('סה"כ יתרה לגבייה', f"=SUM('לקוחות'!${col('balance')}${FIRST}:${col('balance')}${LAST})", ILS),
     ('סה"כ שעות תמיכה', f"=SUMIFS('שעות'!$D$2:$D$500,'שעות'!$B$2:$B$500,\"{SUPPORT}\")", '0.0'),
 ]
 for k, (lab, fm, nf) in enumerate(summ, 9):
@@ -100,6 +107,9 @@ for r in range(FIRST, LAST + 1):
         'list_price': f'=IF($E{r}="","",IFERROR(INDEX(\'חבילות\'!$B$2:$B$4,MATCH($E{r},\'חבילות\'!$A$2:$A$4,0)),""))',
         'retainer': f'=IF($E{r}="","",IFERROR(INDEX(\'חבילות\'!$C$2:$C$4,MATCH($E{r},\'חבילות\'!$A$2:$A$4,0)),""))',
         'price': f'=IF(OR({a}="",${col("list_price")}{r}=""),"",${col("list_price")}{r}+N(${col("adj")}{r}))',
+        'deposit_due': f'=IF(${col("price")}{r}="","",ROUND(${col("price")}{r}*\'חבילות\'!$E$2,0))',
+        'can_order': f'=IF({a}="","",IF(${col("deposit_date")}{r}="","לא — מקדמה טרם שולמה","כן"))',
+        'balance': f'=IF(${col("price")}{r}="","",${col("price")}{r}-IF(${col("deposit_date")}{r}="",0,${col("deposit_due")}{r})-IF(${col("final_date")}{r}="",0,${col("price")}{r}-${col("deposit_due")}{r}))',
         'ret_start': f'=IF(${col("d_accept")}{r}="","",${col("d_accept")}{r})',
         'profit': f'=IF(OR({a}="",${col("price")}{r}="",${col("hw_cost")}{r}=""),"",${col("price")}{r}-${col("hw_cost")}{r}-N(${col("elec_cost")}{r}))',
         'progress': f"=IF({a}=\"\",\"\",IFERROR(INDEX('Checklist'!$C$CHKROW:${L(2 + N_CHECK_CUSTOMERS)}$CHKROW,MATCH({a},'Checklist'!$C$1:${L(2 + N_CHECK_CUSTOMERS)}$1,0)),\"\"))",
@@ -116,11 +126,11 @@ for r in range(FIRST, LAST + 1):
             cell.font = BLK; cell.fill = GFILL
         else:
             cell.font = BLUE
-    for k in ('list_price', 'retainer', 'adj', 'price', 'hw_cost', 'elec_cost'):
+    for k in ('list_price', 'retainer', 'adj', 'price', 'deposit_due', 'balance', 'hw_cost', 'elec_cost'):
         ws_c.cell(r, idx(k)).number_format = ILS
     for k in ('profit', 'pph'):
         ws_c.cell(r, idx(k)).number_format = ILS_NEG
-    for k in ('d_survey', 'd_install', 'd_accept', 'ret_start'):
+    for k in ('d_survey', 'd_install', 'd_accept', 'ret_start', 'deposit_date', 'final_date'):
         ws_c.cell(r, idx(k)).number_format = DATE
     ws_c.cell(r, idx('progress')).number_format = '0%'
     for k in ('hours', 'support'):
@@ -128,7 +138,7 @@ for r in range(FIRST, LAST + 1):
 
 sample = {
     'id': 'C001', 'name': 'לקוח לדוגמה (לא אמיתי)', 'phone': '050-0000000', 'city': 'תל אביב', 'pkg': 'SafeHome',
-    'adj': 0, 'd_survey': date(2026, 10, 5), 'd_install': date(2026, 10, 19), 'd_accept': date(2026, 10, 19),
+    'adj': 0, 'deposit_date': date(2026, 10, 8), 'final_date': date(2026, 10, 19), 'd_survey': date(2026, 10, 5), 'd_install': date(2026, 10, 19), 'd_accept': date(2026, 10, 19),
     'status': 'פעיל', 'ip': '192.168.1.50', 'mac': 'AA:BB:CC:DD:EE:FF', 'ha_ver': '2026.9.3', 'nabu': 'לא', 'nabu_svc': '—',
     'r2': 'onehome-c001-backups', 'monitor': 'c001-sample', 'elec_work': 'כן', 'electrician': 'חשמלאי א׳ (לדוגמה)',
     'hw_cost': 4200, 'elec_cost': 800,
@@ -148,6 +158,8 @@ dv(ws_c, '"כן,לא"', rng('nabu')); dv(ws_c, '"כן,לא"', rng('elec_work'))
 ws_c[f"{col('progress')}1"].comment = Comment(f'מחושב אוטומטית מלשונית Checklist. מופיע רק ללקוחות בשורות 2–{1 + N_CHECK_CUSTOMERS}.', 'Claude')
 ws_c[f"{col('hours')}1"].comment = Comment(f'סכום כל השעות של הלקוח בלשונית שעות, חוץ מהשלב "{SUPPORT}" (זה נספר בעמודה נפרדת).', 'Claude')
 ws_c[f"{col('profit')}1"].comment = Comment('מחיר בפועל פחות עלות חומרה ופחות עלות חשמלאי. לא כולל שכר עצמי ועלויות כלים חודשיות (R2, ניטור).', 'Claude')
+ws_c[f"{col('deposit_due')}1"].comment = Comment('אחוז המקדמה נקבע בתא E2 בלשונית חבילות (הצעה: 50%).', 'Claude')
+ws_c[f"{col('can_order')}1"].comment = Comment('לפי המדיניות המוצעת: לא מזמינים ציוד לפני שהמקדמה שולמה (בהרחבות — תשלום מלא).', 'Claude')
 ws_c[f"{col('monitor')}1"].comment = Comment('מזהה כללי, מתאים לכל כלי ניטור שיוחלט עליו (למשל שם environment או מזהה של דופק). עוד לא הוחלט על הכלי.', 'Claude')
 
 # ---------------- Checklist ----------------
@@ -259,7 +271,7 @@ lines = [
     ('טקסט כחול = תא שממלאים ידנית.   טקסט שחור על רקע אפור = נוסחה, לא לערוך.', False),
     ('', False),
     ('הלשוניות', True),
-    ('לקוחות — שורה לכל לקוח. נוסחאות מוכנות עד שורה 21. כולל מחיר בפועל, עלות חומרה וחשמלאי, רווח לשעה, שעות תמיכה ומזהה ניטור. שדות ה-IP, MAC, R2 ומזהה הניטור הם אלה ש-PRD 4 (כלי ניהול פנימי) יצטרך, כך שבהמשך אפשר לייבא אותם.', False),
+    ('לקוחות — שורה לכל לקוח. נוסחאות מוכנות עד שורה 21. כולל מחיר בפועל, עלות חומרה וחשמלאי, רווח לשעה, שעות תמיכה ומזהה ניטור. כולל עמודות תשלום: מקדמה, אפשר להזמין ציוד, יתרה. שדות ה-IP, MAC, R2 ומזהה הניטור הם אלה ש-PRD 4 (כלי ניהול פנימי) יצטרך, כך שבהמשך אפשר לייבא אותם.', False),
     ('Checklist — עמודה לכל לקוח, נמשכת אוטומטית מלשונית לקוחות (5 הלקוחות הראשונים). מבוסס על PRD 3, סעיפים B ו-D. "לא רלוונטי" לא נספר באחוז ההתקנה.', False),
     (f'שעות — שורה לכל שלב עבודה, כולל "נסיעות". השלב "{SUPPORT}" נספר בנפרד, כדי לראות כמה תמיכה כל לקוח באמת צורך מול הריטיינר שלו.', False),
     ('פניות — יומן פניות אחרי המסירה. חומרה לפי PRD 1: קריטי (תגובה עד יום עסקים), אזהרה (עד 3 ימי עסקים), בקשה (ללא SLA). "מידע" לא נרשם, כי גיא לא מעורב.', False),
@@ -270,8 +282,9 @@ lines = [
     ('2. לא לשמור את הקובץ האמיתי ב-repo של smart-home או ב-plan-site (האתר ב-GitHub Pages עלול להיות נגיש ברשת) ולא בחשבון OneDrive של המעסיק.', False),
     ('3. "רווח התקנה" = מחיר בפועל − עלות חומרה − עלות חשמלאי. "רווח לשעה" = רווח התקנה ÷ שעות התקנה (כולל נסיעות). שניהם לפני שכר עצמי ולפני עלויות כלים חודשיות (R2, ניטור).', False),
     ('4. תחילת ריטיינר = תאריך אישור קבלה חתום (החלטה ב-PRD 3, סעיף B).', False),
-    ('5. "מזהה ניטור" הוא עמודה כללית — עוד לא הוחלט איזה כלי ניטור ישמש (Sentry, דופק או אחר).', False),
-    ('6. בדיקת ה-SLA מניחה ימי עסקים א׳–ה׳ בלי חגים, והיעד הוא סוף יום העסקים ה-N אחרי פתיחת הפנייה. אם שישי נחשב יום עסקים, לתקן את הנוסחה בעמודה "יעד SLA".', False),
+    ('5. מקדמה (הצעה מ-20/09, ממתינה לבדיקה): 50% בחתימה לפני הזמנת ציוד, 50% באישור קבלה חתום. האחוז נקבע בתא E2 בלשונית חבילות. בהרחבות — תשלום מלא לפני הזמנת חומרה.', False),
+    ('6. "מזהה ניטור" הוא עמודה כללית — עוד לא הוחלט איזה כלי ניטור ישמש (Sentry, דופק או אחר).', False),
+    ('7. בדיקת ה-SLA מניחה ימי עסקים א׳–ה׳ בלי חגים, והיעד הוא סוף יום העסקים ה-N אחרי פתיחת הפנייה. אם שישי נחשב יום עסקים, לתקן את הנוסחה בעמודה "יעד SLA".', False),
 ]
 for i, (t, b) in enumerate(lines, 1):
     c = ws_leg.cell(i, 1, t); c.font = Font(name=F, size=12 if i == 1 else 10, bold=b)
