@@ -33,6 +33,8 @@ body{background:var(--bg);color:var(--ink);font-family:'Heebo',system-ui,-apple-
 header{background:var(--head);color:var(--head-fg);padding:18px 16px 14px}
 header h1{margin:0;font-size:19px;font-weight:700}
 header p{margin:4px 0 0;font-size:13px;opacity:.8}
+header .back{display:inline-block;margin-bottom:8px;color:var(--head-fg);opacity:.8;font-size:13.5px;text-decoration:none}
+header .back:hover,header .back:focus-visible{opacity:1;text-decoration:underline}
 .tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--head);display:flex;gap:6px;overflow-x:auto;padding:0 12px 10px;scrollbar-width:none}
 .tabs::-webkit-scrollbar{display:none}
 .tab{flex:none;border:1px solid transparent;background:transparent;color:var(--head-fg);opacity:.72;font:inherit;font-size:14px;font-weight:500;padding:7px 14px;border-radius:999px;cursor:pointer}
@@ -81,6 +83,7 @@ tr:nth-child(even) td{background:var(--row)}
 </head>
 <body>
 <header>
+  <a class="back" href="../plan-site/index.html">← חזרה לאתר התכנון</a>
   <h1>גיליון מעקב לקוחות — דוגמה</h1>
   <p>תצוגה לטלפון של הקובץ onehome_customer_tracker_SAMPLE.xlsx</p>
 </header>
