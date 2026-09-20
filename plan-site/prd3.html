@@ -209,9 +209,34 @@
   <section id="goals" class="block">
     <div class="block-head">
       <div class="block-head-left"><div class="letter-badge">B</div><h2>מטרות ומדדי הצלחה</h2></div>
-      <span class="status status-draft">✎ הצעה — לאישור</span>
+      <span class="status status-draft">✎ הגדרה הושלמה — מדדים בהצעה</span>
     </div>
-    <div class="qbox"><div class="qlabel">הגדרה מוצעת ל"הבית חי" <span class="tag tag-new">הצעה</span></div><p>הבית נחשב חי רק כשכל אלה מתקיימים: (1) כל המכשירים בחבילה מחוברים, ממוספרים בשמות ברורים ופועלים; (2) הלקוח נכנס לדשבורד מהטלפון שלו כשהוא בבית; (3) התראת Push בדיקה התקבלה בטלפון של הלקוח; (4) גיבוי ראשון הצליח, גם ל-R2 וגם עותק מקומי; (5) מסמך הפרטיות חתום; (6) הלקוח קיבל את חבילת המסירה (סעיף F).</p></div>
+    <div class="qbox"><div class="qlabel">הגדרה ל"הבית חי" — הבית נחשב חי רק כשכל התנאים מתקיימים</div>
+      <p style="margin-bottom:8px"><strong>טכני</strong></p>
+      <ul style="margin:0 0 10px">
+        <li>כל מכשירי החבילה מחוברים, בשמות ברורים ופועלים</li>
+        <li><strong>בדיקת ניתוק אינטרנט:</strong> מנתקים את הראוטר מהאינטרנט ובודקים שלפחות אוטומציה מקומית אחת ממשיכה לרוץ — זו ההבטחה "Local-First" שבמסר השיווקי, ועכשיו נבדקת בפועל <span class="tag tag-new">הצעה</span></li>
+        <li>גיבוי ראשון הצליח ל-R2, ונשמר עותק מקומי</li>
+        <li>אצל גיא נרשמו IP, MAC וגרסת HA של ההתקנה, וניטור ה-Alert פועל <span class="tag tag-new">הצעה</span></li>
+      </ul>
+      <p style="margin-bottom:8px"><strong>בטיחות</strong></p>
+      <ul style="margin:0 0 10px">
+        <li>התראת Push בדיקה התקבלה בטלפון של הלקוח, כולל כשהוא מחוץ ל-WiFi הביתי</li>
+        <li><strong>בדיקה לכל חיישן קריטי בחבילה:</strong> מים על חיישן ההצפה מפעילים התראה, וסירנת גלאי העשן נבדקה — התראה כללית לא מוכיחה שכל חיישן מחובר אליה <span class="tag tag-new">הצעה</span></li>
+        <li>אם נרכשה גישה מרחוק: כניסה לדשבורד מהנייד על דאטה סלולרי <span class="tag tag-new">הצעה</span></li>
+      </ul>
+      <p style="margin-bottom:8px"><strong>לקוח</strong></p>
+      <ul style="margin:0 0 10px">
+        <li>הדשבורד עובד בטלפון של הלקוח ושל בני הבית שביקש</li>
+        <li><strong>הלקוח מבצע בעצמו פעולה אחת</strong> (מדליק אור או פותח קריאה בוואטסאפ), כדי לוודא שהוא יודע להשתמש במערכת ולא רק שהיא עובדת <span class="tag tag-new">הצעה</span></li>
+        <li>חבילת המסירה נמסרה ומסמך הפרטיות חתום</li>
+      </ul>
+      <p style="margin-bottom:8px"><strong>חוזי</strong></p>
+      <ul style="margin:0">
+        <li>אם הייתה עבודת חשמל: יש אישור כתוב מהחשמלאי <span class="tag tag-new">הצעה</span></li>
+      </ul>
+    </div>
+    <div class="qbox"><div class="qlabel">"הבית חי" הוא גם תחילת הריטיינר וה-SLA <span class="tag tag-new">הצעה</span></div><p>הריטיינר וה-SLA מתחילים ביום שהלקוח חותם על אישור קבלה, לא ביום ההתקנה. כך הלקוח לא משלם על מערכת שעוד לא אושרה, וברור מי אחראי לתקלה ביום שאחרי ההתקנה. אחוז uptime עדיין לא נמדד בשלב הזה (PRD 1), ולכן בדיקות הקבלה הן ההוכחה היחידה שהמערכת עובדת ביום המסירה.</p></div>
     <div class="qbox"><div class="qlabel">מדד 1 — שעות בפועל לכל שלב <span class="tag tag-ok">מתועד</span></div><p>לרשום שעות אמיתיות לכל שלב בלקוח הראשון. זה המספר שמחליט אם הריטיינר מתומחר נכון (ראו הצעד "למדוד שעות בפועל" בתוכנית העסקית), והוא הבסיס לכל SOP עתידי להעברה לטכנאי שכיר.</p></div>
     <div class="qbox"><div class="qlabel">מדד 2 — פניות פתוחות בשבועיים הראשונים <span class="tag tag-new">הצעה</span></div><p>כמה פניות של הלקוח נדרשו אחרי המסירה, ומה היה הנושא. פנייה חוזרת על אותו נושא אצל כמה לקוחות = פער ב-checklist או במסירה, לא בעיה של לקוח.</p></div>
   </section>
@@ -231,8 +256,8 @@
         <tr><td class="rowlabel">4</td><td>הזמנת ציוד והכנה אצל גיא</td><td>הכנת ה-HA (Green + SkyConnect) מראש: סיסמת הצפנה ייחודית לגיבויים, bucket מבודד ב-R2 (ואם Sentry יאומץ — גם שם environment ייחודי). עדכוני קושחה נבדקים קודם ב-Sandbox של גיא</td><td>HA מוכן להתקנה</td></tr>
         <tr><td class="rowlabel">5</td><td>עבודת חשמל (אם נדרש)</td><td>חשמלאי מוסמך מבצע כל מה שנוגע בלוח או בחיווט קיים (ראו סעיף E)</td><td>עבודת חשמל גמורה + אישור כתוב</td></tr>
         <tr><td class="rowlabel">6</td><td>התקנה ורשת אצל הלקוח</td><td>חיבור המכשירים, הגדרת רשת וגישה מקומית, שירותי Nabu Casa אם נבחרו, גיבויים והתראות — לפי ה-checklist בסעיף D</td><td>Checklist מלא מסומן</td></tr>
-        <tr><td class="rowlabel">7</td><td>בדיקות קבלה</td><td>מעבר על הגדרת "הבית חי" (סעיף B), כולל בדיקת התראת Push אמיתית לטלפון הלקוח</td><td>אישור שהבית חי</td></tr>
-        <tr><td class="rowlabel">8</td><td>מסירה והדרכה</td><td>חבילת מסירה (סעיף F) והסבר קצר על פתיחת קריאה, ה-SLA ומה לא כלול</td><td>לקוח מודרך</td></tr>
+        <tr><td class="rowlabel">7</td><td>בדיקות קבלה</td><td>מעבר על כל תנאי "הבית חי" בסעיף B: בדיקת ניתוק אינטרנט, בדיקה לכל חיישן קריטי, Push אמיתי לטלפון הלקוח, פעולה שהלקוח מבצע בעצמו</td><td>אישור שהבית חי</td></tr>
+        <tr><td class="rowlabel">8</td><td>מסירה והדרכה</td><td>חבילת מסירה (סעיף F) והסבר קצר על פתיחת קריאה, ה-SLA ומה לא כלול. הלקוח חותם על אישור קבלה — זה התאריך שבו מתחילים הריטיינר וה-SLA</td><td>לקוח מודרך + אישור קבלה חתום</td></tr>
         <tr><td class="rowlabel">9</td><td>מעקב אחרי המסירה</td><td>צ'ק-אין חודשי ב-WhatsApp כבר הוחלט ב-PRD 1 (<span class="tag tag-ok">מתועד</span>). בנוסף מוצע צ'ק-אין קצר אחרי כמה ימים ואחרי שבועיים (<span class="tag tag-new">הצעה</span>), כדי לתפוס בעיות בשלב שהלקוח עוד לומד את המערכת</td><td>פניות ראשונות מתועדות (מדד 2)</td></tr>
       </table>
     </div>
@@ -322,6 +347,7 @@
       <li>הסבר קצר על פתיחת קריאה בוואטסאפ, וטבלת ה-SLA לפי חומרה (ערוץ התקשורת — <a href="prd6.html" style="color:var(--brand-blue);text-decoration:none;font-weight:600">PRD 6</a>)</li>
       <li>סיכום מה כלול בחבילה, מה לא כלול, ומה באחריות הלקוח (למשל סוללות)</li>
       <li>עותק של מסמך הפרטיות החתום ושל ההבהרה על חלוקת האחריות מול החשמלאי</li>
+      <li>אישור קבלה חתום (מתחיל את הריטיינר וה-SLA) <span class="tag tag-new">הצעה</span></li>
     </ul>
   </section>
 
@@ -342,10 +368,10 @@
   <section id="open" class="block">
     <div class="block-head">
       <div class="block-head-left"><div class="letter-badge">H</div><h2>שאלות פתוחות להחלטה</h2></div>
-      <span class="status status-empty">❓ 7 שאלות</span>
+      <span class="status status-empty">❓ 6 שאלות פתוחות</span>
     </div>
     <div class="qbox"><div class="qlabel">1 — מקדמה ומסלול תשלום</div><p>מתי בתהליך נגבית מקדמה, וכמה? הנושא כבר מופיע בצעדים הבאים בתוכנית העסקית, כי גיא מממן את החומרה לפני שהלקוח סיים לשלם.</p></div>
-    <div class="qbox"><div class="qlabel">2 — אישור ההגדרה של "הבית חי"</div><p>ההגדרה המוצעת בסעיף B — האם היא מספיקה, ומה חסר?</p></div>
+    <div class="qbox"><div class="qlabel">2 — ההגדרה של "הבית חי" — הוחלט ✓</div><p>ההגדרה המורחבת בסעיף B אושרה, כולל ההחלטה שהריטיינר וה-SLA מתחילים באישור הקבלה החתום.</p></div>
     <div class="qbox"><div class="qlabel">3 — הצמדת חיישנים מראש אצל גיא</div><p>אפשר לבדוק אם ניתן להצמיד חיישני Zigbee ל-HA של הלקוח כבר אצל גיא לפני ההתקנה, ולחסוך זמן אצל הלקוח. לא ברור עדיין אם זה עובד בפועל עם ה-SkyConnect — צריך לנסות פעם אחת.</p></div>
     <div class="qbox"><div class="qlabel">4 — HACS</div><p>דף ה-<a href="ohf.html" style="color:var(--brand-blue);text-decoration:none;font-weight:600">Open Home Foundation</a> מציע להפוך אותו לחלק קבוע מה-checklist. יש מתח מול העיקרון שבבסיס החלטת ה-Watchman (לא להסתמך על קוד צד-שלישי שגיא לא שולט בו) — צריך להחליט אם ובאיזה מקרים.</p></div>
     <div class="qbox"><div class="qlabel">5 — ראוטר שלא מאפשר את ההגדרות</div><p>מה עושים כשהראוטר של ספק האינטרנט לא מאפשר DHCP Reservation או כיבוי AP Isolation? לבקש מהלקוח לשנות ראוטר? להוסיף ראוטר משלנו? מחיר?</p></div>
