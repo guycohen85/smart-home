@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>OneHome — גיליון מעקב לקוחות (דוגמה)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f4f6f8; --card:#ffffff; --ink:#14202e; --soft:#4a5a6c; --muted:#7b8a9b; --line:#dbe2ea;
+  --accent:#0b7a6b; --accent-bg:#e3f4f0; --warn-bg:#fff4d6; --warn-fg:#7a5200; --bad-bg:#fde4e2; --bad-fg:#a12a22;
+  --na-bg:#e9edf2; --na-fg:#5b6a7b; --head:#12202f; --head-fg:#ffffff; --row:#f8fafc;
+  box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#0c141d; --card:#131d29; --ink:#e6edf5; --soft:#a9b7c6; --muted:#7d8ea1; --line:#243345;
+    --accent:#3fc8b2; --accent-bg:#0f3a34; --warn-bg:#3a2c0a; --warn-fg:#f1c66a; --bad-bg:#3d1714; --bad-fg:#ff9b93;
+    --na-bg:#1c2836; --na-fg:#93a3b5; --head:#0a1119; --head-fg:#e6edf5; --row:#101a26;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0c141d; --card:#131d29; --ink:#e6edf5; --soft:#a9b7c6; --muted:#7d8ea1; --line:#243345;
+  --accent:#3fc8b2; --accent-bg:#0f3a34; --warn-bg:#3a2c0a; --warn-fg:#f1c66a; --bad-bg:#3d1714; --bad-fg:#ff9b93;
+  --na-bg:#1c2836; --na-fg:#93a3b5; --head:#0a1119; --head-fg:#e6edf5; --row:#101a26;
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:'Heebo',system-ui,-apple-system,'Segoe UI',Arial,sans-serif;font-size:15px;line-height:1.55;-webkit-text-size-adjust:100%}
+header{background:var(--head);color:var(--head-fg);padding:18px 16px 14px}
+header h1{margin:0;font-size:19px;font-weight:700}
+header p{margin:4px 0 0;font-size:13px;opacity:.8}
+.tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--head);display:flex;gap:6px;overflow-x:auto;padding:0 12px 10px;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex:none;border:1px solid transparent;background:transparent;color:var(--head-fg);opacity:.72;font:inherit;font-size:14px;font-weight:500;padding:7px 14px;border-radius:999px;cursor:pointer}
+.tab[aria-selected="true"]{background:var(--card);color:var(--ink);opacity:1;font-weight:600}
+.tab:focus-visible,.seg button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+main{padding:14px 12px 40px;max-width:760px;margin:0 auto}
+.note{background:var(--warn-bg);color:var(--warn-fg);border-radius:10px;padding:10px 12px;font-size:13.5px;margin-bottom:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;margin-bottom:12px;overflow:hidden}
+.card-h{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;padding:13px 14px;border-bottom:1px solid var(--line)}
+.card-h b{font-size:16.5px}
+.card-h small{display:block;color:var(--muted);font-size:13px}
+.pill{display:inline-block;padding:2px 10px;border-radius:999px;font-size:12.5px;font-weight:600;background:var(--na-bg);color:var(--na-fg);white-space:nowrap}
+.pill.ok{background:var(--accent-bg);color:var(--accent)}
+.pill.bad{background:var(--bad-bg);color:var(--bad-fg)}
+.pill.warn{background:var(--warn-bg);color:var(--warn-fg)}
+.grp{padding:10px 14px;border-bottom:1px solid var(--line)}
+.grp:last-child{border-bottom:0}
+.grp h3{margin:0 0 6px;font-size:13px;color:var(--muted);font-weight:600}
+.kv{display:grid;grid-template-columns:minmax(0,42%) minmax(0,58%);gap:2px 10px;padding:3px 0;font-size:14px}
+.kv span:first-child{color:var(--soft)}
+.kv span:last-child{overflow-wrap:anywhere}
+.kv .empty{color:var(--muted)}
+.seg{display:flex;gap:0;margin-bottom:12px;border:1px solid var(--line);border-radius:10px;overflow:hidden;width:max-content;max-width:100%}
+.seg button{border:0;background:var(--card);color:var(--soft);font:inherit;font-size:13.5px;padding:7px 14px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--accent);color:#fff;font-weight:600}
+.scroll{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--card)}
+table{border-collapse:collapse;width:100%;font-size:13.5px}
+th,td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:right;vertical-align:top;white-space:nowrap}
+th{background:var(--head);color:var(--head-fg);font-weight:600;position:sticky;top:0}
+td.wrap,th.wrap{white-space:normal;min-width:180px}
+tr:nth-child(even) td{background:var(--row)}
+.list .row{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 14px;border-bottom:1px solid var(--line)}
+.list .row:last-child{border-bottom:0}
+.list .row span:first-child{font-size:14px}
+.gh{padding:9px 14px;font-size:13px;font-weight:600;color:var(--muted);background:var(--row);border-bottom:1px solid var(--line)}
+.prog{display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px solid var(--line)}
+.prog b{font-size:22px}
+.sum{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.sum div{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+.sum b{display:block;font-size:22px}
+.sum span{font-size:13px;color:var(--soft)}
+.leg p{margin:0 0 10px}
+.leg h3{margin:16px 0 6px;font-size:15px}
+.hint{color:var(--muted);font-size:13px;margin:0 0 12px}
+</style>
+</head>
+<body>
+<header>
+  <h1>גיליון מעקב לקוחות — דוגמה</h1>
+  <p>תצוגה לטלפון של הקובץ onehome_customer_tracker_SAMPLE.xlsx</p>
+</header>
+<nav class="tabs" role="tablist" id="tabs"></nav>
+<main id="main"></main>
+
+<script>
+const D=/*DATA*/null;
+const TABS=[['cust','לקוחות'],['chk','Checklist'],['hrs','שעות'],['iss','פניות'],['pkg','חבילות'],['leg','הסבר']];
+const GROUPS=[
+ ['זיהוי',[0,1,2,3]],
+ ['חבילה ותשלום',[4,5,6,10]],
+ ['לוח זמנים',[7,8,9]],
+ ['פרטים טכניים',[12,13,14,15,16,17,18]],
+ ['עבודת חשמל',[19,20]],
+ ['מדדים',[21,22,23,24]],
+ ['סודות והערות',[25,26]]
+];
+let tab='cust', custView='cards';
+function el(t,c,x){const e=document.createElement(t);if(c)e.className=c;if(x!==undefined)e.textContent=x;return e}
+function pillFor(v){const p=el('span','pill',v);
+  if(v==='✓'||v==='פעיל'||v==='סגורה')p.classList.add('ok');
+  else if(v==='✗'||v==='קריטית')p.classList.add('bad');
+  else if(v==='פתוחה')p.classList.add('warn');
+  return p}
+function table(head,rows,wrapCols=[]){
+  const s=el('div','scroll'),t=el('table'),th=el('thead'),tr=el('tr');
+  head.forEach((h,i)=>{const c=el('th',wrapCols.includes(i)?'wrap':'',h);tr.appendChild(c)});
+  th.appendChild(tr);t.appendChild(th);const tb=el('tbody');
+  rows.forEach(r=>{const x=el('tr');r.forEach((v,i)=>x.appendChild(el('td',wrapCols.includes(i)?'wrap':'',v===''?'—':v)));tb.appendChild(x)});
+  t.appendChild(tb);s.appendChild(t);return s}
+function note(){return el('div','note','כל הנתונים כאן הם דוגמה (לקוח C001, לא אמיתי).')}
+function renderCust(m){
+  m.appendChild(note());
+  const seg=el('div','seg');
+  [['cards','כרטיסים'],['table','טבלה מלאה']].forEach(([k,l])=>{
+    const b=el('button','',l);b.setAttribute('aria-pressed',custView===k);b.onclick=()=>{custView=k;render()};seg.appendChild(b)});
+  m.appendChild(seg);
+  if(custView==='table'){m.appendChild(el('p','hint','גללו הצידה כדי לראות את כל 27 העמודות.'));m.appendChild(table(D.H,D.cust,[]));return}
+  D.cust.forEach(r=>{
+    const c=el('div','card'),h=el('div','card-h'),l=el('div');
+    l.appendChild(el('b','',r[1]));l.appendChild(el('small','',r[0]+' · '+r[4]));
+    h.appendChild(l);h.appendChild(pillFor(r[11]));c.appendChild(h);
+    GROUPS.forEach(([name,idx])=>{
+      const g=el('div','grp');g.appendChild(el('h3','',name));
+      idx.forEach(i=>{const kv=el('div','kv');kv.appendChild(el('span','',D.H[i]));
+        const v=el('span',r[i]===''?'empty':'',r[i]===''?'—':r[i]);kv.appendChild(v);g.appendChild(kv)});
+      c.appendChild(g)});
+    m.appendChild(c)})}
+function renderChk(m){
+  m.appendChild(note());
+  D.ids.forEach((id,j)=>{
+    const c=el('div','card list');
+    const p=el('div','prog');p.appendChild(el('b','',D.prog[j]));
+    const t=el('div');t.appendChild(el('div','',id+' — התקדמות'));t.appendChild(el('small','','"לא רלוונטי" לא נספר באחוזים'));p.appendChild(t);c.appendChild(p);
+    let last='';
+    D.items.forEach(it=>{
+      if(it.g!==last){c.appendChild(el('div','gh',it.g));last=it.g}
+      const r=el('div','row');r.appendChild(el('span','',it.t));r.appendChild(pillFor(it.v[j]||'—'));c.appendChild(r)});
+    m.appendChild(c)})}
+function renderHrs(m){
+  m.appendChild(note());
+  const tot=D.hours.reduce((a,r)=>a+(parseFloat(r[3])||0),0);
+  const s=el('div','sum');
+  const a=el('div');a.appendChild(el('b','',tot.toFixed(1)));a.appendChild(el('span','','סה"כ שעות'));s.appendChild(a);
+  m.appendChild(s);
+  m.appendChild(table(['לקוח','שלב','תאריך','שעות','הערה'],D.hours,[4]))}
+function renderIss(m){
+  m.appendChild(note());
+  D.issues.forEach(r=>{
+    const c=el('div','card'),h=el('div','card-h'),l=el('div');
+    l.appendChild(el('b','',r[3]));l.appendChild(el('small','',r[0]+' · '+r[1]+' · '+r[2]));
+    h.appendChild(l);h.appendChild(pillFor(r[5]));c.appendChild(h);
+    const g=el('div','grp');
+    [['חומרה',r[4]],['תאריך פתרון',r[6]],['זמן פתרון (שעות)',r[7]],['הערות',r[8]]].forEach(([k,v])=>{
+      const kv=el('div','kv');kv.appendChild(el('span','',k));kv.appendChild(el('span',v===''?'empty':'',v===''?'—':v));g.appendChild(kv)});
+    c.appendChild(g);m.appendChild(c)})}
+function renderPkg(m){
+  const s=el('div','sum');
+  D.sm.forEach(([k,v])=>{const d=el('div');d.appendChild(el('b','',String(v)));d.appendChild(el('span','',k));s.appendChild(d)});
+  m.appendChild(s);
+  m.appendChild(table(['חבילה','מחיר התקנה','ריטיינר חודשי'],D.pk));
+  m.appendChild(el('p','hint','מקור המחירים: PRD 1, תמחור מעודכן ב-16/09/2026.'))}
+function renderLeg(m){
+  const c=el('div','card'),b=el('div','grp leg');
+  D.leg.forEach((t,i)=>{ if(t===null||t==='')return; if(i===0)return;
+    const short=t.length<40&&!t.includes('.');
+    b.appendChild(el(short?'h3':'p','',t))});
+  c.appendChild(b);m.appendChild(c)}
+function render(){
+  const tabs=document.getElementById('tabs');tabs.innerHTML='';
+  TABS.forEach(([k,l])=>{const b=el('button','tab',l);b.setAttribute('role','tab');b.setAttribute('aria-selected',tab===k);
+    b.onclick=()=>{tab=k;render();window.scrollTo(0,0)};tabs.appendChild(b)});
+  const m=document.getElementById('main');m.innerHTML='';
+  ({cust:renderCust,chk:renderChk,hrs:renderHrs,iss:renderIss,pkg:renderPkg,leg:renderLeg})[tab](m)}
+render();
+</script>
+</body>
+</html>
