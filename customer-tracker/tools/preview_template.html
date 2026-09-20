@@ -94,13 +94,14 @@ tr:nth-child(even) td{background:var(--row)}
 const D=/*DATA*/null;
 const TABS=[['cust','לקוחות'],['chk','Checklist'],['hrs','שעות'],['iss','פניות'],['pkg','חבילות'],['leg','הסבר']];
 const GROUPS=[
- ['זיהוי',[0,1,2,3]],
- ['חבילה ותשלום',[4,5,6,10]],
- ['לוח זמנים',[7,8,9]],
- ['פרטים טכניים',[12,13,14,15,16,17,18]],
- ['עבודת חשמל',[19,20]],
- ['מדדים',[21,22,23,24]],
- ['סודות והערות',[25,26]]
+ ['זיהוי',['מזהה לקוח','שם לקוח','טלפון','עיר / אזור']],
+ ['חבילה ותשלום',['חבילה','מחיר חבילה','תוספות / הנחה (₪)','מחיר בפועל','ריטיינר חודשי','תחילת ריטיינר (= אישור קבלה)']],
+ ['רווחיות',['עלות חומרה (כולל מע"מ)','עלות חשמלאי','רווח התקנה (לפני שכר עצמי)','שעות התקנה (כולל נסיעות)','רווח התקנה לשעה','שעות תמיכה (ריטיינר)']],
+ ['לוח זמנים',['תאריך סקר בית','תאריך התקנה','תאריך אישור קבלה','התקדמות checklist']],
+ ['פרטים טכניים',['IP קבוע','MAC של ה-HA','גרסת HA','Nabu Casa','שירותי Nabu Casa שנבחרו','שם bucket ב-R2','מזהה ניטור']],
+ ['עבודת חשמל',['עבודת חשמל','חשמלאי']],
+ ['פניות',['פניות פתוחות']],
+ ['סודות והערות',['הפניה לסודות (מנהל סיסמאות)','הערות']]
 ];
 let tab='cust', custView='cards';
 function el(t,c,x){const e=document.createElement(t);if(c)e.className=c;if(x!==undefined)e.textContent=x;return e}
@@ -122,14 +123,14 @@ function renderCust(m){
   [['cards','כרטיסים'],['table','טבלה מלאה']].forEach(([k,l])=>{
     const b=el('button','',l);b.setAttribute('aria-pressed',custView===k);b.onclick=()=>{custView=k;render()};seg.appendChild(b)});
   m.appendChild(seg);
-  if(custView==='table'){m.appendChild(el('p','hint','גללו הצידה כדי לראות את כל 27 העמודות.'));m.appendChild(table(D.H,D.cust,[]));return}
+  if(custView==='table'){m.appendChild(el('p','hint','גללו הצידה כדי לראות את כל העמודות.'));m.appendChild(table(D.H,D.cust,[]));return}
   D.cust.forEach(r=>{
     const c=el('div','card'),h=el('div','card-h'),l=el('div');
-    l.appendChild(el('b','',r[1]));l.appendChild(el('small','',r[0]+' · '+r[4]));
-    h.appendChild(l);h.appendChild(pillFor(r[11]));c.appendChild(h);
-    GROUPS.forEach(([name,idx])=>{
+    l.appendChild(el('b','',r[1]));l.appendChild(el('small','',r[0]+' · '+r[D.H.indexOf('חבילה')]));
+    h.appendChild(l);h.appendChild(pillFor(r[D.H.indexOf('סטטוס')]));c.appendChild(h);
+    GROUPS.forEach(([name,names])=>{
       const g=el('div','grp');g.appendChild(el('h3','',name));
-      idx.forEach(i=>{const kv=el('div','kv');kv.appendChild(el('span','',D.H[i]));
+      names.forEach(n=>{const i=D.H.indexOf(n);if(i<0)return;const kv=el('div','kv');kv.appendChild(el('span','',n));
         const v=el('span',r[i]===''?'empty':'',r[i]===''?'—':r[i]);kv.appendChild(v);g.appendChild(kv)});
       c.appendChild(g)});
     m.appendChild(c)})}
@@ -146,9 +147,11 @@ function renderChk(m){
     m.appendChild(c)})}
 function renderHrs(m){
   m.appendChild(note());
-  const tot=D.hours.reduce((a,r)=>a+(parseFloat(r[3])||0),0);
+  const SUP='תמיכה (ריטיינר)';
+  const sum=f=>D.hours.filter(f).reduce((a,r)=>a+(parseFloat(r[3])||0),0);
   const s=el('div','sum');
-  const a=el('div');a.appendChild(el('b','',tot.toFixed(1)));a.appendChild(el('span','','סה"כ שעות'));s.appendChild(a);
+  [[sum(r=>r[1]!==SUP).toFixed(1),'שעות התקנה (כולל נסיעות)'],[sum(r=>r[1]===SUP).toFixed(1),'שעות תמיכה (ריטיינר)']].forEach(([n,l])=>{
+    const a=el('div');a.appendChild(el('b','',n));a.appendChild(el('span','',l));s.appendChild(a)});
   m.appendChild(s);
   m.appendChild(table(['לקוח','שלב','תאריך','שעות','הערה'],D.hours,[4]))}
 function renderIss(m){
@@ -158,8 +161,9 @@ function renderIss(m){
     l.appendChild(el('b','',r[3]));l.appendChild(el('small','',r[0]+' · '+r[1]+' · '+r[2]));
     h.appendChild(l);h.appendChild(pillFor(r[5]));c.appendChild(h);
     const g=el('div','grp');
-    [['חומרה',r[4]],['תאריך פתרון',r[6]],['זמן פתרון (שעות)',r[7]],['הערות',r[8]]].forEach(([k,v])=>{
-      const kv=el('div','kv');kv.appendChild(el('span','',k));kv.appendChild(el('span',v===''?'empty':'',v===''?'—':v));g.appendChild(kv)});
+    [['חומרה',r[4]],['תגובה ראשונה',r[6]],['יעד SLA לתגובה',r[9]],['עמד ב-SLA?',r[10]],['תאריך פתרון',r[7]],['זמן פתרון (שעות)',r[8]],['הערות',r[11]]].forEach(([k,v])=>{
+      const kv=el('div','kv');kv.appendChild(el('span','',k));
+      const val=el('span',v===''?'empty':'',v===''?'—':v);kv.appendChild(val);g.appendChild(kv)});
     c.appendChild(g);m.appendChild(c)})}
 function renderPkg(m){
   const s=el('div','sum');

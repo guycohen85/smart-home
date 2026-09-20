@@ -33,5 +33,5 @@ python3 build_preview.py                  # יוצר את index.html
 ## קשר למסמכים אחרים
 
 - ההגדרה של "הבית חי" וה-checklist: `plan-site/prd3.html`
-- שדות ה-IP, MAC, R2 ו-Sentry תואמים למה ש-`plan-site/prd4.html` (כלי ניהול פנימי) יצטרך, כך שבהמשך אפשר לייבא אותם.
+- שדות ה-IP, MAC, R2 ומזהה הניטור תואמים למה ש-`plan-site/prd4.html` (כלי ניהול פנימי) יצטרך, כך שבהמשך אפשר לייבא אותם.
 - מחירי החבילות: `plan-site/prd1.html` (עדכון 16/09/2026).
