@@ -142,6 +142,8 @@
 
   footer { text-align:center; color: var(--muted); font-size:12.5px; padding: 10px 24px 50px; }
   @media (max-width: 640px) { h1.page-title { font-size:28px; } section.block { padding:22px 18px; } }
+  /* Mobile: let the top nav wrap freely; avoid sticky overlap with chip nav */
+  @media (max-width: 720px) { .sitebar { position: static; } nav.chipnav { top: 0; } }
 </style>
 </head>
 <body>

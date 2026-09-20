@@ -26,7 +26,7 @@
   .sitebar-logo { font-weight:800; font-size:15px; color:#f8fafc; text-decoration:none; display:flex; align-items:center; gap:8px; }
   .sitebar-logo span { color:#5eead4; }
   .sitebar-logo small { font-weight:500; color:#94a3b8; font-size:11.5px; }
-  .sitebar-links { display:flex; gap:4px; }
+  .sitebar-links { display:flex; gap:4px; flex-wrap:wrap; }
   .sitebar-links a { text-decoration:none; color:#cbd5e1; font-size:13.5px; font-weight:600; padding:7px 14px; border-radius:8px; transition: background .15s ease, color .15s ease; }
   .sitebar-links a:hover { background: rgba(255,255,255,0.08); color:#fff; }
   .sitebar-links a.active { background: rgba(94,234,212,0.15); color:#5eead4; }
@@ -104,6 +104,8 @@
   footer { text-align:center; color: var(--muted); font-size:12.5px; padding: 30px 24px 50px; }
 
   @media (max-width: 640px) { h1.page-title { font-size:24px; } }
+  /* Mobile: let the top nav wrap freely; avoid sticky overlap with chip nav */
+  @media (max-width: 720px) { .sitebar { position: static; } nav.chipnav { top: 0; } }
 </style>
 </head>
 <body>
