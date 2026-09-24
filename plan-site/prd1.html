@@ -242,7 +242,7 @@
         </ul>
       </div>
     </div>
-    <p style="margin-top:14px">רשימת הרכיבים/החומרה המלאה כבר קיימת ב-<a href="products.html" style="color:var(--brand-blue);text-decoration:none;font-weight:600">רשימת המוצרים ←</a> — צריך לאשר יחד איזה תת-סט הוא ברירת המחדל של כל מסלול.</p>
+    <p style="margin-top:14px">רשימת הרכיבים/החומרה המלאה כבר קיימת ב-<a href="products.html" style="color:var(--brand-blue);text-decoration:none;font-weight:600">רשימת המוצרים ←</a> — הקטלוג עם מחיר לכל פריט נמצא ב-<a href="../pricing/OneHome_pricing_model.xlsx" style="color:var(--brand-blue);text-decoration:none;font-weight:600">OneHome_pricing_model.xlsx</a>.</p>
   </section>
 
   <div class="bg-note">
@@ -251,12 +251,16 @@
   </div>
 
   <div class="bg-note">
-    <h3>החלטה — מדיניות חבילות ותוספות</h3>
+    <h3>החלטה — בניית מחיר לפי חדרים (עודכן 24/09, מחליף "חבילה קבועה")</h3>
     <ul>
-      <li>כל מסלול (EcoHome/SafeHome/EliteHome) = <strong>חבילה קבועה ומוגדרת מראש</strong> לפי הקטגוריות ברשימת המוצרים — לא בחירה חופשית/קרדיטים.</li>
-      <li>מעבר לחבילה הקבועה — תוספות נמכרות <strong>בנפרד, במחיר בודד לכל פריט</strong> (לא "קרדיטים" לפי כמות), כדי שהתמחור הקבוע של ההתקנה (5,700 / 8,700 / 13,150 ₪, מעודכן) ימשיך לשקף את העלות בפועל.</li>
-      <li>מודל "בחר X פריטים מרשימה מדורגת" (הרעיון המקורי של גיא) — נשמר כרעיון טוב ל-<strong>configurator עתידי</strong>, לשקול ב-PRD 2 (חוויית הלקוח) כשיהיה יותר נפח לקוחות.</li>
+      <li><strong>חבילה בסיסית אחת, חובה לכל לקוח:</strong> HA Green + מתאם Zigbee/Thread, חיישן הצפה, גלאי עשן, חיישן לדלת הכניסה, והשירות (התקנה, דשבורד, התראות Push, Watchman, גיבויים, SLA).</li>
+      <li><strong>מעליה הלקוח בונה חדר-חדר:</strong> לכל חדר מוסיף מוצרים (מתגים, מזגן, דוד, נוכחות וכו') במחיר גלוי לכל פריט. הרשימה משמשת גם לתכנון הדשבורד מראש (PRD 3).</li>
+      <li><strong>EcoHome / SafeHome / EliteHome הן נקודות התחלה לדוגמה</strong>, לא חבילות נעולות: בחירה בהן ממלאת הצעה מוכנה, והלקוח מוריד או מוסיף.</li>
+      <li><strong>ריטיינר במדרגות לפי כמות מכשירים מנוטרים:</strong> עד 25 = 160 ₪ · 26–50 = 220 ₪ · 51+ = 350 ₪ (ספים לאימות מול הלקוחות הראשונים).</li>
+      <li><strong>מחיר לכל פריט:</strong> לפי כלל ההרחבות שכבר נסגר (עלות חומרה ×1.3 + 180 ₪/שעה, +495 ₪ ביקור חשמלאי), ועבודת חשמלאי לכל נקודה. קטלוג וכלי הצעת מחיר לפי חדרים: <a href="../pricing/OneHome_pricing_model.xlsx" style="color:var(--brand-blue);text-decoration:none;font-weight:600">OneHome_pricing_model.xlsx</a>.</li>
+      <li><strong>מחיר גלוי לגמרי באתר</strong> — בידול מול מתחרים שמסתירים מחיר.</li>
     </ul>
+    <p style="margin:8px 0 0;font-size:13.5px">פירוט: <a href="claude/decision-package-model.md" style="color:var(--brand-blue);text-decoration:none;font-weight:600">decision-package-model.md</a> · <a href="claude/decision-pricing-transparency.md" style="color:var(--brand-blue);text-decoration:none;font-weight:600">decision-pricing-transparency.md</a></p>
   </div>
 
   <section id="requirements" class="block">
@@ -274,22 +278,23 @@
         <tr><td class="rowlabel">תדירות גיבויים</td><td class="tbd">TBD</td><td class="tbd">TBD</td><td class="tbd">TBD</td></tr>
         <tr><td class="rowlabel">ערוצי תמיכה כלולים</td><td class="tbd">TBD</td><td class="tbd">TBD</td><td class="tbd">TBD</td></tr>
         <tr><td class="rowlabel">ביקורי תחזוקה מתוכננים בשנה</td><td colspan="3" style="text-align:center">0 — אין ביקורי תחזוקה יזומים. ביקור פיזי רק לתיקון (SLA) או בתשלום לפי בקשה</td></tr>
-        <tr><td class="rowlabel">מחיר התקנה / ריטיינר</td><td>5,700 ₪ / 160 ₪</td><td>8,700 ₪ / 220 ₪</td><td>13,150 ₪ / 350 ₪</td></tr>
+        <tr><td class="rowlabel">מחיר התקנה / ריטיינר (נקודת התחלה לדוגמה)</td><td>5,700 ₪ / 160 ₪</td><td>8,700 ₪ / 220 ₪</td><td>13,150 ₪ / 350 ₪</td></tr>
+        <tr><td class="rowlabel">⚠ מחירי ההתקנה בבדיקה</td><td colspan="3" style="text-align:center">במודל התמחור החדש נקודות ההתחלה יוצאות כ-8,500 / 13,900 / 21,000 ₪ (בעיקר בגלל עליית מחיר HA Green ל-$199 ועבודת חשמלאי לכל נקודה). ממתין להחלטת גיא.</td></tr>
       </table>
     </div>
 
     <div style="margin-top:22px">
       <div class="block-head" style="margin-bottom:10px">
-        <div class="block-head-left"><h2 style="font-size:16px">הרכב החבילה הקבועה לפי קטגוריה (מתוך רשימת המוצרים)</h2></div>
+        <div class="block-head-left"><h2 style="font-size:16px">נקודות התחלה לדוגמה לפי קטגוריה (מתוך רשימת המוצרים)</h2></div>
         <span class="status status-done">✓ הושלמו כל 9 הקטגוריות</span>
       </div>
       <div class="req-table-wrap">
         <table class="req-table">
           <tr><th>קטגוריה</th><th>EcoHome</th><th>SafeHome</th><th>EliteHome</th></tr>
-          <tr><td class="rowlabel">1. בקר מרכזי, קישוריות ושרתים</td><td colspan="3" style="text-align:center">זהה בכל המסלולים: HA Green + SkyConnect. גישה מרחוק דרך Nabu Casa: תוספת אופציונלית שהלקוח משלם עליה ישירות</td></tr>
+          <tr><td class="rowlabel">1. בקר מרכזי, קישוריות ושרתים</td><td colspan="3" style="text-align:center">חבילה בסיסית (חובה לכולם): HA Green + SkyConnect. גישה מרחוק דרך Nabu Casa: תוספת אופציונלית שהלקוח משלם עליה ישירות</td></tr>
           <tr><td class="rowlabel">2. חיישני נוכחות ותנועה</td><td>FP2 ~2-3 יח' + PIR במעברים</td><td>FP2 ~4-5 יח' + PIR במעברים/כניסות</td><td>FP2 6+ יח' + PIR בכל מעבר</td></tr>
           <tr><td class="rowlabel">3. אקלים, איכות אוויר ובריאות</td><td>Broadlink RM4 + חיישן Aqara טמפ'/לחות</td><td>+ IKEA VINDSTYRKA (איכות אוויר)</td><td>+ IKEA VINDSTYRKA (איכות אוויר)</td></tr>
-          <tr><td class="rowlabel">4. בטיחות, הצפה והגנה אקטיבית</td><td>חיישן הצפה + גלאי עשן</td><td>+ Shelly Pro DIN-Rail (ניתוק אוטומטי)</td><td>+ Shelly Pro DIN-Rail (ניתוק אוטומטי)</td></tr>
+          <tr><td class="rowlabel">4. בטיחות, הצפה והגנה אקטיבית</td><td>חיישן הצפה + גלאי עשן (בחבילה הבסיסית)</td><td>+ Shelly Pro DIN-Rail (ניתוק אוטומטי)</td><td>+ Shelly Pro DIN-Rail (ניתוק אוטומטי)</td></tr>
           <tr><td class="rowlabel">5. ניהול אנרגיה, דוד ורכב חשמלי</td><td>Switcher (דוד) + Shelly EM חד-פאזי</td><td>Switcher (דוד) + Shelly EM חד-פאזי</td><td>Switcher (דוד) + Shelly Pro 3EM תלת-פאזי</td></tr>
           <tr><td class="rowlabel">6. מפסקים, עמעמים ובקרי תריסים</td><td>Shelly Plus 1/1PM + 2PM (לפי כמות)</td><td>+ Shelly Dimmer 2</td><td>+ Shelly Dimmer 2</td></tr>
           <tr><td class="rowlabel">7. בקרת כניסה, דלתות וחלונות</td><td colspan="3" style="text-align:center">חיישני פתיחה/סגירה לכל דלת/חלון — זהה בכל המסלולים. מנעול Nuki + פעמון וידאו: תוספת בתשלום לכולם</td></tr>
@@ -297,8 +302,8 @@
           <tr><td class="rowlabel">9. מסכי Kiosk ושילוב מכשירים חכמים</td><td colspan="3" style="text-align:center">טאבלט קיר: תוספת אופציונלית (לא דשבורד ברירת מחדל). שואב רובוטי: משולב אוטומטית אם קיים אצל הלקוח, ללא עלות</td></tr>
         </table>
       </div>
-      <p style="margin-top:10px;font-size:13.5px">Home Assistant Voice PE (שליטה קולית) — <strong>לא</strong> חלק מאף חבילה קבועה; זמין כתוספת בתשלום נפרד לכל מסלול באותה מידה.</p>
-      <p style="margin:4px 0 0;font-size:13.5px">כמויות בקטגוריה 2 הן הערכת בסיס לפי גודל טיפוסי; המספר הסופי נקבע בסקר הבית בפועל.</p>
+      <p style="margin-top:10px;font-size:13.5px">Home Assistant Voice PE (שליטה קולית) — <strong>לא</strong> חלק מאף נקודת התחלה; זמין כתוספת בתשלום נפרד לכל מסלול באותה מידה.</p>
+      <p style="margin:4px 0 0;font-size:13.5px">כל הכמויות הן דוגמה לבית טיפוסי; הלקוח משנה אותן בבנייה לפי חדרים, והמספר הסופי נקבע בסקר הבית.</p>
     </div>
 
     <div style="margin-top:22px">
