@@ -144,6 +144,24 @@
   @media (max-width: 640px) { h1.page-title { font-size:28px; } section.block { padding:22px 18px; } }
   /* Mobile: let the top nav wrap freely; avoid sticky overlap with chip nav */
   @media (max-width: 720px) { .sitebar { position: static; } nav.chipnav { top: 0; } }
+  /* ---------- SWOT ---------- */
+  .swot { display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-top:12px; }
+  @media (max-width: 800px) { .swot { grid-template-columns: 1fr; } }
+  .sw { border:1px solid var(--border); border-top:4px solid; border-radius:12px; padding:14px 16px 10px; background: var(--bg); min-width:0; }
+  .sw h3 { margin:0 0 2px; font-size:16px; font-weight:800; }
+  .sw .sub { margin:0 0 10px; font-size:12.5px; color:var(--muted); }
+  .sw ul { list-style:none; margin:0; padding:0; }
+  .sw li { position:relative; padding-inline-start:16px; margin-bottom:8px; font-size:13.5px; line-height:1.6; color:var(--ink-soft); }
+  .sw li::before { content:""; position:absolute; inset-inline-start:0; top:8px; width:7px; height:7px; border-radius:50%; background: var(--src); }
+  .sw li strong { color:var(--ink); }
+  .sw-s { border-top-color:#059669; } .sw-s h3 { color:#047857; }
+  .sw-w { border-top-color:#d97706; } .sw-w h3 { color:#b45309; }
+  .sw-o { border-top-color:#0284c7; } .sw-o h3 { color:#0369a1; }
+  .sw-t { border-top-color:#b91c1c; } .sw-t h3 { color:#b91c1c; }
+  .tows { list-style:none; margin:8px 0 0; padding:0; }
+  .tows li { position:relative; padding-inline-start:16px; margin-bottom:8px; font-size:14px; color:var(--ink-soft); }
+  .tows li::before { content:""; position:absolute; inset-inline-start:0; top:9px; width:7px; height:7px; border-radius:50%; background: var(--new); }
+  .tows li strong { color:var(--ink); }
 </style>
 </head>
 <body>
@@ -186,6 +204,7 @@
     <a href="#market">לקוח יעד ושוק</a>
     <a href="#gtm">השגת לקוחות</a>
     <a href="#finance">תחזית פיננסית</a>
+    <a href="#swot">ניתוח SWOT</a>
     <a href="#risks">סיכונים</a>
     <a href="#next">צעדים הבאים</a>
   </nav>
@@ -428,10 +447,82 @@
     </div>
   </section>
 
-  <!-- ===================== E. RISKS ===================== -->
+  <!-- ===================== E. SWOT ===================== -->
+  <section class="block" id="swot">
+    <div class="block-head">
+      <div class="block-head-left"><div class="letter-badge">E</div><h2>ניתוח SWOT — חוזקות, חולשות, הזדמנויות ואיומים</h2></div>
+      <span class="status status-draft">✎ טיוטה — לאישור</span>
+    </div>
+    <p>תמונת מצב של OneHome בעמוד אחד. <strong>חוזקות וחולשות</strong> הן פנימיות — בשליטתנו. <strong>הזדמנויות ואיומים</strong> הם חיצוניים — בשוק ובספקים. כל פריט נאסף מתוך <a class="inline" href="vision.html">החזון</a>, <a class="inline" href="competitors.html">המתחרים</a>, הקנבס שלמעלה והחלטות Nabu Casa; הפירוט המלא של האיומים והמענה להם נמצא בסעיף F.</p>
+
+    <div class="swot">
+      <div class="sw sw-s">
+        <h3>💪 חוזקות (Strengths)</h3>
+        <p class="sub">פנימי · מה עובד לטובתנו</p>
+        <ul>
+          <li><strong>המודל היחיד בישראל עם ריטיינר מנוהל</strong> — ניטור, גיבויים ועדכונים כשירות מתמשך, לא התקנה חד-פעמית.</li>
+          <li><strong>Local-First אמיתי</strong> — האוטומציות וההתראות עובדות גם בלי אינטרנט ובלי גישה מרחוק.</li>
+          <li><strong>בלי נעילת ספק</strong> — גם אחרי הפסקת תשלום, הבית ממשיך לעבוד מקומית.</li>
+          <li><strong>משמעת DevOps</strong> — גיבוי מוצפן ל-Cloudflare R2 לכל לקוח, עדכוני קושחה מרחוק (קודם אצל גיא), SLA לפי חומרה.</li>
+          <li><strong>פלטפורמה פתוחה ויציבה</strong> — Home Assistant ו-Open Home Foundation, לא קוד קנייני שלנו.</li>
+          <li><strong>תמחור שקוף</strong> — חבילת בסיס ובונה חדרים, מחירים גלויים מראש.</li>
+        </ul>
+      </div>
+
+      <div class="sw sw-w">
+        <h3>⚠️ חולשות (Weaknesses)</h3>
+        <p class="sub">פנימי · מה מגביל אותנו</p>
+        <ul>
+          <li><strong>קיבולת של אדם אחד</strong> — כל התקנה, קריאה והתראה עוברות דרך גיא; אין עדיין SOP להעברה.</li>
+          <li><strong>אין יתרון לא הוגן עדיין</strong> — אין חסם טכנולוגי, ואין עדיין לקוחות, המלצות או מוניטין.</li>
+          <li><strong>מחיר הריטיינר לא אומת</strong> — 160 ₪ בחודש הם פחות משעת עבודה, ושעות התמיכה בפועל עוד לא נמדדו.</li>
+          <li><strong>תלות בחשמלאי</strong> — קטגוריות 5–6 דורשות חשמלאי מוסמך, וחשמלאי קבוע עוד לא נבחר.</li>
+          <li><strong>תזרים</strong> — החומרה נקנית לפני שהלקוח משלם, כלומר מימון עצמי.</li>
+          <li><strong>כלי ניטור צי טרם נבחר</strong> — ה-SLA מניח שגיא יודע שבית נפל, ועדיין אין לכך מנגנון.</li>
+        </ul>
+      </div>
+
+      <div class="sw sw-o">
+        <h3>🚀 הזדמנויות (Opportunities)</h3>
+        <p class="sub">חיצוני · מה אפשר לנצל</p>
+        <ul>
+          <li><strong>חלון פתוח בשוק</strong> — אף מתחרה ישראלי (Vitrea, Accorto, Homeii) לא מציע ניטור ותחזוקה כמנוי.</li>
+          <li><strong>העולם כבר אימת את המודל</strong> — Brilliant, Vivint ו-Josh.ai מוכיחים שלקוחות פרימיום משלמים על שכבת ניהול.</li>
+          <li><strong>סיפור שיווקי מוכן</strong> — Revolv ו-Insteon שנכבו, ודמי ה-API של SmartThings ב-2026, מוכיחים את הסיכון שבתלות בענן.</li>
+          <li><strong>חיסכון באנרגיה שמממן את הריטיינר</strong> — דוד שמש, מזגנים ורכב חשמלי.</li>
+          <li><strong>ערוצי הפניה</strong> — חשמלאי קבוע, מעצבי פנים ולקוחות מרוצים.</li>
+          <li><strong>הכנסה נוספת</strong> — חנות תוספות למנויים (PRD 5), ותוכנית מתקינים עתידית של Nabu Casa.</li>
+        </ul>
+      </div>
+
+      <div class="sw sw-t">
+        <h3>🛑 איומים (Threats)</h3>
+        <p class="sub">חיצוני · מה עלול לפגוע בנו</p>
+        <ul>
+          <li><strong>Homeii</strong> — כמעט זהה טכנית (Local-First) ויכול להוסיף ריטיינר בקלות.</li>
+          <li><strong>"עוד מנוי"</strong> — בישראל מקובל שבית חכם מקצועי לא דורש מנוי, והריטיינר עלול להיתפס כמו הנעילה של Control4.</li>
+          <li><strong>אחריות משפטית ופרטיות</strong> — נזק שלא זוהה עלול להיות מיוחס לשירות; חוק הגנת הפרטיות חל עלינו.</li>
+          <li><strong>עוסק פטור</strong> — תקרת 122,833 ₪ ב-2026, ובלי קיזוז מע"מ על חומרה.</li>
+          <li><strong>שינויים אצל Nabu Casa</strong> — מחיר או תנאים יכולים להשתנות, ואין תוכנית מתקינים או הנחת נפח.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="idea-box">
+      <h3>הצעה: מה ה-SWOT אומר לעשות (TOWS)</h3>
+      <ul class="tows">
+        <li><strong>חוזקות × הזדמנויות:</strong> להגיע מהר ל-3 הלקוחות הראשונים ולתעד חיסכון בשקלים, לפני שמתחרה ממלא את החלון.</li>
+        <li><strong>חוזקות × איומים:</strong> להפוך את השקיפות למסר — קונפיגורציה ניתנת לייצוא, בלי נעילה ומחירון הוגן — כדי שהריטיינר לא ייתפס כ"עוד מנוי".</li>
+        <li><strong>חולשות × הזדמנויות:</strong> לסגור את PRD 3 ואת בחירת החשמלאי, כדי שהפניות לא יחסמו בקיבולת.</li>
+        <li><strong>חולשות × איומים:</strong> למדוד שעות תמיכה ולבדוק ביטוח ורו"ח לפני פתיחה לציבור.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ===================== F. RISKS ===================== -->
   <section class="block" id="risks">
     <div class="block-head">
-      <div class="block-head-left"><div class="letter-badge">E</div><h2>סיכונים ומענה</h2></div>
+      <div class="block-head-left"><div class="letter-badge">F</div><h2>סיכונים ומענה</h2></div>
       <span class="status status-draft">✎ טיוטה</span>
     </div>
     <div class="tbl-wrap">
@@ -452,10 +543,10 @@
     </div>
   </section>
 
-  <!-- ===================== F. NEXT ===================== -->
+  <!-- ===================== G. NEXT ===================== -->
   <section class="block" id="next">
     <div class="block-head">
-      <div class="block-head-left"><div class="letter-badge">F</div><h2>צעדים הבאים</h2></div>
+      <div class="block-head-left"><div class="letter-badge">G</div><h2>צעדים הבאים</h2></div>
       <span class="status status-draft">✎ לפי סדר עדיפות</span>
     </div>
     <ul class="steps">
@@ -476,7 +567,7 @@
 
 </main>
 
-<footer>עודכן 19/09/2026 · תוכנית עסקית — טיוטה ראשונה, מתעדכנת לפי החלטות גיא</footer>
+<footer>עודכן 24/09/2026 · תוכנית עסקית — טיוטה ראשונה, מתעדכנת לפי החלטות גיא</footer>
 
 <script>
 (function () {
