@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>אוטומציה ראשונה — שיעור 3</title>
+<link rel="stylesheet" href="../assets/style.css">
+<script src="../assets/quiz.js" defer></script>
+<script src="../assets/sort.js" defer></script>
+</head>
+<body>
+<div class="page">
+  <div class="course-nav">
+    <span>🏠 מסלול הלקוח · שיעור 3</span>
+    <a href="../reference/automation-cheatsheet.html">דף עזר: אוטומציות ←</a>
+  </div>
+
+  <div class="lesson-kicker">מסלול הלקוח · מושג חדש + בנייה על הבית האמיתי</div>
+  <h1>האוטומציה הראשונה: הדוד שנשאר דלוק</h1>
+  <p class="subtitle">
+    עד עכשיו סידרת את הבית: מכשירים, ישויות, אזורים ודשבורד. היום הבית מתחיל לפעול לבד.
+    בסוף השיעור תהיה לך אוטומציה אחת שרצה על מכשיר אמיתי אצלך, ותדע לבדוק למה היא רצה (או לא רצה).
+  </p>
+
+  <div class="box source">
+    <span class="box-label">מקור ראשי</span>
+    <a href="https://www.home-assistant.io/docs/automation/basics/" target="_blank">Automation basics — home-assistant.io</a>.
+    דף קצר, שווה לקרוא אותו כולו. פרטים נוספים בשיעור:
+    <a href="https://www.home-assistant.io/triggers/state/" target="_blank">State trigger</a> ·
+    <a href="https://www.home-assistant.io/docs/automation/troubleshooting/" target="_blank">Troubleshooting automations</a>.
+  </div>
+
+  <h2>חימום: מה זכור משיעורים 1–2?</h2>
+  <p>ענה בראש לפני שאתה לוחץ. גם אם אתה לא בטוח, הניסיון לשלוף מהזיכרון הוא מה שמקבע את הידע.</p>
+
+  <div class="quiz">
+    <p class="quiz-q">1. ב-<code>switch.boiler</code>, מה החלק <code>switch</code> ומה הוא קובע?</p>
+    <button class="quiz-reveal-btn" onclick="revealQuiz(this)">הצג תשובה</button>
+    <p class="quiz-answer">זה ה-domain של ה-Entity. הוא קובע איזה סוג התנהגות יש לה, ולכן אילו פעולות אפשר להפעיל עליה (למשל <code>switch.turn_off</code>). <a href="#domain">הסבר מורחב מיד אחרי השאלות ↓</a></p>
+  </div>
+  <div class="quiz">
+    <p class="quiz-q">2. למה שיוך מכשיר ל-Area הוא לא רק "סדר יפה" בהתקנה אצל לקוח?</p>
+    <button class="quiz-reveal-btn" onclick="revealQuiz(this)">הצג תשובה</button>
+    <p class="quiz-answer">כי הדשבורד האוטומטי נבנה מתוך ה-Areas. בלי שיוך, הלקוח רואה ביום הראשון ערימת כרטיסים לא מאורגנת. <a href="0002-dashboards-and-areas.html">(שיעור 2)</a></p>
+  </div>
+
+  <h2 id="domain">רענון לעומק: מה ה-domain קובע</h2>
+  <p>
+    לכל Entity יש מזהה בפורמט קבוע של שני חלקים עם נקודה ביניהם
+    (<a href="https://www.home-assistant.io/docs/configuration/entities_domains/" target="_blank">מקור</a>):
+  </p>
+<pre dir="ltr"><code>switch . boiler
+  │        │
+domain   object_id
+(הסוג)    (השם)</code></pre>
+  <p>
+    <strong><code>boiler</code></strong> הוא רק שם. מישהו בחר אותו כדי שיהיה ברור שזה הדוד, ואפשר לשנות אותו ל-<code>water_heater_bathroom</code>
+    בלי שום השפעה על ההתנהגות.
+    <strong><code>switch</code></strong> הוא ה-<strong>domain</strong>, כלומר סוג ה-Entity. הוא לא שם אלא הגדרה, ונגזרים ממנו שלושה דברים:
+  </p>
+  <ol>
+    <li><strong>אילו מצבים אפשריים.</strong> ל-<code>switch</code> יש רק <code>on</code> או <code>off</code>. ל-<code>sensor</code> (למשל מדחום) יש מספר כמו <code>23.5</code>. גם ל-<code>binary_sensor</code> (למשל חיישן דלת) יש <code>on</code> או <code>off</code>, אבל הוא רק מדווח.</li>
+    <li><strong>אילו פעולות אפשר להפעיל עליו.</strong> כל domain מגיע עם סט פעולות משלו, ושם הפעולה מתחיל בשם ה-domain.</li>
+    <li><strong>אילו מאפיינים נוספים יש לו.</strong> ל-<code>light</code> יש בהירות וצבע, ל-<code>climate</code> יש טמפרטורת יעד, ול-<code>switch</code> אין כמעט כלום מעבר לדלוק/כבוי.</li>
+  </ol>
+  <table>
+    <tr><th>Domain</th><th>דוגמה</th><th>פעולות אפשריות</th></tr>
+    <tr><td><code>switch</code></td><td>דוד, שקע חכם</td><td><code>switch.turn_on</code>, <code>switch.turn_off</code>, <code>switch.toggle</code></td></tr>
+    <tr><td><code>light</code></td><td>נורה</td><td><code>light.turn_on</code> (גם עם בהירות וצבע), <code>light.turn_off</code></td></tr>
+    <tr><td><code>climate</code></td><td>מזגן</td><td><code>climate.set_temperature</code>, <code>climate.set_hvac_mode</code></td></tr>
+    <tr><td><code>cover</code></td><td>תריס</td><td><code>cover.open_cover</code>, <code>cover.close_cover</code></td></tr>
+    <tr><td><code>sensor</code></td><td>מדחום</td><td>אין פעולות. אפשר רק לקרוא ממנו.</td></tr>
+  </table>
+
+  <h3>למה הדוד הוא דווקא <code>switch</code>?</h3>
+  <p>
+    ברוב הבתים הדוד מחובר לממסר (למשל Shelly) שיודע רק לחבר או לנתק חשמל, ולכן HA רואה אותו כ-<code>switch</code>.
+    אילו היה לך דוד חכם שאפשר לקבוע לו טמפרטורה, הוא כנראה היה מופיע כ-<code>water_heater.boiler</code>, עם פעולות אחרות לגמרי.
+    את ה-domain קובעת האינטגרציה לפי מה שהמכשיר יודע לעשות. את השם בוחר מי שמתקין.
+  </p>
+
+  <div class="box win">
+    <span class="box-label">הכלל לאוטומציות</span>
+    המילה הראשונה ב-Entity היא גם המילה הראשונה בפעולה: <code>switch.boiler</code> מקבל <code>switch.turn_off</code>.
+    פעולה של domain אחר, למשל <code>light.turn_on</code> על <code>switch.boiler</code>, לא תעבוד כי הדוד הוא לא נורה.
+    בעורך ה-UI תראה את זה כשתחפש פעולה: HA מציע רק Entities שמתאימים ל-domain של הפעולה שבחרת.
+  </div>
+
+  <h2>שלושה חלקים: מתי, רק אם, אז</h2>
+  <p>
+    כל אוטומציה ב-HA בנויה משלושה חלקים
+    (<a href="https://www.home-assistant.io/docs/automation/basics/" target="_blank">מקור</a>):
+  </p>
+
+  <div class="flow-steps">
+    <div class="flow-step">
+      <span class="step-word">מתי</span>
+      <span class="step-en">Trigger</span>
+      <p>אירוע שמתחיל את הריצה. משהו <strong>קרה</strong>: מצב השתנה, הגיעה שעה, מישהו הגיע הביתה.</p>
+    </div>
+    <div class="flow-step optional">
+      <span class="step-word">רק אם</span>
+      <span class="step-en">Condition · אופציונלי</span>
+      <p>בדיקה של <strong>המצב ברגע הזה</strong>. אם היא נכשלת, הריצה נעצרת ושום פעולה לא מתבצעת.</p>
+    </div>
+    <div class="flow-step">
+      <span class="step-word">אז</span>
+      <span class="step-en">Action</span>
+      <p>מה הבית עושה: לכבות, להדליק, לשלוח התראה.</p>
+    </div>
+  </div>
+
+  <p>
+    הדוגמה של התיעוד עצמו: "<em>כש-Paulus מגיע הביתה</em> (טריגר) <em>ואחרי השקיעה</em> (תנאי), <em>הדלק את האור בסלון</em> (פעולה)."
+  </p>
+
+  <div class="box win">
+    <span class="box-label">התובנה שחשוב לזכור</span>
+    הטריגר הוא <strong>רגע</strong>, התנאי הוא <strong>מצב</strong>.
+    HA לא "מחכה" שהתנאי יתקיים. הוא בודק אותו פעם אחת, ברגע שהטריגר קרה. אם בדיוק אז התנאי לא מתקיים, הריצה הזו אבודה
+    ולא תקרה שוב עד הטריגר הבא. הרבה אוטומציות "שלא עובדות" הן בעצם החלפה בין השניים.
+  </div>
+
+  <h3>מהקטלוג שלך ל-HA</h3>
+  <p>
+    ב-<code>plan-site/automations.html</code> כבר כתבת כל רעיון בדיוק במבנה הזה. הכרטיס "דוד חשמל דלוק ללא נוכחות":
+  </p>
+  <table>
+    <tr><th>חלק</th><th>בקטלוג</th><th>ב-HA</th></tr>
+    <tr><td>טריגר</td><td>דוד חשמל פועל מעל שעה</td><td>הטריגר State: <code>switch.boiler</code> עובר ל-<code>on</code>, עם <strong>For</strong> של שעה</td></tr>
+    <tr><td>תנאי</td><td>אין נוכחות בבית</td><td>עדיין אין לך חיישן נוכחות לבית כולו, אז <strong>היום נדלג עליו</strong></td></tr>
+    <tr><td>פעולה</td><td>כיבוי + התראה</td><td><code>switch.turn_off</code> ואחריו <code>persistent_notification.create</code></td></tr>
+  </table>
+  <p>
+    שדה <strong>For</strong> אומר: "רק אם המצב <em>נשאר</em> ככה לאורך כל הזמן הזה". אם הדוד כבה אחרי 40 דקות, השעון מתאפס
+    (<a href="https://www.home-assistant.io/triggers/state/" target="_blank">מקור</a>).
+  </p>
+
+  <h2>תרגול 1: מיין לשלושת החלקים</h2>
+  <p>
+    הפריטים לקוחים מכמה כרטיסים שונים בקטלוג שלך, מעורבבים. לכל אחד שאל את עצמך: זה <strong>רגע</strong> שקורה, <strong>מצב</strong> שבודקים, או משהו שהבית <strong>עושה</strong>?
+  </p>
+
+  <div class="sort" data-answer="trigger" data-why="זה רגע: הדוד נדלק והמצב הזה נמשך שעה.">
+    <p class="sort-q">הדוד עבר למצב "פועל" ונשאר כך שעה</p>
+    <div class="sort-opts"><button data-v="trigger">טריגר</button><button data-v="condition">תנאי</button><button data-v="action">פעולה</button></div>
+    <p class="sort-fb"></p>
+  </div>
+  <div class="sort" data-answer="condition" data-why="זה מצב שבודקים ברגע שהטריגר קרה, לא משהו שמתחיל את הריצה.">
+    <p class="sort-q">אף אחד לא נמצא בבית</p>
+    <div class="sort-opts"><button data-v="trigger">טריגר</button><button data-v="condition">תנאי</button><button data-v="action">פעולה</button></div>
+    <p class="sort-fb"></p>
+  </div>
+  <div class="sort" data-answer="action" data-why="זה מה שהבית עושה בתגובה.">
+    <p class="sort-q">סגירת שסתום המים הראשי</p>
+    <div class="sort-opts"><button data-v="trigger">טריגר</button><button data-v="condition">תנאי</button><button data-v="action">פעולה</button></div>
+    <p class="sort-fb"></p>
+  </div>
+  <div class="sort" data-answer="trigger" data-why="הגעה לשעה מסוימת היא רגע, ולכן טריגר מסוג Time.">
+    <p class="sort-q">השעה הגיעה ל-23:00</p>
+    <div class="sort-opts"><button data-v="trigger">טריגר</button><button data-v="condition">תנאי</button><button data-v="action">פעולה</button></div>
+    <p class="sort-fb"></p>
+  </div>
+  <div class="sort" data-answer="condition" data-why="בכרטיס 'אור דלוק בבית ריק' זה נבדק אחרי שהגיעה השעה 23:00. זה מצב, לא רגע.">
+    <p class="sort-q">גוף תאורה כלשהו בבית דלוק</p>
+    <div class="sort-opts"><button data-v="trigger">טריגר</button><button data-v="condition">תנאי</button><button data-v="action">פעולה</button></div>
+    <p class="sort-fb"></p>
+  </div>
+  <div class="sort" data-answer="trigger" data-why="החיישן שינה מצב, זה הרגע שמתחיל הכול. בכרטיס הזה אין בכלל תנאי.">
+    <p class="sort-q">חיישן ההצפה מזהה מים על הרצפה</p>
+    <div class="sort-opts"><button data-v="trigger">טריגר</button><button data-v="condition">תנאי</button><button data-v="action">פעולה</button></div>
+    <p class="sort-fb"></p>
+  </div>
+  <div class="sort" data-answer="action" data-why="התראה היא פעולה, בדיוק כמו כיבוי.">
+    <p class="sort-q">שליחת נוטיפיקציה לנייד של ההורים</p>
+    <div class="sort-opts"><button data-v="trigger">טריגר</button><button data-v="condition">תנאי</button><button data-v="action">פעולה</button></div>
+    <p class="sort-fb"></p>
+  </div>
+  <div class="sort" data-answer="condition" data-why="מצב קבוע של הבית שבודקים כשיש תנועה. התנועה היא הטריגר.">
+    <p class="sort-q">מצב הבית מוגדר כ"לא בבית"</p>
+    <div class="sort-opts"><button data-v="trigger">טריגר</button><button data-v="condition">תנאי</button><button data-v="action">פעולה</button></div>
+    <p class="sort-fb"></p>
+  </div>
+  <p class="sort-score"></p>
+
+  <h2>תרגול 2: לבנות אותה על הבית שלך</h2>
+  <p>
+    אין לך דוד מחובר? לא משנה. בחר <strong>כל</strong> מכשיר שאפשר להדליק ולכבות: שקע חכם, Shelly, מנורה.
+    כדי שלא תחכה שעה, בזמן הבדיקה ה-For יהיה דקה אחת.
+  </p>
+  <div class="box practice">
+    <span class="box-label">משימה מעשית · 10 דקות</span>
+    <ol>
+      <li>היכנס ל-<strong>Settings → Automations &amp; scenes</strong>, לחץ <strong>Create automation</strong> ואז <strong>Create new automation</strong>.</li>
+      <li><strong>הטריגר:</strong> Add trigger ← Entity ← <strong>State</strong>. בחר את המכשיר שלך, ב-<strong>To</strong> בחר <em>On</em>, וב-<strong>For</strong> הכנס דקה אחת.</li>
+      <li><strong>התנאי:</strong> השאר ריק.</li>
+      <li><strong>פעולה ראשונה:</strong> Add action ← חפש <em>Turn off</em> של ה-domain שלך (<code>switch</code> או <code>light</code>) ובחר את אותו מכשיר.</li>
+      <li><strong>פעולה שנייה:</strong> Add action ← חפש <em>persistent notification</em>. בהודעה כתוב: "המכשיר נשאר דלוק דקה וכובה אוטומטית".</li>
+      <li>שמור בשם <code>הדוד נשאר דלוק (בדיקה)</code>.</li>
+      <li><strong>הבדיקה:</strong> הדלק את המכשיר מהדשבורד וחכה דקה. הוא אמור לכבות לבד, והתראה אמורה להופיע בפעמון בתפריט הצד.</li>
+    </ol>
+  </div>
+
+  <h3>לקרוא את מה שקרה: Trace</h3>
+  <p>
+    בכל ריצה HA שומר ציר זמן: מה הפעיל אותה, אילו תנאים נבדקו, ומה כל פעולה עשתה. כברירת מחדל נשמרות 5 הריצות האחרונות
+    (<a href="https://www.home-assistant.io/docs/automation/troubleshooting/" target="_blank">מקור</a>).
+    זה הכלי הראשון שתפתח כשלקוח יתקשר ויגיד "האוטומציה לא עבדה".
+  </p>
+  <div class="box practice">
+    <span class="box-label">משימה מעשית · 3 דקות</span>
+    <ol>
+      <li>בעורך האוטומציה, תפריט שלוש הנקודות ← <strong>Traces</strong>.</li>
+      <li>לחץ על כל צומת בגרף ומצא: מה ה-<code>from</code> וה-<code>to</code> של הטריגר, ומתי כל פעולה רצה.</li>
+      <li>הדלק את המכשיר ו<strong>כבה אותו ידנית לפני</strong> שעוברת דקה. בדוק ב-Traces: האם נוספה ריצה חדשה? (רמז: למה לא?)</li>
+    </ol>
+  </div>
+
+  <h3>ומה יש מתחת: YAML</h3>
+  <p>
+    בתפריט שלוש הנקודות בחר <strong>Edit in YAML</strong>. זה בערך מה שתראה (שמות ה-Entity שלך יהיו אחרים):
+  </p>
+<pre><code>alias: הדוד נשאר דלוק (בדיקה)
+triggers:
+  - trigger: state
+    entity_id: switch.boiler
+    to: "on"
+    for:
+      minutes: 1
+conditions: []
+actions:
+  - action: switch.turn_off
+    target:
+      entity_id: switch.boiler
+  - action: persistent_notification.create
+    data:
+      message: המכשיר נשאר דלוק דקה וכובה אוטומטית
+mode: single</code></pre>
+  <p>
+    הכל כאן אמור להיראות לך מוכר: שלושת החלקים הם שלושה מפתחות. ה-domain מ-<code>switch.boiler</code> קובע גם את <code>switch.turn_off</code>.
+    שמירה ב-UI כותבת לקובץ <code>automations.yaml</code>, והתיעוד מבקש לא לערוך אותו ידנית
+    (<a href="https://www.home-assistant.io/docs/automation/yaml/" target="_blank">מקור</a>).
+    נחזור לזה במסלול ה-full-stack, כשנשכפל אוטומציות בין לקוחות.
+  </p>
+
+  <h2>בדיקת זיכרון: תרחישים מהשטח</h2>
+
+  <div class="quiz">
+    <p class="quiz-q">1. טכנאי בנה את אוטומציית הדוד הפוך: "כולם יצאו מהבית" כטריגר, ו"הדוד דלוק" כתנאי. לקוח יוצא בבוקר, ובצהריים מדליק את הדוד מרחוק ושוכח אותו. מה קורה?</p>
+    <button class="quiz-reveal-btn" onclick="revealQuiz(this)">הצג תשובה</button>
+    <p class="quiz-answer">כלום. הריצה היחידה הייתה ביציאה בבוקר, ואז הדוד היה כבוי ולכן התנאי נכשל. הדלקה בצהריים היא לא הטריגר, אז אין ריצה חדשה והדוד נשאר דלוק כל היום.</p>
+  </div>
+
+  <div class="quiz">
+    <p class="quiz-q">2. הדוד דלוק כבר 40 דקות (מתוך ה-For של שעה), ובדיוק אז HA מתעדכן ועושה restart. מתי הדוד יכובה?</p>
+    <button class="quiz-reveal-btn" onclick="revealQuiz(this)">הצג תשובה</button>
+    <p class="quiz-answer">לא אחרי 20 דקות. השעון של For מתאפס ב-restart או ב-reload של אוטומציות (<a href="https://www.home-assistant.io/triggers/state/" target="_blank">מקור</a>). במקרה הטוב הספירה מתחילה מחדש (שעה מלאה נוספת). במקרה הרע HA לא רואה מעבר חדש ל-on, והדוד לא יכובה בכלל. בשביל OneHome זו נקודה חשובה: עדכונים שאתה מריץ מרחוק יכולים לשבור אוטומציות כאלה בשקט. נלמד איך להגן מזה בהמשך.</p>
+  </div>
+
+  <div class="quiz">
+    <p class="quiz-q">3. בעורך יש כפתור <strong>Run actions</strong>. אם תלחץ עליו כשהמכשיר כבר כבוי, מה ייבדק ומה לא?</p>
+    <button class="quiz-reveal-btn" onclick="revealQuiz(this)">הצג תשובה</button>
+    <p class="quiz-answer">רק הפעולות ירוצו: המכשיר "יכובה" שוב ותופיע התראה. הטריגרים והתנאים לא נבדקים בכלל (<a href="https://www.home-assistant.io/docs/automation/troubleshooting/" target="_blank">מקור</a>). זה טוב לבדיקת פעולות, אבל לא בודק את הלוגיקה.</p>
+  </div>
+
+  <div class="box win">
+    <span class="box-label">הניצחון של היום</span>
+    הבית שלך עושה משהו לבד, ואתה יודע לפתוח Trace ולהבין למה. אחרי שהבדיקה עובדת, אפשר להעלות את ה-For לשעה ולהשאיר אותה פעילה.
+    זה גם "רגע וואו" פשוט להדגמה ללקוח: להדליק ולראות את הבית מכבה לבד.
+  </div>
+
+  <div class="box ask-teacher">
+    <span class="box-label">נתקעת? שאל</span>
+    אם האוטומציה לא רצה, ה-Trace ריק, או שהמסכים אצלך נראים אחרת, תדביק לי את ה-YAML ואת מה שראית ב-Trace. נפתור את זה ביחד.
+    ותספר לי גם מה ענית על השאלה ב-Traces ("למה לא נוספה ריצה?").
+  </div>
+
+  <div class="lesson-footer">
+    <span>שיעור 3 · מסלול הלקוח · OneHome Learning Workspace</span>
+    <a href="0002-dashboards-and-areas.html">← שיעור 2</a>
+    <a href="0004-presence-and-notifications.html">שיעור 4 ←</a>
+    <a href="../reference/automation-cheatsheet.html">דף עזר: אוטומציות</a>
+    <a href="../reference/glossary.html">מילון מונחים</a>
+  </div>
+</div>
+</body>
+</html>

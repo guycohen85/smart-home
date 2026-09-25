@@ -1,0 +1,119 @@
+<title>מפת המושגים של Home Assistant — שיעור 1</title>
+<link rel="stylesheet" href="../assets/style.css">
+<script src="../assets/quiz.js" defer></script>
+<div class="page">
+  <div class="course-nav">
+    <span>🏠 מסלול הלקוח · שיעור 1 מתוך N</span>
+    <a href="../reference/glossary.html">מילון מונחים ←</a>
+  </div>
+
+  <div class="lesson-kicker">מסלול הלקוח · רענון</div>
+  <h1>מפת המושגים: Integration, Device, Entity, Area</h1>
+  <p class="subtitle">
+    ארבעה מושגים שכל מסך, כל דשבורד וכל מסמך ב-<code>plan-site</code> שלך בנויים עליהם.
+    בלעדיהם קשה לנווט ב-HA בביטחון, אי אפשר להסביר ללקוח מה הוא קונה, ואי אפשר לקרוא נכון את PRD 1 או את קטלוג המוצרים.
+  </p>
+
+  <div class="box source">
+    <span class="box-label">מקור ראשי</span>
+    לפני השיעור (או תוך כדי), כדאי לקרוא את הדף הרשמי הקצר:
+    <a href="https://www.home-assistant.io/getting-started/concepts-terminology/" target="_blank">Concepts and terminology — home-assistant.io</a>.
+    השיעור הזה מתמצת אותו ומחבר אותו ישירות לחומרה שכבר בדרך אליך מ-<code>products.html</code>.
+  </div>
+
+  <h2>למה זה השיעור הראשון</h2>
+  <p>
+    כתבת כבר, בעצמך, בתוך <code>vision.html</code> ו-<code>products.html</code>, עשרות משפטים כמו
+    "חיישן Aqara FP2 חושף entity של נוכחות" בלי לעצור עליהם. זה בסדר גמור — אבל כדי לתפעל בית אמיתי בביטחון,
+    ובטח כדי להסביר ללקוח בשטח למה הוא משלם על "ריטיינר" ולא רק על "גאדג'טים", אתה צריך שהמושגים האלה יהיו
+    ברורים כמו טבלת מסד נתונים, לא רק כמילים מוכרות.
+  </p>
+
+  <h2>ארבעת המושגים</h2>
+
+  <h3>1. Integration — אינטגרציה</h3>
+  <p>
+    האינטגרציה היא הגשר בין HA לפלטפורמה, לפרוטוקול או ליצרן חיצוני. היא זו שמזהה משהו חדש ברשת ו<em>יוצרת</em>
+    ממנו Device ו-Entities. אצלך בבית יש לפחות שלוש אינטגרציות פעילות כבר עכשיו (או ברגע שה-SkyConnect יגיע):
+    <strong>ZHA</strong> (רדיו Zigbee שמדבר עם Aqara/IKEA), <strong>Shelly</strong> (מדבר ישירות ברשת המקומית עם מכשירי Shelly),
+    ו־<strong>Home Assistant Cloud</strong> (Nabu Casa, אם ותוספת הגישה מרחוק פעילה).
+  </p>
+
+  <h3>2. Device — התקן</h3>
+  <p>
+    Device הוא הדבר הפיזי הבודד שהאינטגרציה זיהתה. חיישן Aqara FP2 אחד בסלון = Device אחד.
+    Shelly Plus 1 אחד שמותקן מאחורי מפסק הדוד = Device אחד. חשוב: Device אחד יכול לחשוף
+    <strong>כמה</strong> Entities בבת אחת — זה המעבר הכי חשוב למושג הבא.
+  </p>
+
+  <h3>3. Entity — ישות</h3>
+  <p>
+    Entity היא נקודת הנתון או השליטה הבודדת שבאמת מדווחת או פועלת. לכל Entity יש מזהה בפורמט
+    <code>domain.name</code> — ה-domain (החלק שלפני הנקודה) קובע איזה סוג התנהגות מדובר.
+    ה-Shelly Plus 1PM שמותקן על קו הדוד, לדוגמה, הוא <strong>Device אחד</strong> שחושף <strong>שתי Entities</strong>:
+  </p>
+  <pre><code>switch.boiler              ← אפשר להדליק/לכבות
+sensor.boiler_power_w       ← אפשר רק לקרוא (וואט בזמן אמת)</code></pre>
+  <p>
+    זה בדיוק ה-domain שקובע איך אפשר להשתמש בכל Entity: <code>switch.*</code> ניתן להפעלה/כיבוי,
+    <code>binary_sensor.*</code> נותן מצב כן/לא (פתוח/סגור, יש/אין תנועה), <code>sensor.*</code> נותן מספר או טקסט לקריאה בלבד.
+  </p>
+
+  <h3>4. Area — אזור</h3>
+  <p>
+    Area מקבץ Devices ו-Entities לפי חדר או אזור פיזי — "סלון", "מקלחת הורים", "כניסה". בלי Area,
+    כל תנאי באוטומציה חייב לפרט כל Entity בשמו. עם Area, אפשר לכתוב תנאי ברמת "יש תנועה
+    <em>באזור</em> סלון" בלי לדעת אילו חיישנים בדיוק נמצאים שם — בדיוק מה שהופך התקנה אצל לקוח חדש
+    לניתנת לשכפול לפי ה-golden backup, ולא בנייה ידנית מחדש בכל בית.
+  </p>
+
+  <div class="box win">
+    <span class="box-label">הניצחון של השיעור הזה</span>
+    בסוף השיעור אתה אמור להיות מסוגל להסתכל על כל מסך ב-HA (Dashboard, Settings → Devices, כרטיס אוטומציה)
+    ולזהות תוך שנייה: "זה Device, זה Entity שלו מ-domain כך-וכך, והוא משויך ל-Area הזו".
+  </div>
+
+  <h2>תרגול על הבית האמיתי שלך</h2>
+  <div class="box practice">
+    <span class="box-label">משימה מעשית · על ה-HA שכבר רץ אצלך</span>
+    <ol>
+      <li>היכנס ל-Settings → Devices &amp; Services → Devices, ובחר מכשיר פיזי אחד שכבר מזווג אצלך.</li>
+      <li>בדף המכשיר, זהה: איזו Integration יצרה אותו? כמה Entities הוא חושף? מה ה-domain של כל אחת?</li>
+      <li>עבור לטאב Areas ובדוק: האם המכשיר הזה משויך לאזור? אם לא — זו הזדמנות טובה לשייך אותו עכשיו.</li>
+      <li>חזור על זה עם מכשיר משני domains שונים (למשל חיישן נוכחות ומפסק חכם), כדי לראות את ההבדל בין
+        <code>binary_sensor</code> ל-<code>switch</code> בעיניים שלך, לא רק בתיאוריה.</li>
+    </ol>
+  </div>
+
+  <h2>בדיקת זיכרון (Retrieval Practice)</h2>
+
+  <div class="quiz">
+    <p class="quiz-q">1. יש לך Shelly Plus 1PM אחד מותקן מאחורי מפסק הדוד, שחושף switch ו-sensor. ה-Shelly עצמו — Device או Entity? ומה הם ה-switch וה-sensor שלו?</p>
+    <button class="quiz-reveal-btn" onclick="revealQuiz(this)">הצג תשובה</button>
+    <p class="quiz-answer">ה-Shelly עצמו הוא Device אחד; ה-switch וה-sensor הם שתי Entities נפרדות שהוא חושף.</p>
+  </div>
+
+  <div class="quiz">
+    <p class="quiz-q">2. איזה מושג אחראי על יצירת ה-Device וה-Entities, כשמחברים חיישן Aqara FP2 חדש לבית?</p>
+    <button class="quiz-reveal-btn" onclick="revealQuiz(this)">הצג תשובה</button>
+    <p class="quiz-answer">האינטגרציה (כאן ZHA) — היא זו שמזהה את המכשיר ויוצרת ממנו Device ו-Entities.</p>
+  </div>
+
+  <div class="quiz">
+    <p class="quiz-q">3. יש לך שני חיישני FP2 — אחד בסלון ואחד בחדר שינה. למה בכלל צריך Area, ולא מספיק שם ה-Entity?</p>
+    <button class="quiz-reveal-btn" onclick="revealQuiz(this)">הצג תשובה</button>
+    <p class="quiz-answer">כדי לקבץ הכל לפי חדר בדשבורד ובאוטומציות — Area מאפשר תנאי כמו "יש תנועה באזור סלון" בלי לפרט כל Entity בנפרד.</p>
+  </div>
+
+  <div class="box ask-teacher">
+    <span class="box-label">נתקעת? שאל</span>
+    אני המורה שלך לאורך כל הקורס הזה. אם משהו לא ברור — במיוחד אם המסך שאתה רואה בפועל נראה אחרת ממה שמתואר כאן
+    (גרסאות HA משתנות) — פשוט תשאל אותי, זה בדיוק התפקיד שלי.
+  </div>
+
+  <div class="lesson-footer">
+    <span>שיעור 1 · מסלול הלקוח · OneHome Learning Workspace</span>
+    <a href="../reference/glossary.html">מילון מונחים</a>
+    <a href="0002-dashboards-and-areas.html">שיעור 2 →</a>
+  </div>
+</div>

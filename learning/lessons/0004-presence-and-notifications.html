@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>נוכחות והתראות — שיעור 4</title>
+<link rel="stylesheet" href="../assets/style.css">
+<script src="../assets/quiz.js" defer></script>
+<script src="../assets/sort.js" defer></script>
+</head>
+<body>
+<div class="page">
+  <div class="course-nav">
+    <span>🏠 מסלול הלקוח · שיעור 4</span>
+    <a href="../reference/automation-cheatsheet.html">דף עזר: אוטומציות ←</a>
+  </div>
+
+  <div class="lesson-kicker">מסלול הלקוח · מושג חדש + השלמת כרטיס הדוד</div>
+  <h1>מי בבית? נוכחות והתראה לנייד</h1>
+  <p class="subtitle">
+    בשיעור 3 דילגנו על התנאי "אין נוכחות בבית", וההתראה הופיעה רק בפעמון של HA. היום נשלים את שני החלקים:
+    הבית ידע אם יש מישהו בבית, וההתראה תגיע לטלפון שלך גם כשאתה בחוץ. בסוף השיעור כרטיס הדוד מהקטלוג יעבוד כמו שכתבת אותו.
+  </p>
+
+  <div class="box source">
+    <span class="box-label">מקור ראשי</span>
+    <a href="https://www.home-assistant.io/integrations/person/" target="_blank">Person — home-assistant.io</a> ·
+    <a href="https://www.home-assistant.io/integrations/zone/" target="_blank">Zone</a> ·
+    <a href="https://companion.home-assistant.io/docs/core/location/" target="_blank">Companion app: Location</a> ·
+    <a href="https://companion.home-assistant.io/docs/notifications/notifications-basic/" target="_blank">Companion app: Notifications</a>.
+  </div>
+
+  <h2>חימום: מה זכור משיעור 3?</h2>
+  <p>ענה בראש לפני שאתה לוחץ.</p>
+
+  <div class="quiz">
+    <p class="quiz-q">1. מה ההבדל בין טריגר לתנאי, במשפט אחד?</p>
+    <button class="quiz-reveal-btn" onclick="revealQuiz(this)">הצג תשובה</button>
+    <p class="quiz-answer">טריגר הוא <strong>רגע</strong> שמתחיל ריצה. תנאי הוא <strong>מצב</strong> שנבדק פעם אחת, בדיוק ברגע הטריגר. זה יהיה מרכזי היום, כי "אין אף אחד בבית" נכנס כתנאי.</p>
+  </div>
+  <div class="quiz">
+    <p class="quiz-q">2. פתחת Trace ואתה רואה ריצה שנעצרה באמצע, בלי שאף פעולה רצה. איפה הבעיה?</p>
+    <button class="quiz-reveal-btn" onclick="revealQuiz(this)">הצג תשובה</button>
+    <p class="quiz-answer">בתנאי. הטריגר קרה (אחרת לא הייתה ריצה בכלל), אבל תנאי נכשל. לוחצים על צומת התנאי ורואים איזה ערך היה שם באותו רגע. נשתמש בזה בתרגול.</p>
+  </div>
+
+  <h2>שלוש שכבות: מכשיר ← אדם ← בית</h2>
+  <p>
+    כדי ש-HA יענה על השאלה "יש מישהו בבית?", הוא בונה את התשובה בשלוש שכבות. כל אחת מהן היא Entity, עם domain משלה:
+  </p>
+
+  <div class="flow-steps">
+    <div class="flow-step">
+      <span class="step-word">מכשיר</span>
+      <span class="step-en">device_tracker</span>
+      <p>הטלפון מדווח איפה <strong>הוא</strong> נמצא. אפליקציית Companion יוצרת אותו אוטומטית, למשל <code>device_tracker.pixel_8</code>.</p>
+    </div>
+    <div class="flow-step">
+      <span class="step-word">אדם</span>
+      <span class="step-en">person</span>
+      <p>מחבר מכשיר אחד או יותר לבן אדם אחד, למשל <code>person.guy</code>. המצב: <code>home</code>, <code>not_home</code>, או שם של zone.</p>
+    </div>
+    <div class="flow-step">
+      <span class="step-word">בית</span>
+      <span class="step-en">zone</span>
+      <p>אזור על המפה. המצב של <code>zone.home</code> הוא <strong>מספר</strong>: כמה אנשים נמצאים בו כרגע.</p>
+    </div>
+  </div>
+
+  <p>
+    השכבה האחרונה היא מה שהופך את התנאי לפשוט. לפי התיעוד, "המצב של zone הוא מספר, שמייצג את כמות האנשים שנמצאים כרגע ב-zone",
+    ובעזרתו אפשר לבדוק "אם מישהו בבית, אם אדם אחד בבית, או אם אף אחד לא בבית"
+    (<a href="https://www.home-assistant.io/integrations/zone/" target="_blank">מקור</a>).
+    ה-zone של הבית נוצר בהתקנה, ברדיוס של 100 מטר, ואי אפשר למחוק אותו.
+  </p>
+
+  <div class="box win">
+    <span class="box-label">התובנה שחשוב לזכור</span>
+    "אין אף אחד בבית" זה פשוט: <code>zone.home</code> במצב <code>0</code>.
+    אבל <code>zone.home</code> סופר רק <strong>person</strong>-ים שהגדרת. אדם שאין לו person עם מכשיר מחובר לא נספר, מבחינת HA הוא לא קיים.
+  </div>
+
+  <h3>למה person ולא ישר device_tracker?</h3>
+  <p>
+    כי לאדם אחד יכולים להיות כמה מקורות מידע: GPS מהטלפון, ובהמשך גם חיבור לראוטר או ל-Bluetooth. ה-person משקלל אותם לפי כלל קבוע
+    (<a href="https://www.home-assistant.io/integrations/person/" target="_blank">מקור</a>):
+  </p>
+  <table>
+    <tr><th>מצב</th><th>מי קובע קודם</th><th>למה</th></tr>
+    <tr><td>כשאתה בבית</td><td>מקורות חיבור (ראוטר, Bluetooth), ורק אחריהם GPS</td><td>GPS בתוך בניין קופץ ועלול "להוציא" אותך מהבית בטעות</td></tr>
+    <tr><td>כשאתה בחוץ</td><td>GPS, ורק אחריו מקורות חיבור</td><td>ראוטר לא יודע איפה אתה, רק שלא התחברת</td></tr>
+  </table>
+  <p>
+    היום יש לך רק מקור אחד (GPS מהאפליקציה), אז הכלל הזה עוד לא משפיע. הוא יהיה חשוב אצל לקוחות, ועוד יותר כשיגיע ה-Aqara FP2,
+    שמזהה נוכחות <strong>בתוך חדר</strong>. זו שאלה אחרת לגמרי ("יש מישהו בסלון?") מ"מישהו בבית?".
+  </p>
+
+  <h2>תרגול 1: איזה Entity עונה על השאלה?</h2>
+  <p>לכל שאלה, בחר את ה-Entity שממנו כדאי לבנות את התנאי.</p>
+
+  <div class="sort" data-answer="zone" data-why="zone.home סופר את כל האנשים. 0 אומר שאין אף אחד, בלי לבדוק כל אדם בנפרד.">
+    <p class="sort-q">אין אף אחד בבית (כרטיס הדוד)</p>
+    <div class="sort-opts"><button data-v="tracker">device_tracker</button><button data-v="person">person</button><button data-v="zone">zone</button></div>
+    <p class="sort-fb"></p>
+  </div>
+  <div class="sort" data-answer="person" data-why="שאלה על אדם מסוים, לא על הבית כולו. person משקלל את כל המכשירים של אותו אדם.">
+    <p class="sort-q">הילד חזר מבית הספר</p>
+    <div class="sort-opts"><button data-v="tracker">device_tracker</button><button data-v="person">person</button><button data-v="zone">zone</button></div>
+    <p class="sort-fb"></p>
+  </div>
+  <div class="sort" data-answer="zone" data-why="אם המצב של zone.home הוא 1, בדיוק אדם אחד בבית. זה מה שהמספר נותן בחינם.">
+    <p class="sort-q">רק אדם אחד נשאר בבית</p>
+    <div class="sort-opts"><button data-v="tracker">device_tracker</button><button data-v="person">person</button><button data-v="zone">zone</button></div>
+    <p class="sort-fb"></p>
+  </div>
+  <div class="sort" data-answer="tracker" data-why="כאן שואלים על המכשיר עצמו, לא על האדם. זה המקרה הנדיר שבו כדאי ללכת ישר ל-device_tracker.">
+    <p class="sort-q">הטאבלט של הילדים יצא מהבית (נשכח בתיק?)</p>
+    <div class="sort-opts"><button data-v="tracker">device_tracker</button><button data-v="person">person</button><button data-v="zone">zone</button></div>
+    <p class="sort-fb"></p>
+  </div>
+  <p class="sort-score"></p>
+
+  <h2>תרגול 2: לחבר את הטלפון</h2>
+  <div class="box practice">
+    <span class="box-label">משימה מעשית · 10 דקות</span>
+    <ol>
+      <li>התקן את אפליקציית <strong>Home Assistant</strong> (Companion) מ-App Store או מ-Google Play, והתחבר לשרת שלך עם המשתמש שלך.</li>
+      <li>כשהיא מבקשת הרשאת מיקום, בחר <strong>Allow all the time</strong> (באייפון: <strong>Always</strong>). בלי זה המיקום מתעדכן רק כשהאפליקציה פתוחה, והבית לא ידע שיצאת.</li>
+      <li>ב-HA היכנס ל-<strong>Settings → People</strong> ופתח את ה-person שלך. תחת <strong>Track device</strong> ודא שהטלפון מופיע ומסומן. אם לא, סמן אותו.</li>
+      <li>היכנס ל-<strong>Developer tools → States</strong> וחפש שלושה Entities: ה-<code>device_tracker</code> של הטלפון, <code>person.&lt;שמך&gt;</code>, ו-<code>zone.home</code>. מה המצב של כל אחד?</li>
+      <li>באותו מסך, רשום לעצמך את השם של פעולת ההתראה: חפש ב-<strong>Developer tools → Actions</strong> את <code>notify.mobile_app_</code>. מה שמופיע אחרי הקו התחתון הוא שם הטלפון שלך.</li>
+    </ol>
+    <p><strong>מה אמור להיות:</strong> <code>device_tracker</code> ו-<code>person</code> במצב <code>home</code>, ו-<code>zone.home</code> במצב <code>1</code>.</p>
+  </div>
+
+  <h2>תרגול 3: להשלים את כרטיס הדוד</h2>
+  <p>
+    פתח את האוטומציה משיעור 3 (<code>הדוד נשאר דלוק (בדיקה)</code>) ושנה שני דברים:
+  </p>
+  <div class="box practice">
+    <span class="box-label">משימה מעשית · 10 דקות</span>
+    <ol>
+      <li><strong>התנאי:</strong> Add condition ← Entity ← <strong>State</strong>. בחר את <code>zone.home</code>, וב-<strong>State</strong> כתוב <code>0</code>.</li>
+      <li><strong>ההתראה:</strong> מחק את פעולת ה-persistent notification. במקומה Add action ← חפש את <code>notify.mobile_app_&lt;הטלפון שלך&gt;</code>. בשדה Message כתוב: "הדוד נשאר דלוק ואין אף אחד בבית. כיביתי אותו."</li>
+      <li>שמור.</li>
+      <li><strong>בדיקה א' (אתה בבית):</strong> הדלק את המכשיר וחכה דקה. הוא <strong>לא</strong> אמור לכבות. פתח Traces: תראה ריצה שנעצרה בצומת התנאי. לחץ עליו ובדוק מה היה המצב של <code>zone.home</code>.</li>
+      <li><strong>בדיקה ב' (אין אף אחד):</strong> בחר אחת משתי דרכים:
+        <ul>
+          <li><strong>הדרך האמיתית:</strong> צא לסיבוב של יותר מ-100 מטר, וכש-<code>zone.home</code> מראה <code>0</code> (אפשר לבדוק באפליקציה), הדלק את המכשיר מהטלפון. אחרי דקה אמורה להגיע התראה לנייד.</li>
+          <li><strong>הדרך המהירה:</strong> הדלק את המכשיר, ואחרי כ-50 שניות היכנס ל-<strong>Developer tools → States</strong>, בחר <code>zone.home</code>, שנה את ה-State ל-<code>0</code> ולחץ <strong>Set state</strong>.</li>
+        </ul>
+      </li>
+    </ol>
+  </div>
+  <div class="box ask-teacher">
+    <span class="box-label">למה הדרך המהירה עובדת, ולמה רק ב-50 שניות?</span>
+    Set state משנה רק את מה ש-HA <em>רואה</em>. הוא לא נוגע במכשיר, והערך נדרס בעדכון האמיתי הבא
+    (<a href="https://www.home-assistant.io/docs/tools/dev-tools/" target="_blank">מקור</a>).
+    והתזמון? כי התנאי נבדק <strong>רק ברגע שה-For מסתיים</strong>. אם תשנה ל-0 מוקדם מדי, יכול להיות שהטלפון ידווח מיקום לפני שהדקה נגמרת, והערך יחזור ל-1.
+    זה בדיוק "הטריגר הוא רגע, התנאי הוא מצב" משיעור 3, רק שהפעם אתה רואה את זה בעיניים.
+  </div>
+
+  <h3>ה-YAML אחרי השינוי</h3>
+<pre dir="ltr"><code>alias: הדוד נשאר דלוק (בדיקה)
+triggers:
+  - trigger: state
+    entity_id: switch.boiler
+    to: "on"
+    for:
+      minutes: 1
+conditions:
+  - condition: state
+    entity_id: zone.home
+    state: "0"            # מחרוזת, לא מספר: כל state ב-HA הוא טקסט
+actions:
+  - action: switch.turn_off
+    target:
+      entity_id: switch.boiler
+  - action: notify.mobile_app_pixel_8   # השם של הטלפון שלך
+    data:
+      message: הדוד נשאר דלוק ואין אף אחד בבית. כיביתי אותו.
+mode: single</code></pre>
+  <p>
+    שים לב ל-domain של ההתראה: <code>notify</code>. זה אותו רעיון משיעור 3, רק שכאן ה-domain הוא שירות ולא מכשיר. השם של הפעולה נגזר משם הטלפון בהגדרות
+    המכשיר, כשרווחים ותווים מיוחדים מוחלפים בקו תחתון
+    (<a href="https://companion.home-assistant.io/docs/notifications/notifications-basic/" target="_blank">מקור</a>).
+    אצל לקוח עם שני הורים יהיו שתי פעולות כאלה, אחת לכל טלפון.
+  </p>
+
+  <h2>בדיקת זיכרון: תרחישים מהשטח</h2>
+
+  <div class="quiz">
+    <p class="quiz-q">1. התקנת אצל לקוח את כרטיס הדוד. לשני ההורים יש אפליקציה, לסבתא שגרה איתם אין. ההורים בעבודה, סבתא במקלחת, והדוד דלוק שעה. מה קורה?</p>
+    <button class="quiz-reveal-btn" onclick="revealQuiz(this)">הצג תשובה</button>
+    <p class="quiz-answer">הדוד נכבה לסבתא באמצע המקלחת. מבחינת HA <code>zone.home</code> הוא 0, כי סבתא לא person עם מכשיר. זו שאלה שחייבת להיות ב-Onboarding: "מי גר בבית, ולמי אין סמארטפון?". לבני בית בלי טלפון צריך מקור נוכחות אחר (חיישן נוכחות פנימי כמו FP2), או לוותר על כיבוי אוטומטי ולהסתפק בהתראה.</p>
+  </div>
+
+  <div class="quiz">
+    <p class="quiz-q">2. לקוח מתלונן: "יצאתי מהבית לפני חצי שעה, והבית עדיין חושב שאני בבית". מה הדבר הראשון שתבדוק?</p>
+    <button class="quiz-reveal-btn" onclick="revealQuiz(this)">הצג תשובה</button>
+    <p class="quiz-answer">את הרשאת המיקום של האפליקציה בטלפון שלו. אם היא לא על <strong>Allow all the time</strong> (או Always באייפון), או שחיסכון הסוללה של אנדרואיד "מרדים" את האפליקציה, המיקום לא מתעדכן ברקע. באייפון העדכון ברקע מבוסס על כניסה ויציאה מ-zones ועל שינויי מיקום משמעותיים, בתדירות של עד כ-15 דקות (<a href="https://companion.home-assistant.io/docs/core/location/" target="_blank">מקור</a>). אחרי זה, ב-Developer tools → States בודקים מתי ה-<code>device_tracker</code> התעדכן לאחרונה.</p>
+  </div>
+
+  <div class="quiz">
+    <p class="quiz-q">3. אתה גר 60 מטר מהסופר. מה יקרה כשתלך לקנות חלב, ומה אפשר לעשות עם זה?</p>
+    <button class="quiz-reveal-btn" onclick="revealQuiz(this)">הצג תשובה</button>
+    <p class="quiz-answer">כלום: הרדיוס של zone.home הוא 100 מטר כברירת מחדל, אז מבחינת HA לא יצאת מהבית. אפשר להקטין את הרדיוס ב-Settings → Areas, labels &amp; zones → Zones. אבל רדיוס קטן מדי גורם לקפיצות GPS "להוציא" אותך מהבית בזמן שאתה בסלון. אצל לקוחות בבניין רב-קומות בעיר, כדאי לבדוק את זה בפועל ולא להניח.</p>
+  </div>
+
+  <div class="box win">
+    <span class="box-label">הניצחון של היום</span>
+    כרטיס "דוד חשמל דלוק ללא נוכחות" עובד כמו שכתבת אותו בקטלוג: טריגר, תנאי ופעולה, עם התראה שמגיעה לכיס.
+    אחרי הבדיקה אפשר להעלות את ה-For לשעה ולשנות את השם של האוטומציה.
+    וזה גם רגע וואו אמיתי להדגמה: אתה בחוץ, הטלפון מצלצל, והבית מספר לך שהוא טיפל בדוד.
+  </div>
+
+  <div class="box ask-teacher">
+    <span class="box-label">נתקעת? שאל</span>
+    אם <code>zone.home</code> לא מתעדכן, ההתראה לא מגיעה, או שהטלפון לא מופיע ב-Track device, תדביק לי את המצבים מ-Developer tools ואת ה-Trace.
+    ותספר לי: באיזו דרך עשית את בדיקה ב', ומה ראית בצומת התנאי בבדיקה א'?
+  </div>
+
+  <div class="lesson-footer">
+    <span>שיעור 4 · מסלול הלקוח · OneHome Learning Workspace</span>
+    <a href="0003-first-automation.html">← שיעור 3</a>
+    <a href="../reference/automation-cheatsheet.html">דף עזר: אוטומציות</a>
+    <a href="../reference/glossary.html">מילון מונחים</a>
+  </div>
+</div>
+</body>
+</html>

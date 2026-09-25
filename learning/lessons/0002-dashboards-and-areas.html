@@ -1,0 +1,110 @@
+<title>דשבורדים ואזורים — שיעור 2</title>
+<link rel="stylesheet" href="../assets/style.css">
+<script src="../assets/quiz.js" defer></script>
+<div class="page">
+  <div class="course-nav">
+    <span>🏠 מסלול הלקוח · שיעור 2 מתוך N</span>
+    <a href="../reference/glossary.html">מילון מונחים ←</a>
+  </div>
+
+  <div class="lesson-kicker">מסלול הלקוח · תרגול + מושג חדש</div>
+  <h1>מהמסך הראשון לדשבורד לפי חדרים</h1>
+  <p class="subtitle">
+    בשיעור הקודם למדת את ארבעת המושגים (Integration, Device, Entity, Area) בתיאוריה בלבד — עוד לא פתחת את ה-HA שלך
+    כדי לראות אותם בעיניים. היום עושים את זה, ובדרך לומדים איך HA הופך Area לדשבורד שאפשר להראות ללקוח.
+  </p>
+
+  <div class="box source">
+    <span class="box-label">מקור ראשי</span>
+    <a href="https://www.home-assistant.io/dashboards/" target="_blank">Dashboards — home-assistant.io</a> ·
+    <a href="https://www.home-assistant.io/docs/organizing/areas/" target="_blank">Organizing with areas — home-assistant.io</a>.
+    השיעור הזה מתמצת את שני הדפים האלה ומחבר אותם לתרגול המעשי שדילגת עליו בשיעור 1.
+  </div>
+
+  <h2>קודם: התרגול שדילגנו עליו בשיעור 1</h2>
+  <p>
+    קראת את ההגדרות של Integration/Device/Entity/Area, אבל עוד לא ראית אותן על המסך שלך. לפני שממשיכים
+    הלאה — עצור כאן ותעשה את זה בפועל. זה לא ייקח יותר מדקתיים, וכל מה שבא אחר כך בשיעור הזה נשען על זה.
+  </p>
+  <div class="box practice">
+    <span class="box-label">משימה מעשית · חובה לפני שממשיכים</span>
+    <ol>
+      <li>היכנס ל-<strong>Settings → Devices &amp; Services → Devices</strong>, ובחר מכשיר פיזי אחד שכבר מזווג אצלך.</li>
+      <li>בדף המכשיר, זהה: איזו Integration יצרה אותו? כמה Entities הוא חושף? מה ה-domain של כל אחת (<code>sensor</code>? <code>switch</code>? <code>binary_sensor</code>?)</li>
+      <li>בדוק אם המכשיר משויך ל-Area. אם לא — שייך אותו עכשיו לחדר האמיתי שבו הוא נמצא.</li>
+      <li>חזור על זה עם מכשיר אחד נוסף, מ-domain אחר.</li>
+    </ol>
+  </div>
+  <p>
+    אם המסך אצלך נראה שונה ממה שמתואר כאן (גרסאות HA משתנות) — זו בדיוק הסיבה שהתרגול על הבית האמיתי שלך
+    חשוב יותר מכל תיאור כתוב. תשאל אותי אם משהו לא מסתדר.
+  </p>
+
+  <h2>מה זה בכלל דשבורד</h2>
+  <p>
+    דשבורד הוא המסך שרואה מי שמפעיל את הבית — לא מפתח, לא מתקין, אלא בן/בת הזוג של הלקוח שרק רוצה לכבות אור.
+    ב-HA יש שתי דרכים לקבל דשבורד:
+  </p>
+  <h3>1. Auto-generated dashboard — נוצר לבד</h3>
+  <p>
+    ברירת המחדל של HA: דשבורד שנבנה <strong>אוטומטית</strong> מתוך ה-Areas שהגדרת. כל Area שיש לה לפחות Entity אחד
+    הופכת ללשונית/כרטיס בדשבורד, עם כל ה-Entities המשויכים אליה מקובצים יחד. זו הסיבה שהתרגול למעלה (לשייך
+    מכשירים ל-Area) לא רק "מסודר יפה" — הוא <strong>ישירות</strong> מה שהופך את הדשבורד לשימושי או לבלגן.
+  </p>
+  <h3>2. Dashboard מותאם אישית (YAML או UI Editor)</h3>
+  <p>
+    לדשבורד אפשר גם לבנות ידנית — עם Cards ספציפיים (Entity Card, Thermostat Card, Camera Card וכו'), בסדר ועיצוב
+    שאתה קובע. זה הכיוון שאליו OneHome ילך בסוף (דשבורד אחיד ומוברנד לכל לקוח), אבל זה שיעור להמשך —
+    היום המטרה היא להבין את הבסיס: דשבורד אוטומטי מבוסס Area.
+  </p>
+
+  <div class="box win">
+    <span class="box-label">החיבור ל-OneHome</span>
+    זו בדיוק הסיבה ש-Area הוא לא "משהו נחמד לסדר" — הוא <strong>הבסיס לדשבורד שהלקוח רואה ביום הראשון</strong>.
+    התקנה שבה שכחת לשייך מכשירים ל-Area נראית ללקוח כמו בלגן של כרטיסים לא מסודרים, גם אם כל האינטגרציות עובדות מושלם.
+  </div>
+
+  <h2>תרגול: לראות את זה קורה</h2>
+  <div class="box practice">
+    <span class="box-label">משימה מעשית · על הדשבורד עצמו</span>
+    <ol>
+      <li>פתח את הדשבורד הראשי (הלשונית "Overview" / "בית" בתפריט הצד).</li>
+      <li>מצא את הלשונית/הכרטיס של האזור ששייכת אליו מכשיר בתרגול הקודם — הוא אמור להופיע שם עכשיו.</li>
+      <li>אם שייכת שני מכשירים לשני אזורים שונים — בדוק שהם מופיעים בכרטיסים נפרדים, לא מעורבבים יחד.</li>
+      <li>נסה לדמיין: אם לקוח סקפטי היה מסתכל על המסך הזה עכשיו — האם הוא היה מבין מיד מה קורה בבית שלו? מה היית משנה?</li>
+    </ol>
+  </div>
+
+  <h2>בדיקת זיכרון (Retrieval Practice)</h2>
+
+  <div class="quiz">
+    <p class="quiz-q">1. שייכת שני חיישנים (Entities) לאזור "סלון". מה קורה לדשבורד האוטומטי כתוצאה מזה?</p>
+    <button class="quiz-reveal-btn" onclick="revealQuiz(this)">הצג תשובה</button>
+    <p class="quiz-answer">שני החיישנים יופיעו מקובצים יחד תחת הכרטיס/לשונית של "סלון" בדשבורד האוטומטי — בלי שהיה צריך להגדיר את זה ידנית.</p>
+  </div>
+
+  <div class="quiz">
+    <p class="quiz-q">2. מכשיר חדש מחובר ל-HA אבל לא שויך לאף Area. מה יקרה לו בדשבורד האוטומטי?</p>
+    <button class="quiz-reveal-btn" onclick="revealQuiz(this)">הצג תשובה</button>
+    <p class="quiz-answer">הוא לא ייכנס לאף כרטיס אזור מסודר — בדרך כלל ייפול לקטגוריה כללית/לא מקובצת, מה שיוצר בדשבורד רשימה לא מאורגנת שקשה ללקוח לקרוא.</p>
+  </div>
+
+  <div class="quiz">
+    <p class="quiz-q">3. מה ההבדל העקרוני בין הדשבורד האוטומטי לדשבורד מותאם אישית (custom)?</p>
+    <button class="quiz-reveal-btn" onclick="revealQuiz(this)">הצג תשובה</button>
+    <p class="quiz-answer">האוטומטי נבנה לבד מתוך מבנה ה-Areas, בלי עבודה נוספת. המותאם אישית נבנה ידנית עם כרטיסים (Cards) ספציפיים בסדר ועיצוב שאתה קובע — שלב מתקדם יותר, רלוונטי כשרוצים דשבורד מוברנד ואחיד לכל לקוחות OneHome.</p>
+  </div>
+
+  <div class="box ask-teacher">
+    <span class="box-label">נתקעת? שאל</span>
+    אם התרגול לא הראה מה שציפית (למשל האזור לא מופיע בדשבורד) — זו לא בהכרח טעות שלך, לפעמים זה עניין של רענון דף
+    או גרסת HA. תשאל אותי במקום לנחש.
+  </div>
+
+  <div class="lesson-footer">
+    <span>שיעור 2 · מסלול הלקוח · OneHome Learning Workspace</span>
+    <a href="0001-core-concepts-map.html">← שיעור 1</a>
+    <a href="0003-first-automation.html">שיעור 3 →</a>
+    <a href="../reference/glossary.html">מילון מונחים</a>
+  </div>
+</div>

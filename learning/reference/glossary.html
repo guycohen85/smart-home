@@ -1,0 +1,126 @@
+<title>מילון מונחים — Home Assistant · OneHome</title>
+<link rel="stylesheet" href="../assets/style.css">
+<div class="page">
+  <div class="course-nav">
+    <span>📖 מסמך רפרנס · מתעדכן עם כל שיעור</span>
+    <a href="../lessons/0004-presence-and-notifications.html">← חזרה לשיעור 4</a>
+  </div>
+
+  <div class="lesson-kicker">רפרנס מהיר</div>
+  <h1>מילון מונחים — Home Assistant</h1>
+  <p class="subtitle">
+    המונחים הרשמיים שחוזרים בכל שיעור. הדף הזה נבנה בהדרגה — כל שיעור חדש שמכניס מונח חדש מוסיף אותו כאן.
+    מקור: <a href="https://www.home-assistant.io/docs/glossary/" target="_blank">Glossary הרשמי של Home Assistant</a>.
+  </p>
+
+  <h2>מבנה הבית (שיעור 1)</h2>
+  <table>
+    <tr><th>מונח</th><th>מה זה</th><th>דוגמה מ-OneHome</th></tr>
+    <tr>
+      <td><strong>Integration</strong><br>אינטגרציה</td>
+      <td>הגשר בין HA לפלטפורמה/פרוטוקול/יצרן חיצוני. היא זו שיוצרת Devices ו-Entities כשמחברים משהו חדש.</td>
+      <td>ZHA (רדיו Zigbee דרך SkyConnect), Shelly, Home Assistant Cloud (Nabu Casa)</td>
+    </tr>
+    <tr>
+      <td><strong>Device</strong><br>התקן</td>
+      <td>דבר פיזי (או לוגי) אחד שהאינטגרציה זיהתה. יכול לחשוף כמה Entities.</td>
+      <td>חיישן Aqara FP2 אחד בסלון; Shelly Plus 1 אחד מאחורי מפסק הדוד</td>
+    </tr>
+    <tr>
+      <td><strong>Entity</strong><br>ישות</td>
+      <td>נקודת הנתון/השליטה הבודדת שדיווח או פועל בפועל. לכל Entity יש <code>entity_id</code> בפורמט <code>domain.name</code> — ה-domain קובע איזה סוג התנהגות (light, switch, sensor, binary_sensor, climate…).</td>
+      <td><code>binary_sensor.fp2_livingroom_occupancy</code>, <code>switch.boiler</code>, <code>sensor.boiler_power</code></td>
+    </tr>
+    <tr>
+      <td><strong>Area</strong><br>אזור</td>
+      <td>קיבוץ של Devices/Entities לפי חדר/אזור פיזי. מאפשר תנאים ב-Dashboard ובאוטומציות ברמת "כל מה שבסלון" ולא Entity־Entity.</td>
+      <td>"סלון", "מקלחת הורים", "כניסה"</td>
+    </tr>
+  </table>
+
+  <h2>דשבורדים (שיעור 2)</h2>
+  <table>
+    <tr><th>מונח</th><th>מה זה</th><th>דוגמה מ-OneHome</th></tr>
+    <tr>
+      <td><strong>Dashboard</strong><br>דשבורד</td>
+      <td>המסך שרואה מי שמפעיל את הבית. יכול להיות <strong>Auto-generated</strong> (נבנה לבד מתוך מבנה ה-Areas) או <strong>Custom</strong> (נבנה ידנית עם Cards ספציפיים).</td>
+      <td>הלשונית "Overview" בתפריט הצד</td>
+    </tr>
+    <tr>
+      <td><strong>Card</strong><br>כרטיס</td>
+      <td>יחידת תצוגה בודדת בדשבורד — מייצג Entity אחד או קבוצת Entities (Entity Card, Thermostat Card, Camera Card וכו').</td>
+      <td>כרטיס עם switch.boiler ו-sensor.boiler_power_w</td>
+    </tr>
+  </table>
+
+  <h2>אוטומציות (שיעור 3)</h2>
+  <table>
+    <tr><th>מונח</th><th>מה זה</th><th>דוגמה מ-OneHome</th></tr>
+    <tr>
+      <td><strong>Automation</strong><br>אוטומציה</td>
+      <td>כלל שהבית מריץ לבד: מתי (Trigger), רק אם (Condition), אז (Action).</td>
+      <td>"דוד חשמל דלוק ללא נוכחות" מהקטלוג</td>
+    </tr>
+    <tr>
+      <td><strong>Trigger</strong><br>טריגר</td>
+      <td><strong>רגע</strong> שמתחיל ריצה: שינוי מצב, שעה, אירוע.</td>
+      <td><code>switch.boiler</code> עובר ל-<code>on</code></td>
+    </tr>
+    <tr>
+      <td><strong>Condition</strong><br>תנאי</td>
+      <td><strong>מצב</strong> שנבדק פעם אחת ברגע הטריגר. אם הוא נכשל, הריצה נעצרת. אופציונלי.</td>
+      <td>אין אף אחד בבית</td>
+    </tr>
+    <tr>
+      <td><strong>Action</strong><br>פעולה</td>
+      <td>מה הבית עושה. בנויה מ-domain ופעולה, למשל <code>switch.turn_off</code>.</td>
+      <td>כיבוי הדוד + התראה</td>
+    </tr>
+    <tr>
+      <td><strong>For</strong><br>משך</td>
+      <td>שדה בטריגר State: המצב חייב להישאר קבוע לאורך כל הזמן. מתאפס ב-restart.</td>
+      <td>הדוד דלוק שעה ברציפות</td>
+    </tr>
+    <tr>
+      <td><strong>Trace</strong><br>עקבה</td>
+      <td>ציר זמן של ריצה: מה הפעיל אותה, אילו תנאים נבדקו, מה כל פעולה עשתה. נשמרות 5 אחרונות.</td>
+      <td>הכלי הראשון כשלקוח אומר "האוטומציה לא עבדה"</td>
+    </tr>
+  </table>
+
+  <h2>נוכחות (שיעור 4)</h2>
+  <table>
+    <tr><th>מונח</th><th>מה זה</th><th>דוגמה מ-OneHome</th></tr>
+    <tr>
+      <td><strong>device_tracker</strong><br>עוקב מכשיר</td>
+      <td>Entity שמדווח איפה <strong>מכשיר</strong> נמצא. אפליקציית Companion יוצרת אחד לכל טלפון.</td>
+      <td><code>device_tracker.pixel_8</code></td>
+    </tr>
+    <tr>
+      <td><strong>Person</strong><br>אדם</td>
+      <td>מחבר מכשיר אחד או יותר לבן אדם. בבית, מקורות חיבור (ראוטר/Bluetooth) קובעים לפני GPS. בחוץ, GPS קובע קודם.</td>
+      <td><code>person.guy</code></td>
+    </tr>
+    <tr>
+      <td><strong>Zone</strong><br>אזור גאוגרפי</td>
+      <td>אזור על המפה (ברירת מחדל: רדיוס 100 מטר). המצב שלו הוא מספר האנשים שנמצאים בו.</td>
+      <td><code>zone.home</code> במצב <code>0</code> = אין אף אחד בבית</td>
+    </tr>
+    <tr>
+      <td><strong>Companion app</strong><br>אפליקציית HA</td>
+      <td>האפליקציה הרשמית לנייד. מדווחת מיקום וחיישני טלפון, ומקבלת התראות דרך <code>notify.mobile_app_&lt;device&gt;</code>.</td>
+      <td>ההתראה "הדוד נשאר דלוק ואין אף אחד בבית"</td>
+    </tr>
+  </table>
+
+  <h2>מונחים שיתווספו בשיעורים הבאים</h2>
+  <p>
+    <strong>Blueprint</strong>, <strong>Add-on</strong>, <strong>HACS</strong>,
+    <strong>Zigbee / Z-Wave / Matter / Thread</strong>, <strong>Assist</strong> (עוזר קולי מקומי) — עדיין לא נלמדו לעומק, ייכנסו לכאן כשמגיעים אליהם.
+  </p>
+
+  <div class="lesson-footer">
+    <span>מתעדכן לפי סדר השיעורים · OneHome Learning Workspace</span>
+    <a href="../MISSION.md">המשימה</a>
+  </div>
+</div>

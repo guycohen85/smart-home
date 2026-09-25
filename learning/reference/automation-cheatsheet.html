@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>דף עזר: אוטומציות</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="page">
+  <div class="course-nav">
+    <span>📖 מסמך רפרנס · מתעדכן עם כל שיעור</span>
+    <a href="../lessons/0004-presence-and-notifications.html">← שיעור 4</a>
+  </div>
+
+  <div class="lesson-kicker">רפרנס מהיר</div>
+  <h1>דף עזר: אוטומציות</h1>
+  <p class="subtitle">
+    מבנה, תחביר, ודרך דיבוג. מקור: <a href="https://www.home-assistant.io/docs/automation/basics/" target="_blank">Automation basics</a>
+    ו-<a href="https://www.home-assistant.io/docs/automation/yaml/" target="_blank">Automation YAML</a>.
+  </p>
+
+  <h2>המבנה</h2>
+  <div class="flow-steps">
+    <div class="flow-step"><span class="step-word">מתי</span><span class="step-en">triggers</span><p><strong>רגע</strong> שקורה. מתחיל ריצה.</p></div>
+    <div class="flow-step optional"><span class="step-word">רק אם</span><span class="step-en">conditions</span><p><strong>מצב</strong> שנבדק פעם אחת, ברגע הטריגר.</p></div>
+    <div class="flow-step"><span class="step-word">אז</span><span class="step-en">actions</span><p>מה הבית <strong>עושה</strong>.</p></div>
+  </div>
+  <p><strong>כלל האצבע:</strong> אם זה "קרה", זה טריגר. אם זה "נכון עכשיו", זה תנאי. HA לא מחכה שתנאי יתקיים.</p>
+
+  <h2>שלד YAML (תחביר נוכחי)</h2>
+<pre><code>alias: שם האוטומציה
+triggers:
+  - trigger: state          # לא platform: (תחביר ישן)
+    entity_id: switch.boiler
+    to: "on"
+    for: "01:00:00"         # המצב חייב להישאר לאורך כל הזמן
+conditions: []              # אופציונלי
+actions:
+  - action: switch.turn_off # לא service: (תחביר ישן)
+    target:
+      entity_id: switch.boiler
+  - action: persistent_notification.create
+    data:
+      message: טקסט ההתראה
+mode: single</code></pre>
+
+  <h2>נוכחות (שיעור 4)</h2>
+  <table>
+    <tr><th>שכבה</th><th>Entity</th><th>מצב</th></tr>
+    <tr><td>מכשיר</td><td><code>device_tracker.&lt;טלפון&gt;</code></td><td><code>home</code> / <code>not_home</code> / שם zone</td></tr>
+    <tr><td>אדם</td><td><code>person.&lt;שם&gt;</code></td><td><code>home</code> / <code>not_home</code> / שם zone</td></tr>
+    <tr><td>בית</td><td><code>zone.home</code></td><td>מספר האנשים בבית (<a href="https://www.home-assistant.io/integrations/zone/" target="_blank">מקור</a>)</td></tr>
+  </table>
+<pre dir="ltr"><code>conditions:
+  - condition: state        # אין אף אחד בבית
+    entity_id: zone.home
+    state: "0"              # מחרוזת
+actions:
+  - action: notify.mobile_app_&lt;device_id&gt;   # התראה לנייד
+    data:
+      message: טקסט ההתראה</code></pre>
+
+  <h2>מלכודות ידועות</h2>
+  <table>
+    <tr><th>מלכודת</th><th>מה קורה</th></tr>
+    <tr><td>החלפה בין טריגר לתנאי</td><td>האוטומציה רצה ברגע הלא נכון, התנאי נכשל, ואין ריצה נוספת.</td></tr>
+    <tr><td>שדה <code>for</code> ו-restart</td><td>השעון מתאפס ב-restart או ב-reload (<a href="https://www.home-assistant.io/triggers/state/" target="_blank">מקור</a>). בעייתי ל-For ארוך אצל לקוחות שמתעדכנים מרחוק.</td></tr>
+    <tr><td>עריכה ידנית של <code>automations.yaml</code></td><td>הקובץ מנוהל על ידי ה-UI. לא לערוך ידנית (<a href="https://www.home-assistant.io/docs/automation/yaml/" target="_blank">מקור</a>).</td></tr>
+    <tr><td>בן בית בלי person עם טלפון</td><td>לא נספר ב-<code>zone.home</code>. "אין אף אחד בבית" יהיה נכון גם כשהוא בבית.</td></tr>
+    <tr><td>הרשאת מיקום לא על "Allow all the time"</td><td>המיקום לא מתעדכן ברקע, והבית חושב שהלקוח עדיין בבית.</td></tr>
+    <tr><td>Set state ב-Developer tools</td><td>משנה רק את מה ש-HA רואה, ונדרס בעדכון הבא. טוב לבדיקות קצרות בלבד.</td></tr>
+    <tr><td>הכפתור Run actions</td><td>מריץ רק פעולות ומדלג על טריגרים ותנאים. לא בודק לוגיקה.</td></tr>
+  </table>
+
+  <h2>דיבוג: "האוטומציה לא עבדה"</h2>
+  <ol>
+    <li>פתח <strong>Traces</strong> (עורך האוטומציה ← שלוש נקודות). כברירת מחדל נשמרות 5 ריצות אחרונות (<a href="https://www.home-assistant.io/docs/automation/troubleshooting/" target="_blank">מקור</a>).</li>
+    <li><strong>אין ריצה בכלל?</strong> הבעיה בטריגר: הוא לא קרה, או שה-For נקטע.</li>
+    <li><strong>יש ריצה שנעצרה?</strong> לחץ על צומת התנאי וראה איזה ערך נכשל.</li>
+    <li><strong>הפעולה רצה ולא קרה כלום?</strong> בדוק את המכשיר עצמו: האם הוא זמין (לא <code>unavailable</code>)?</li>
+  </ol>
+
+  <div class="lesson-footer">
+    <span>OneHome Learning Workspace</span>
+    <a href="glossary.html">מילון מונחים</a>
+  </div>
+</div>
+</body>
+</html>
