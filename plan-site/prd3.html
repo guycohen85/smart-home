@@ -312,6 +312,16 @@
       <li>סירנת גלאי העשן המקומית נבדקה <span class="tag tag-new">הצעה</span></li>
       <li>ניטור על בסיס אינטגרציית Alert המובנית פועל (PRD 4) <span class="tag tag-ok">מתועד</span></li>
       <li>הלקוח יודע במפורש שכשהאינטרנט בבית נופל, גיא לא מקבל התראה מרחוק — והאוטומציות המקומיות ממשיכות לעבוד <span class="tag tag-ok">מתועד</span></li>
+    <div class="grp">חוסן להפסקות חשמל <span class="tag tag-new">הצעה</span></div>
+    <p style="margin:0;font-size:13.5px">הפסקת חשמל מפילה את ה-Green יחד עם הראוטר. בלי הכנה, השעון עלול להתאפס, אינטגרציות נשארות unavailable, נורות נדלקות באמצע הלילה, והדוד חוזר למצב לא צפוי.</p>
+    <ul class="chk">
+      <li><strong>סוללת CR2032 ב-Green.</strong> לא כלולה באריזה. בלעדיה השעון תלוי ב-NTP, וכשהראוטר עוד לא עלה, השעה שגויה, ואוטומציות זמן, היסטוריה ותעודות TLS נפגעות. להכניס עם הפלוס כלפי מעלה, ולוודא שה-Green הסתנכרן ל-NTP לפחות פעם אחת <span class="tag tag-new">הצעה</span></li>
+      <li><strong>UPS קטן ל-Green, לראוטר ולמודם/ONT.</strong> פותר את רוב הבעיות בבת אחת, כי HA והרשת לא נופלים. אם ה-UPS עם חיבור USB, לחבר אותו ל-HA דרך NUT כדי לקבל התראת "נפל חשמל" וזמן סוללה. תוספת או חלק מהחבילה, ראו שאלה 8 <span class="tag tag-new">הצעה</span></li>
+      <li><strong>Power-on behavior מוגדר במפורש בכל מכשיר.</strong> נורות Zigbee: "previous" או "off", לא ברירת המחדל שנדלקת ב-100%. ממסרים ושקעים לפי תפקיד, ו<strong>בקרת הדוד והמזגנים תמיד "off"</strong>, וה-HA מחזיר אותם לפי לוח הזמנים <span class="tag tag-new">הצעה</span></li>
+      <li><strong>טריגרים עם <code>not_from: unavailable</code>.</strong> בכל אוטומציית התראה (דלת, הצפה, תנועה), כדי שחזרת חשמל לא תשלח התראות שווא <span class="tag tag-new">הצעה</span></li>
+      <li><strong>אוטומציית "HA עלה".</strong> טריגר <code>homeassistant: start</code> שמחשב מחדש מצבים שתלויים בזמן, למשל האם הדוד אמור לפעול עכשיו, כי טריגרי זמן שהוחמצו בזמן ההפסקה לא רצים בדיעבד. אפשר לשלב ריסטרט אוטומטי לאינטגרציות שנשארו unavailable <span class="tag tag-new">הצעה</span></li>
+      <li><strong>בדיקת הפסקת חשמל ביום ההתקנה.</strong> לנתק את החשמל ל-Green ולראוטר, להחזיר, ולוודא: שעה נכונה, אין נורות שנדלקו, הדוד כבוי או לפי לו"ז, אין התראות שווא, ורשת ה-Zigbee התייצבה <span class="tag tag-new">הצעה</span></li>
+      <li>הלקוח יודע שאחרי הפסקת חשמל מכשירי סוללה של Zigbee יכולים להיראות לא זמינים עד כמה דקות, ושאין צורך לפתוח קריאה <span class="tag tag-new">הצעה</span></li>
     </ul>
   </section>
 
@@ -362,6 +372,7 @@
       <li><strong>חשמלאי.</strong> כמעט כל התקנה תלויה בזמינות שלו (ראו PRD 1, סעיף G). עיכוב שלו מעכב את כל התהליך.</li>
       <li><strong>Nabu Casa דורש מהלקוח לפתוח חשבון ולשלם בעצמו.</strong> לקוח לא-טכני עלול להיתקע בפתיחת חשבון או בתשלום. הסיבה שגיא מלווה בזמן ההתקנה, בנוכחותו.</li>
       <li><strong>המודל זמני.</strong> Nabu Casa אישרו שתוכנית מתקינים בפיתוח, בלי תאריכים ובלי תמחור (ראו <a href="claude/decision-network-access.md" style="color:var(--brand-blue);text-decoration:none;font-weight:600">מסמך ההחלטה</a>). לכן שלב Nabu Casa בנוי כמודול נפרד ב-checklist.</li>
+      <li><strong>הפסקות חשמל.</strong> בלי UPS, כל הפסקה מפילה את HA והרשת, ועלולה להשחית את מסד ההיסטוריה ולגרום לקריאות תמיכה מיותרות. eMMC של ה-Green אמין יותר מכרטיס SD, אבל לא מחסן. ראו פריטי החוסן ב-checklist, סעיף D.</li>
       <li><strong>קיבולת של אדם אחד.</strong> אין עדיין SOP להעברה לטכנאי שכיר. המסמך הזה הוא הצעד הראשון בכיוון.</li>
     </ul>
   </section>
@@ -369,7 +380,7 @@
   <section id="open" class="block">
     <div class="block-head">
       <div class="block-head-left"><div class="letter-badge">H</div><h2>שאלות פתוחות להחלטה</h2></div>
-      <span class="status status-empty">❓ 6 שאלות פתוחות</span>
+      <span class="status status-empty">❓ 7 שאלות פתוחות</span>
     </div>
     <div class="qbox"><div class="qlabel">1 — מקדמה ומסלול תשלום — הצעה מ-20/09, ממתינה לבדיקה</div><p>50% מסה"כ הצעת המחיר (חבילה בסיסית + פריטים לפי חדרים, מחושב בגיליון "הצעת מחיר" ב-<a href="../pricing/OneHome_pricing_model.xlsx" style="color:var(--brand-blue);text-decoration:none;font-weight:600">OneHome_pricing_model.xlsx</a>) בחתימה, לפני הזמנת הציוד, ו-50% ביום אישור הקבלה החתום, אותו יום שמתחיל הריטיינר. הרחבות: תשלום מלא לפני הזמנת חומרה. המקדמה מוחזרת במלואה עד הזמנת הציוד. מסלול שנתי לריטיינר נדחה עד שיש נתוני שעות תמיכה. עלויות החומרה בתוכנית העסקית הן הערכות, ולכן לוודא מול <a href="../pricing/OneHome_pricing_model.xlsx" style="color:var(--brand-blue);text-decoration:none;font-weight:600">OneHome_pricing_model.xlsx</a>. ניסוח הביטול לאמת עם עו"ד, וקבלה על מקדמה עם רו"ח.</p></div>
     <div class="qbox"><div class="qlabel">2 — ההגדרה של "הבית חי" — הוחלט ✓</div><p>ההגדרה המורחבת בסעיף B אושרה, כולל ההחלטה שהריטיינר וה-SLA מתחילים באישור הקבלה החתום.</p></div>
@@ -378,6 +389,7 @@
     <div class="qbox"><div class="qlabel">5 — ראוטר שלא מאפשר את ההגדרות</div><p>מה עושים כשהראוטר של ספק האינטרנט לא מאפשר DHCP Reservation או כיבוי AP Isolation? לבקש מהלקוח לשנות ראוטר? להוסיף ראוטר משלנו? מחיר?</p></div>
     <div class="qbox"><div class="qlabel">6 — אחריות על עבודת ההתקנה והחומרה</div><p>לוודא מול PRD 1 מה תקופת האחריות על עבודת ההתקנה עצמה ועל החומרה, ולכתוב אותה במסמך המסירה.</p></div>
     <div class="qbox"><div class="qlabel">7 — בחירת חשמלאי ואימות תקנים</div><p>עדיין פתוח מ-PRD 1: מי החשמלאי הקבוע, ואילו משימות בפועל מחייבות רישיון. לאמת מולו לפני הלקוח הראשון.</p></div>
+    <div class="qbox"><div class="qlabel">8 — UPS: חלק מהחבילה או תוספת?</div><p>ההמלצה היא UPS לכל לקוח, כי הוא מונע את רוב התקלות שאחרי הפסקת חשמל ומוריד קריאות תמיכה. צריך להחליט: לכלול בחבילה הבסיסית או למכור כתוספת, ואיזה דגם. UPS קטן עם USB (תומך NUT, מאפשר התראה) מול Mini UPS DC זול בלי חיבור נתונים. לבדוק מחירים אצל יבואנים בישראל ולעדכן ב-<a href="../pricing/OneHome_pricing_model.xlsx" style="color:var(--brand-blue);text-decoration:none;font-weight:600">OneHome_pricing_model.xlsx</a>.</p></div>
   </section>
 
 </main>
