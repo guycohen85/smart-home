@@ -10,7 +10,7 @@
 <div class="page">
   <div class="course-nav">
     <span>📖 מסמך רפרנס · מתעדכן עם כל שיעור</span>
-    <a href="../lessons/0004-presence-and-notifications.html">← שיעור 4</a>
+    <a href="../lessons/0005-actionable-notifications.html">← שיעור 5</a>
   </div>
 
   <div class="lesson-kicker">רפרנס מהיר</div>
@@ -61,6 +61,36 @@ actions:
     data:
       message: טקסט ההתראה</code></pre>
 
+  <h2>התראה עם כפתורים (שיעור 5)</h2>
+  <p>שולחים ← לוחצים (event) ← מחכים (<code>wait_for_trigger</code>) ← מחליטים (<code>wait.trigger</code>). מקור: <a href="https://companion.home-assistant.io/docs/notifications/actionable-notifications/" target="_blank">Actionable notifications</a>.</p>
+<pre dir="ltr"><code>- variables:
+    action_off: "{{ 'BOILER_OFF_' ~ context.id }}"   # מזהה ייחודי לכל ריצה
+- action: notify.mobile_app_&lt;device_id&gt;
+  data:
+    message: לכבות?
+    data:
+      actions:
+        - action: "{{ action_off }}"
+          title: כבה
+- wait_for_trigger:
+    - trigger: event
+      event_type: mobile_app_notification_action
+      event_data:
+        action: "{{ action_off }}"
+      id: "off"
+  timeout:
+    minutes: 10
+- if:
+    - condition: template
+      value_template: "{{ wait.trigger is none or wait.trigger.id == 'off' }}"
+  then: [...]</code></pre>
+  <table>
+    <tr><th>משתנה</th><th>ערך</th></tr>
+    <tr><td><code>wait.trigger</code></td><td>הטריגר שהעיר את ה-wait, או <code>none</code> אם הזמן נגמר</td></tr>
+    <tr><td><code>wait.trigger.id</code></td><td>ה-<code>id</code> שנתת לטריגר ב-wait</td></tr>
+    <tr><td><code>wait.remaining</code></td><td>כמה זמן נשאר עד ה-timeout (<a href="https://www.home-assistant.io/docs/scripts/#wait-variable" target="_blank">מקור</a>)</td></tr>
+  </table>
+
   <h2>מלכודות ידועות</h2>
   <table>
     <tr><th>מלכודת</th><th>מה קורה</th></tr>
@@ -70,6 +100,10 @@ actions:
     <tr><td>בן בית בלי person עם טלפון</td><td>לא נספר ב-<code>zone.home</code>. "אין אף אחד בבית" יהיה נכון גם כשהוא בבית.</td></tr>
     <tr><td>הרשאת מיקום לא על "Allow all the time"</td><td>המיקום לא מתעדכן ברקע, והבית חושב שהלקוח עדיין בבית.</td></tr>
     <tr><td>Set state ב-Developer tools</td><td>משנה רק את מה ש-HA רואה, ונדרס בעדכון הבא. טוב לבדיקות קצרות בלבד.</td></tr>
+    <tr><td>מילים כמו <code>off</code> בלי מירכאות</td><td>ב-YAML הן הופכות לבוליאני. תמיד <code>"on"</code> / <code>"off"</code>.</td></tr>
+    <tr><td>כפתור בהתראה בלי מזהה ייחודי</td><td>לחיצה אחת מעירה כל wait שמחכה לאותו מזהה, גם באוטומציה אחרת.</td></tr>
+    <tr><td>לחיצה אחרי שה-wait הסתיים</td><td>האירוע נורה, אבל אף אחד לא מקשיב. כלום לא קורה.</td></tr>
+    <tr><td>יותר מ-3 כפתורים</td><td>אנדרואיד מציג עד 3. באייפון בערך 10.</td></tr>
     <tr><td>הכפתור Run actions</td><td>מריץ רק פעולות ומדלג על טריגרים ותנאים. לא בודק לוגיקה.</td></tr>
   </table>
 
@@ -78,6 +112,7 @@ actions:
     <li>פתח <strong>Traces</strong> (עורך האוטומציה ← שלוש נקודות). כברירת מחדל נשמרות 5 ריצות אחרונות (<a href="https://www.home-assistant.io/docs/automation/troubleshooting/" target="_blank">מקור</a>).</li>
     <li><strong>אין ריצה בכלל?</strong> הבעיה בטריגר: הוא לא קרה, או שה-For נקטע.</li>
     <li><strong>יש ריצה שנעצרה?</strong> לחץ על צומת התנאי וראה איזה ערך נכשל.</li>
+    <li><strong>לחצו על כפתור בהתראה ולא קרה כלום?</strong> Developer tools ← Events, האזנה ל-<code>mobile_app_notification_action</code>.</li>
     <li><strong>הפעולה רצה ולא קרה כלום?</strong> בדוק את המכשיר עצמו: האם הוא זמין (לא <code>unavailable</code>)?</li>
   </ol>
 

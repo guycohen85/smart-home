@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>כפתורים בהתראה — שיעור 5</title>
+<link rel="stylesheet" href="../assets/style.css">
+<script src="../assets/quiz.js" defer></script>
+<script src="../assets/sort.js" defer></script>
+</head>
+<body>
+<div class="page">
+  <div class="course-nav">
+    <span>🏠 מסלול הלקוח · שיעור 5</span>
+    <a href="../reference/automation-cheatsheet.html">דף עזר: אוטומציות ←</a>
+  </div>
+
+  <div class="lesson-kicker">מסלול הלקוח · השלמת שיעור 4 + מושג חדש</div>
+  <h1>הבית שואל: כפתורים בהתראה</h1>
+  <p class="subtitle">
+    עד עכשיו הבית <em>החליט</em> לבד ורק דיווח לך. היום הוא ישאל: "הדוד דלוק ואין אף אחד בבית. לכבות?", ותחת ההודעה יופיעו שני כפתורים.
+    לחיצה בטלפון חוזרת ל-HA, והאוטומציה ממשיכה לפי התשובה. זה רגע הוואו הכי חזק שלך להדגמה עד עכשיו.
+  </p>
+
+  <div class="box source">
+    <span class="box-label">מקור ראשי</span>
+    <a href="https://companion.home-assistant.io/docs/notifications/actionable-notifications/" target="_blank">Actionable notifications — companion.home-assistant.io</a> ·
+    <a href="https://www.home-assistant.io/docs/scripts/#wait-for-a-trigger" target="_blank">Script syntax: wait_for_trigger</a>.
+    את המדריך הראשון כדאי לקרוא עד הסוף, כולל הדוגמה עם התריסים. היא הבסיס לכל מה שנבנה כאן.
+  </div>
+
+  <h2>חימום: מה זכור?</h2>
+  <p>ענה בראש לפני שאתה לוחץ.</p>
+
+  <div class="quiz">
+    <p class="quiz-q">1. מה המצב של <code>zone.home</code> כשאתה לבד בבית, ולמה בתנאי כותבים אותו במירכאות?</p>
+    <button class="quiz-reveal-btn" onclick="revealQuiz(this)">הצג תשובה</button>
+    <p class="quiz-answer"><code>"1"</code>: המצב הוא מספר האנשים שנמצאים ב-zone. במירכאות, כי כל state ב-HA הוא טקסט (<a href="0004-presence-and-notifications.html">שיעור 4</a>).</p>
+  </div>
+  <div class="quiz">
+    <p class="quiz-q">2. על מה מדלג הכפתור <strong>Run actions</strong> בעורך האוטומציה?</p>
+    <button class="quiz-reveal-btn" onclick="revealQuiz(this)">הצג תשובה</button>
+    <p class="quiz-answer">על הטריגרים ועל התנאים, ומריץ רק את הפעולות. היום זה יתרון: אפשר לבדוק את הכפתורים כשאתה בבית, בלי ש-<code>zone.home</code> יחסום.</p>
+  </div>
+
+  <h2>שלב 0: להשלים את שיעור 4</h2>
+  <p>
+    כפתורים בהתראה דורשים שהאפליקציה מחוברת ושפעולת <code>notify.mobile_app_*</code> עובדת, אז התרגול משיעור 4 הוא תנאי מקדים.
+    ענית ש-<code>zone.home</code> יהיה <code>1</code> בבדיקה א'. זו הייתה <strong>תחזית</strong>, ועכשיו תבדוק אותה.
+  </p>
+  <div class="box practice">
+    <span class="box-label">משימה מעשית · 15 דקות</span>
+    <ol>
+      <li>לפי <a href="0004-presence-and-notifications.html">תרגול 2 בשיעור 4</a>: התקן את אפליקציית Companion, תן לה הרשאת מיקום <strong>Allow all the time</strong>, וודא שהטלפון מסומן ב-Track device של ה-person שלך.</li>
+      <li>ב-<strong>Developer tools → Actions</strong> מצא את שם הפעולה <code>notify.mobile_app_&lt;הטלפון&gt;</code>, ושלח ממנה הודעת ניסיון. הגיעה? אפשר להמשיך.</li>
+      <li>באוטומציה <code>הדוד נשאר דלוק (בדיקה)</code> הוסף את התנאי <code>zone.home</code> = <code>0</code> ושמור.</li>
+      <li><strong>בדיקה א':</strong> הדלק את המכשיר, חכה דקה, פתח Traces ולחץ על צומת התנאי. האם התחזית שלך נכונה?</li>
+    </ol>
+  </div>
+
+  <h2>איך לחיצה בטלפון חוזרת לבית</h2>
+  <p>ההתראה היא לא חלון שיחה. היא הודעה חד-כיוונית, והלחיצה חוזרת ל-HA בנפרד, כ-<strong>event</strong>. האוטומציה צריכה לחכות לו:</p>
+
+  <div class="flow-steps">
+    <div class="flow-step">
+      <span class="step-word">שולחים</span>
+      <span class="step-en">notify + actions</span>
+      <p>ההתראה נשלחת עם רשימת כפתורים. לכל כפתור יש <code>title</code> (מה רואים) ו-<code>action</code> (מזהה שחוזר ל-HA).</p>
+    </div>
+    <div class="flow-step">
+      <span class="step-word">לוחצים</span>
+      <span class="step-en">event</span>
+      <p>האפליקציה יורה ב-HA את האירוע <code>mobile_app_notification_action</code>, ובתוכו המזהה של הכפתור.</p>
+    </div>
+    <div class="flow-step">
+      <span class="step-word">מחכים</span>
+      <span class="step-en">wait_for_trigger</span>
+      <p>האוטומציה עוצרת באמצע ומחכה לאירוע הזה, עם תקרת זמן (<code>timeout</code>).</p>
+    </div>
+    <div class="flow-step">
+      <span class="step-word">מחליטים</span>
+      <span class="step-en">if / then</span>
+      <p>המשתנה <code>wait.trigger</code> מראה על איזה כפתור לחצו. אם הזמן נגמר, הוא <code>none</code>.</p>
+    </div>
+  </div>
+  <p>
+    המבנה של האירוע והשם שלו לקוחים מ<a href="https://companion.home-assistant.io/docs/notifications/actionable-notifications/" target="_blank">התיעוד של האפליקציה</a>,
+    ו-<code>wait.trigger</code> מ<a href="https://www.home-assistant.io/docs/scripts/#wait-variable" target="_blank">תיעוד ה-Script</a>.
+    זה אותו טריגר שאתה מכיר משיעור 3, רק שהפעם הוא נמצא <strong>בתוך</strong> הפעולות: טריגר שני, באמצע ריצה.
+  </p>
+
+  <h3>למה המזהה כולל את <code>context.id</code></h3>
+  <p>
+    האירוע של הלחיצה משותף לכל ההתראות בבית. אם גם אוטומציית מכונת הכביסה תשתמש בכפתור <code>OFF</code>, לחיצה אחת תעיר את שתיהן.
+    התיעוד ממליץ לבנות מזהה ייחודי לכל ריצה, מתוך <code>context.id</code> שלה. ככה כל כפתור שייך בדיוק לריצה ששלחה אותו
+    (<a href="https://companion.home-assistant.io/docs/notifications/actionable-notifications/" target="_blank">מקור</a>).
+  </p>
+
+  <div class="box win">
+    <span class="box-label">התובנה שחשוב לזכור</span>
+    ה-<code>timeout</code> הוא לא פרט טכני, הוא <strong>החלטה על הלקוח</strong>. מה הבית עושה כשאף אחד לא עונה? אצלך, כיבוי הוא ברירת מחדל טובה.
+    אצל משפחה עם סבתא בלי סמארטפון (<a href="0004-presence-and-notifications.html">שיעור 4</a>), אולי עדיף להשאיר דלוק. זו שאלה לשאול ב-Onboarding, לא לנחש.
+  </div>
+
+  <h2>תרגול 1: מה יקרה?</h2>
+  <p>האוטומציה שנבנה עוד רגע: כבה מיד על "כבה", לא לעשות כלום על "השאר דלוק", ולכבות אם אין תשובה תוך 10 דקות. מה קורה בכל מקרה?</p>
+
+  <div class="sort" data-answer="off" data-why="wait.trigger.id הוא off, אז ה-if נכון והדוד נכבה.">
+    <p class="sort-q">ההתראה הגיעה, ולחצת על "כבה"</p>
+    <div class="sort-opts"><button data-v="off">הדוד כבה מיד</button><button data-v="keep">הדוד נשאר דלוק</button><button data-v="none">כלום לא קורה</button></div>
+    <p class="sort-fb"></p>
+  </div>
+  <div class="sort" data-answer="off" data-why="אחרי 10 דקות wait.trigger הוא none, וה-if מתייחס לזה כמו ל'כבה'. זו ברירת המחדל שבחרנו.">
+    <p class="sort-q">ההתראה הגיעה, והטלפון נשאר בכיס</p>
+    <div class="sort-opts"><button data-v="off">הדוד כבה מיד</button><button data-v="keep">הדוד נשאר דלוק</button><button data-v="none">כלום לא קורה</button></div>
+    <p class="sort-fb"></p>
+  </div>
+  <div class="sort" data-answer="none" data-why="הריצה של אתמול כבר הסתיימה, ואף wait לא מחכה למזהה הזה. האירוע נורה, אבל אף אחד לא מקשיב.">
+    <p class="sort-q">מצאת בטלפון את ההתראה של אתמול, ולחצת עליה "כבה"</p>
+    <div class="sort-opts"><button data-v="off">הדוד כבה מיד</button><button data-v="keep">הדוד נשאר דלוק</button><button data-v="none">כלום לא קורה</button></div>
+    <p class="sort-fb"></p>
+  </div>
+  <div class="sort" data-answer="keep" data-why="wait.trigger.id הוא keep, ה-if לא נכון, ואין else. הריצה מסתיימת והדוד נשאר כמו שהוא.">
+    <p class="sort-q">ההתראה הגיעה, ולחצת על "השאר דלוק"</p>
+    <div class="sort-opts"><button data-v="off">הדוד כבה מיד</button><button data-v="keep">הדוד נשאר דלוק</button><button data-v="none">כלום לא קורה</button></div>
+    <p class="sort-fb"></p>
+  </div>
+  <p class="sort-score"></p>
+
+  <h2>תרגול 2: לכתוב את זה ב-YAML</h2>
+  <p>
+    עד עכשיו בנית ב-UI וקראת את ה-YAML. את הכפתורים הכי נוח לכתוב ישר ב-YAML, כי הם יושבים בתוך שדה <code>data</code> מקונן.
+    כמפתח, זה המקום שלך.
+  </p>
+  <div class="box practice">
+    <span class="box-label">משימה מעשית · 15 דקות</span>
+    <ol>
+      <li>פתח את האוטומציה ← שלוש נקודות ← <strong>Edit in YAML</strong>.</li>
+      <li>החלף את כל החלק של <code>actions:</code> בזה שלמטה. שנה את <code>pixel_8</code> לשם הטלפון שלך (בשני המקומות), ואת <code>switch.boiler</code> למכשיר שלך.</li>
+      <li>לבדיקה, שנה את ה-<code>timeout</code> ל-<code>minutes: 1</code>. אחר כך תחזיר ל-10.</li>
+      <li>שמור, וחזור למצב העריכה הוויזואלי. שים לב איך ה-UI מציג את ה-wait ואת ה-if: אותה אוטומציה, שתי תצוגות.</li>
+    </ol>
+  </div>
+
+<pre dir="ltr"><code>actions:
+  - variables:
+      action_off: "{{ 'BOILER_OFF_' ~ context.id }}"
+      action_keep: "{{ 'BOILER_KEEP_' ~ context.id }}"
+  - action: notify.mobile_app_pixel_8
+    data:
+      message: הדוד דלוק ואין אף אחד בבית. לכבות?
+      data:
+        actions:                 # אנדרואיד: עד 3 כפתורים
+          - action: "{{ action_off }}"
+            title: כבה
+          - action: "{{ action_keep }}"
+            title: השאר דלוק
+  - wait_for_trigger:
+      - trigger: event
+        event_type: mobile_app_notification_action
+        event_data:
+          action: "{{ action_off }}"
+        id: "off"                # במירכאות! off בלי מירכאות הופך ל-false
+      - trigger: event
+        event_type: mobile_app_notification_action
+        event_data:
+          action: "{{ action_keep }}"
+        id: keep
+    timeout:
+      minutes: 10
+  - if:
+      - condition: template
+        value_template: "{{ wait.trigger is none or wait.trigger.id == 'off' }}"
+    then:
+      - action: switch.turn_off
+        target:
+          entity_id: switch.boiler
+      - action: notify.mobile_app_pixel_8
+        data:
+          message: כיביתי את הדוד.</code></pre>
+
+  <p>
+    שתי הערות מפתח למפתח: <code>data</code> מופיע פעמיים, החיצוני שייך לפעולה והפנימי לאפליקציה. ו-<code>"off"</code> במירכאות,
+    כי ב-YAML המילים <code>on</code>/<code>off</code> בלי מירכאות הופכות לבוליאני. זו אותה סיבה שכותבים <code>to: "on"</code> בטריגר
+    (<a href="https://www.home-assistant.io/triggers/state/" target="_blank">מקור</a>).
+  </p>
+
+  <h2>תרגול 3: לבדוק את שלושת המסלולים</h2>
+  <div class="box practice">
+    <span class="box-label">משימה מעשית · 10 דקות</span>
+    <p>בכל בדיקה: הדלק את המכשיר, ואז בעורך האוטומציה ← שלוש נקודות ← <strong>Run actions</strong>. ההתראה אמורה להגיע תוך שניות, גם כשאתה בבית.</p>
+    <ol>
+      <li><strong>"כבה":</strong> לחץ על הכפתור. המכשיר כבה, ומגיעה הודעת "כיביתי את הדוד".</li>
+      <li><strong>"השאר דלוק":</strong> המכשיר נשאר דלוק, ולא מגיעה הודעה נוספת.</li>
+      <li><strong>בלי תשובה:</strong> אל תיגע בטלפון. אחרי דקה המכשיר כבה לבד.</li>
+      <li>פתח את ה-Trace של אחת הריצות ולחץ על צומת ה-wait. תראה שם את הטריגר שהעיר אותו, או שהזמן נגמר.</li>
+      <li>החזר את ה-<code>timeout</code> ל-10 דקות ושמור.</li>
+    </ol>
+    <p><strong>לא מופיעים כפתורים?</strong> באנדרואיד צריך למשוך את ההתראה למטה כדי לראות אותם. באייפון, לחיצה ארוכה על ההתראה.</p>
+  </div>
+
+  <h2>בדיקת זיכרון: תרחישים מהשטח</h2>
+
+  <div class="quiz">
+    <p class="quiz-q">1. אצל לקוח, ההתראה נשלחת לשני ההורים. אמא לוחצת "השאר דלוק", ושתי דקות אחר כך אבא לוחץ "כבה". מה קורה, ולמה?</p>
+    <button class="quiz-reveal-btn" onclick="revealQuiz(this)">הצג תשובה</button>
+    <p class="quiz-answer">הדוד נשאר דלוק. הלחיצה של אמא סיימה את ה-wait, והריצה הסתיימה. כשאבא לחץ, אף אחד כבר לא הקשיב. בשביל זוג הורים כדאי לשלוח אחרי התשובה הודעה לשניהם ("אמא השאירה את הדוד דלוק"), כדי שאף אחד לא יחשוב שהוא כיבה.</p>
+  </div>
+
+  <div class="quiz">
+    <p class="quiz-q">2. לקוח אומר "לחצתי על הכפתור ולא קרה כלום". איפה אתה רואה אם הלחיצה בכלל הגיעה ל-HA?</p>
+    <button class="quiz-reveal-btn" onclick="revealQuiz(this)">הצג תשובה</button>
+    <p class="quiz-answer">ב-<strong>Developer tools → Events</strong>: מאזינים ל-<code>mobile_app_notification_action</code> ומבקשים מהלקוח ללחוץ שוב (<a href="https://www.home-assistant.io/docs/tools/dev-tools/" target="_blank">מקור</a>). אם האירוע מגיע, הבעיה אצלך: המזהה לא תואם, או שהריצה כבר לא מחכה (כמו ההתראה של אתמול בתרגול 1). אם הוא לא מגיע, הבעיה בטלפון או בחיבור שלו ל-HA.</p>
+  </div>
+
+  <div class="quiz">
+    <p class="quiz-q">3. למה לא לשלוח את ההתראה עם כפתור "כבה" ישר מהטריגר, בלי תנאי הנוכחות?</p>
+    <button class="quiz-reveal-btn" onclick="revealQuiz(this)">הצג תשובה</button>
+    <p class="quiz-answer">כי הלקוח יקבל שאלה בכל פעם שהוא מדליק את הדוד בבית, וזה יתיש אותו מהר. התנאי מסנן את המקרים שבהם השאלה באמת מועילה. התראה טובה היא נדירה: היא מגיעה רק כשיש לה משהו חשוב להגיד.</p>
+  </div>
+
+  <div class="box win">
+    <span class="box-label">הניצחון של היום</span>
+    הבית שלך שואל שאלה, מקבל תשובה מהכיס, ופועל לפיה, עם ברירת מחדל בטוחה כשאין תשובה.
+    בהדגמה ללקוח: אתה מדליק את הדוד, מראה לו את הטלפון, והוא לוחץ בעצמו "כבה". זה עובד מקומית, והלחיצה עוברת דרך השרת בבית שלו.
+  </div>
+
+  <div class="box ask-teacher">
+    <span class="box-label">נתקעת? שאל</span>
+    אם הכפתורים לא מופיעים, או שהלחיצה לא מעירה את ה-wait, תדביק לי את ה-YAML ואת ה-Trace (או את מה שראית ב-Events).
+    ותספר לי: מה ראית בצומת התנאי בבדיקה א' של שלב 0, והאם התחזית שלך הייתה נכונה?
+  </div>
+
+  <div class="lesson-footer">
+    <span>שיעור 5 · מסלול הלקוח · OneHome Learning Workspace</span>
+    <a href="0004-presence-and-notifications.html">← שיעור 4</a>
+    <a href="../reference/automation-cheatsheet.html">דף עזר: אוטומציות</a>
+    <a href="../reference/glossary.html">מילון מונחים</a>
+  </div>
+</div>
+</body>
+</html>

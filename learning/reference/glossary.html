@@ -113,6 +113,31 @@
     </tr>
   </table>
 
+  <h2>התראות עם כפתורים (שיעור 5)</h2>
+  <table>
+    <tr><th>מונח</th><th>מה זה</th><th>דוגמה מ-OneHome</th></tr>
+    <tr>
+      <td><strong>Event</strong><br>אירוע</td>
+      <td>הודעה פנימית ש-HA מפיץ כשמשהו קורה. אפשר להאזין לו בטריגר או ב-wait, ולצפות בו ב-Developer tools ← Events.</td>
+      <td><code>mobile_app_notification_action</code> נורה כשלוחצים על כפתור בהתראה</td>
+    </tr>
+    <tr>
+      <td><strong>Actionable notification</strong><br>התראה עם כפתורים</td>
+      <td>התראה לנייד עם כפתורים. לכל כפתור <code>title</code> (מה רואים) ו-<code>action</code> (המזהה שחוזר ל-HA). באנדרואיד עד 3.</td>
+      <td>"הדוד דלוק ואין אף אחד בבית. לכבות?" עם כבה / השאר דלוק</td>
+    </tr>
+    <tr>
+      <td><strong>wait_for_trigger</strong><br>המתנה לטריגר</td>
+      <td>פעולה שעוצרת את הריצה עד שטריגר קורה או שה-<code>timeout</code> נגמר. התוצאה נשמרת במשתנה <code>wait.trigger</code>.</td>
+      <td>מחכים 10 דקות לתשובה, ואם אין תשובה מכבים</td>
+    </tr>
+    <tr>
+      <td><strong>Context</strong><br>הקשר ריצה</td>
+      <td>מזהה ייחודי של ריצה (<code>context.id</code>). משמש לבניית מזהי כפתורים שלא מתנגשים בין התראות.</td>
+      <td><code>BOILER_OFF_&lt;context.id&gt;</code></td>
+    </tr>
+  </table>
+
   <h2>מונחים שיתווספו בשיעורים הבאים</h2>
   <p>
     <strong>Blueprint</strong>, <strong>Add-on</strong>, <strong>HACS</strong>,
