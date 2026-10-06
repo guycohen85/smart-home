@@ -91,6 +91,36 @@ actions:
     <tr><td><code>wait.remaining</code></td><td>כמה זמן נשאר עד ה-timeout (<a href="https://www.home-assistant.io/docs/scripts/#wait-variable" target="_blank">מקור</a>)</td></tr>
   </table>
 
+  <h2>סקריפטים וסצנות (שיעור 6)</h2>
+  <table>
+    <tr><th>כלי</th><th>עונה על</th></tr>
+    <tr><td>אוטומציה</td><td><strong>מתי</strong>: טריגר + תנאים</td></tr>
+    <tr><td>סקריפט</td><td><strong>מה</strong>: רצף צעדים, עם פרמטרים (<code>fields</code>) וערך חזרה</td></tr>
+    <tr><td>סצנה</td><td><strong>איך הבית נראה</strong>: רשימת מצבים, בלי צעדים ובלי "כבוי"</td></tr>
+  </table>
+<pre dir="ltr"><code># בסקריפט: להחזיר תשובה (חייב להיות מפתח: ערך)
+- variables:
+    result:
+      answer: "{{ 'timeout' if wait.trigger is none else wait.trigger.id }}"
+- stop: Got an answer
+  response_variable: result
+
+# באוטומציה: לקרוא ישירות ולקבל את התשובה
+- action: script.ask_phone        # לא script.turn_on!
+  data:
+    message: לכבות?
+  response_variable: reply        # reply.answer
+
+# צילום מצב והחזרה אליו
+- action: scene.create
+  data:
+    scene_id: before
+    snapshot_entities: [light.salon]
+- action: scene.turn_on
+  target:
+    entity_id: scene.before</code></pre>
+  <p>מקורות: <a href="https://www.home-assistant.io/integrations/script/" target="_blank">Scripts</a> · <a href="https://www.home-assistant.io/docs/scripts/#stop" target="_blank">stop + response_variable</a> · <a href="https://www.home-assistant.io/integrations/scene/" target="_blank">Scenes</a>.</p>
+
   <h2>מלכודות ידועות</h2>
   <table>
     <tr><th>מלכודת</th><th>מה קורה</th></tr>
@@ -105,6 +135,11 @@ actions:
     <tr><td>לחיצה אחרי שה-wait הסתיים</td><td>האירוע נורה, אבל אף אחד לא מקשיב. כלום לא קורה.</td></tr>
     <tr><td>יותר מ-3 כפתורים</td><td>אנדרואיד מציג עד 3. באייפון בערך 10.</td></tr>
     <tr><td>הכפתור Run actions</td><td>מריץ רק פעולות ומדלג על טריגרים ותנאים. לא בודק לוגיקה.</td></tr>
+    <tr><td>מילים כמו <code>yes</code>/<code>no</code> בלי מירכאות</td><td>אותה מלכודת כמו <code>off</code>: הופכות ל-true/false.</td></tr>
+    <tr><td>קריאה ל-<code>script.turn_on</code> במקום לסקריפט ישירות</td><td>לא מחכה לסקריפט ולא מחזיר תשובה. ה-<code>response_variable</code> נשאר ריק.</td></tr>
+    <tr><td>סקריפט ב-<code>mode: single</code> (ברירת המחדל)</td><td>קריאה שנייה בזמן שהראשונה רצה לא מתבצעת. לסקריפט "שאל" צריך <code>parallel</code>.</td></tr>
+    <tr><td>שם סקריפט בעברית</td><td>ה-ID נגזר מהשם. לתת שם באנגלית בשמירה הראשונה.</td></tr>
+    <tr><td>לצפות שסצנה "תתבטל"</td><td>לסצנה אין מצב כבוי. חוזרים עם סצנה אחרת או עם <code>scene.create</code> לפני השינוי.</td></tr>
   </table>
 
   <h2>דיבוג: "האוטומציה לא עבדה"</h2>

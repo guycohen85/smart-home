@@ -1,0 +1,301 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Scripts ו-Scenes — שיעור 6</title>
+<link rel="stylesheet" href="../assets/style.css">
+<script src="../assets/quiz.js" defer></script>
+<script src="../assets/sort.js" defer></script>
+</head>
+<body>
+<div class="page">
+  <div class="course-nav">
+    <span>🏠 מסלול הלקוח · שיעור 6</span>
+    <a href="../reference/automation-cheatsheet.html">דף עזר: אוטומציות ←</a>
+  </div>
+
+  <div class="lesson-kicker">מסלול הלקוח · מושג חדש + שימוש חוזר</div>
+  <h1>כותבים פעם אחת: Scripts ו-Scenes</h1>
+  <p class="subtitle">
+    ה-YAML משיעור 5 עובד, אבל הוא 40 שורות. מחר תרצה לשאול "מכונת הכביסה סיימה. להפעיל ייבוש?", ואחר כך "המזגן דלוק והחלון פתוח. לכבות?".
+    במקום להעתיק את כל הבלוק בכל פעם, היום תארוז אותו פעם אחת כ-<strong>Script</strong>: פונקציה עם פרמטרים וערך חזרה.
+    ובסוף, <strong>Scene</strong>: "מצב יציאה מהבית" בלחיצה אחת.
+  </p>
+
+  <div class="box source">
+    <span class="box-label">מקור ראשי</span>
+    <a href="https://www.home-assistant.io/integrations/script/" target="_blank">Scripts — home-assistant.io</a> ·
+    <a href="https://www.home-assistant.io/docs/scripts/#stop" target="_blank">Script syntax: stop + response_variable</a> ·
+    <a href="https://www.home-assistant.io/integrations/scene/" target="_blank">Scenes</a> ·
+    <a href="https://www.home-assistant.io/docs/scene/editor/" target="_blank">Scene editor</a>.
+  </div>
+
+  <h2>חימום: מה זכור?</h2>
+  <div class="quiz">
+    <p class="quiz-q">1. בכפתור בהתראה, ה-<code>action</code> הוא <code>BOILER_OFF_01HX7K</code>. מה בדיוק מכבה את הדוד?</p>
+    <button class="quiz-reveal-btn" onclick="revealQuiz(this)">הצג תשובה</button>
+    <p class="quiz-answer">לא המזהה. המזהה הוא רק תווית שהטלפון שולח חזרה. מה שמכבה הוא <code>switch.turn_off</code> בתוך ה-<code>then</code>, שרץ כי ה-wait תפס את התווית וה-if החליט לכבות.</p>
+  </div>
+  <div class="quiz">
+    <p class="quiz-q">2. מה הערך של <code>wait.trigger</code> כשאף אחד לא ענה עד ה-timeout?</p>
+    <button class="quiz-reveal-btn" onclick="revealQuiz(this)">הצג תשובה</button>
+    <p class="quiz-answer"><code>none</code>. לכן ה-if בשיעור 5 בודק <code>wait.trigger is none</code> לפני שהוא ניגש ל-<code>.id</code>.</p>
+  </div>
+
+  <h2>שלושה כלים, שלוש שאלות</h2>
+  <p>עד עכשיו היה לך רק כלי אחד: אוטומציה. בפועל HA מפריד בין שלוש שאלות שונות:</p>
+  <table>
+    <tr><th>כלי</th><th>עונה על</th><th>במונחי מפתח</th></tr>
+    <tr><td><strong>אוטומציה</strong> (Automation)</td><td><strong>מתי</strong> לעשות משהו: טריגר + תנאים</td><td>event handler</td></tr>
+    <tr><td><strong>סקריפט</strong> (Script)</td><td><strong>מה</strong> לעשות: רצף צעדים, עם המתנות והחלטות</td><td>פונקציה: פרמטרים (<code>fields</code>) וערך חזרה (<code>response_variable</code>)</td></tr>
+    <tr><td><strong>סצנה</strong> (Scene)</td><td><strong>איך הבית צריך להיראות</strong>: רשימת מצבים, בלי צעדים</td><td>קובץ קונפיגורציה הצהרתי (declarative)</td></tr>
+  </table>
+  <p>
+    לסקריפט אין טריגר. הוא רץ רק כשמישהו קורא לו: אוטומציה, כפתור בדשבורד, או פקודה קולית בעתיד.
+    לסצנה אין צעדים ואין מצב "כבוי". היא רק אומרת "האור הזה כבוי, המזגן הזה על 24", ומפעילה הכול בבת אחת
+    (<a href="https://www.home-assistant.io/integrations/scene/" target="_blank">מקור</a>).
+  </p>
+
+  <h2>תרגול 1: מה מתאים?</h2>
+  <div class="sort" data-answer="scene" data-why="רשימת מצבים קבועה, בלי סדר ובלי המתנה. בדיוק מה שסצנה עושה.">
+    <p class="sort-q">"ערב סרט": תאורת סלון על 20%, התריס סגור, המזגן על 23</p>
+    <div class="sort-opts"><button data-v="automation">אוטומציה</button><button data-v="script">סקריפט</button><button data-v="scene">סצנה</button></div>
+    <p class="sort-fb"></p>
+  </div>
+  <div class="sort" data-answer="automation" data-why="יש כאן 'מתי': טריגר (הדלת נפתחה) ותנאי (אחרי 23:00).">
+    <p class="sort-q">כשדלת הכניסה נפתחת אחרי 23:00, לשלוח התראה</p>
+    <div class="sort-opts"><button data-v="automation">אוטומציה</button><button data-v="script">סקריפט</button><button data-v="scene">סצנה</button></div>
+    <p class="sort-fb"></p>
+  </div>
+  <div class="sort" data-answer="script" data-why="רצף צעדים עם המתנה וערך חזרה. סצנה לא יודעת לחכות, ואוטומציה לא מקבלת פרמטרים.">
+    <p class="sort-q">לשאול שאלה בטלפון, לחכות לתשובה ולהחזיר אותה</p>
+    <div class="sort-opts"><button data-v="automation">אוטומציה</button><button data-v="script">סקריפט</button><button data-v="scene">סצנה</button></div>
+    <p class="sort-fb"></p>
+  </div>
+  <div class="sort" data-answer="script" data-why="יש כאן סדר וזמן: דלוק, חכה, כבוי, שלוש פעמים. סצנה שומרת רק מצב סופי אחד.">
+    <p class="sort-q">להבהב את האור במסדרון שלוש פעמים</p>
+    <div class="sort-opts"><button data-v="automation">אוטומציה</button><button data-v="script">סקריפט</button><button data-v="scene">סצנה</button></div>
+    <p class="sort-fb"></p>
+  </div>
+  <p class="sort-score"></p>
+
+  <h2>הסקריפט: "שאל בטלפון"</h2>
+  <p>
+    זה אותו קוד משיעור 5, עם שלושה שינויים: הטקסטים הפכו לפרמטרים, הוא <strong>לא</strong> מכבה כלום בעצמו,
+    ובסוף הוא מחזיר תשובה: <code>yes</code>, <code>no</code> או <code>timeout</code>. מה לעשות עם התשובה, זה כבר עניין של מי שקרא לו.
+  </p>
+
+  <div class="flow-steps">
+    <div class="flow-step">
+      <span class="step-word">מקבל</span>
+      <span class="step-en">fields</span>
+      <p>הודעה, שני טקסטים לכפתורים, ודקות עד timeout. בתוך הסקריפט הם משתנים רגילים: <code>{{ message }}</code>.</p>
+    </div>
+    <div class="flow-step">
+      <span class="step-word">שואל ומחכה</span>
+      <span class="step-en">notify + wait</span>
+      <p>בדיוק כמו בשיעור 5.</p>
+    </div>
+    <div class="flow-step">
+      <span class="step-word">מחזיר</span>
+      <span class="step-en">stop + response_variable</span>
+      <p>בונה משתנה עם התשובה, ומחזיר אותו למי שקרא. חייב להיות מבנה של מפתח וערך (<a href="https://www.home-assistant.io/docs/scripts/#stop" target="_blank">מקור</a>).</p>
+    </div>
+  </div>
+
+  <div class="box practice">
+    <span class="box-label">משימה מעשית · 15 דקות</span>
+    <ol>
+      <li><strong>Settings → Automations &amp; scenes → Scripts → Add script → Create new script</strong>.</li>
+      <li>שלוש נקודות ← <strong>Edit in YAML</strong>, ומחק את מה שיש שם.</li>
+      <li>הדבק את הקוד שלמטה, ושנה את <code>pixel_8</code> לשם הטלפון שלך.</li>
+      <li>שמור, ובשם כתוב באנגלית <code>Ask phone</code>. מהשם הזה נגזר ה-ID, אז הסקריפט יהיה <code>script.ask_phone</code>. שם בעברית ייצור ID לא צפוי.</li>
+    </ol>
+  </div>
+
+<pre dir="ltr"><code>alias: Ask phone
+mode: parallel              # כמה אוטומציות יכולות לשאול בו-זמנית
+fields:
+  message:
+    name: הודעה
+    required: true
+    selector:
+      text:
+  yes_title:
+    name: טקסט כפתור "כן"
+    selector:
+      text:
+  no_title:
+    name: טקסט כפתור "לא"
+    selector:
+      text:
+  timeout_minutes:
+    name: דקות עד timeout
+    selector:
+      number:
+        min: 1
+        max: 60
+sequence:
+  - variables:
+      action_yes: "{{ 'ASK_YES_' ~ context.id }}"
+      action_no: "{{ 'ASK_NO_' ~ context.id }}"
+  - action: notify.mobile_app_pixel_8
+    data:
+      message: "{{ message }}"
+      data:
+        actions:
+          - action: "{{ action_yes }}"
+            title: "{{ yes_title | default('כן') }}"
+          - action: "{{ action_no }}"
+            title: "{{ no_title | default('לא') }}"
+  - wait_for_trigger:
+      - trigger: event
+        event_type: mobile_app_notification_action
+        event_data:
+          action: "{{ action_yes }}"
+        id: "yes"              # במירכאות! yes בלי מירכאות הופך ל-true
+      - trigger: event
+        event_type: mobile_app_notification_action
+        event_data:
+          action: "{{ action_no }}"
+        id: "no"               # גם no
+    timeout:
+      minutes: "{{ timeout_minutes | default(10) }}"
+  - variables:
+      result:
+        answer: "{{ 'timeout' if wait.trigger is none else wait.trigger.id }}"
+  - stop: Got an answer
+    response_variable: result</code></pre>
+
+  <p>שלוש הערות:</p>
+  <ul>
+    <li><strong>מלכודת <code>on</code>/<code>off</code> חוזרת</strong>: גם <code>yes</code> ו-<code>no</code> בלי מירכאות הופכים ב-YAML ל-true/false. אותה סיבה, אותו פתרון.</li>
+    <li><strong>הפילטר <code>| default(...)</code></strong> נותן ערך כשמי שקרא לא שלח את הפרמטר. כך עושה גם הדוגמה בתיעוד (<a href="https://www.home-assistant.io/integrations/script/#example-with-fields-variables-and-a-mode" target="_blank">מקור</a>).</li>
+    <li><strong>הבחירה <code>mode: parallel</code></strong>: ברירת המחדל היא <code>single</code>, והיא לא נותנת לסקריפט לרוץ פעמיים בו-זמנית (<a href="https://www.home-assistant.io/integrations/script/" target="_blank">מקור</a>). אם הדוד ומכונת הכביסה ישאלו באותן 10 דקות, השאלה השנייה לא תישלח. בסקריפט "שאל" זה לא מה שאתה רוצה.</li>
+  </ul>
+
+  <h3>בדיקה ראשונה, בלי אוטומציה</h3>
+  <div class="box practice">
+    <span class="box-label">משימה מעשית · 5 דקות</span>
+    <ol>
+      <li>ב-<strong>Developer tools → Actions</strong> בחר <code>script.ask_phone</code>. השדות שהגדרת יופיעו כטופס: זה מה שה-<code>selector</code> עושה.</li>
+      <li>מלא הודעה כלשהי, timeout של דקה, והרץ.</li>
+      <li>לחץ "כן" בטלפון. בתחתית המסך אמורה להופיע התשובה: <code>answer: "yes"</code>.</li>
+      <li>הרץ שוב ואל תיגע בטלפון. אחרי דקה: <code>answer: timeout</code>.</li>
+    </ol>
+  </div>
+
+  <h2>הקריאה מהאוטומציה</h2>
+  <p>
+    עכשיו האוטומציה של הדוד מתקצרת. היא רק אומרת <strong>מה לשאול</strong> ו<strong>מה לעשות עם התשובה</strong>.
+    שים לב ל-<code>response_variable: reply</code>: התשובה של הסקריפט נכנסת למשתנה <code>reply</code>.
+  </p>
+
+<pre dir="ltr"><code>actions:
+  - action: script.ask_phone
+    data:
+      message: הדוד דלוק ואין אף אחד בבית. לכבות?
+      yes_title: כבה
+      no_title: השאר דלוק
+      timeout_minutes: 10
+    response_variable: reply
+  - if:
+      - condition: template
+        value_template: "{{ reply.answer in ['yes', 'timeout'] }}"
+    then:
+      - action: switch.turn_off
+        target:
+          entity_id: switch.boiler
+      - action: notify.mobile_app_pixel_8
+        data:
+          message: כיביתי את הדוד.</code></pre>
+
+  <div class="box win">
+    <span class="box-label">התובנה שחשוב לזכור</span>
+    קוראים לסקריפט <strong>ישירות</strong> (<code>action: script.ask_phone</code>), ולא דרך <code>script.turn_on</code>.
+    קריאה ישירה מחכה עד שהסקריפט מסתיים ומקבלת את התשובה. <code>script.turn_on</code> רק מפעיל אותו וממשיך הלאה, בלי לחכות ובלי תשובה
+    (<a href="https://www.home-assistant.io/docs/scripts/#stop" target="_blank">מקור</a>). במונחי מפתח: <code>await</code> מול fire-and-forget.
+  </div>
+
+  <div class="box practice">
+    <span class="box-label">משימה מעשית · 10 דקות</span>
+    <ol>
+      <li>פתח את אוטומציית הדוד ← <strong>Edit in YAML</strong>, והחלף את כל ה-<code>actions:</code> בקוד שלמעלה (עם שם הטלפון והמכשיר שלך).</li>
+      <li>לבדיקה, שנה את <code>timeout_minutes</code> ל-1.</li>
+      <li>בדוק שוב את שלושת המסלולים עם <strong>Run actions</strong>, בדיוק כמו בשיעור 5.</li>
+      <li>פתח את ה-Trace של האוטומציה. רואים צעד אחד של הסקריפט, ואת <code>reply</code> שחזר. ל-Trace של הסקריפט עצמו נכנסים מ-<strong>Scripts</strong> ← הסקריפט ← <strong>Traces</strong>.</li>
+      <li>החזר את ה-timeout ל-10 ושמור.</li>
+    </ol>
+  </div>
+
+  <h2>Scene: "יוצאים מהבית"</h2>
+  <p>
+    סצנה שומרת <strong>מצבים</strong>, לא פעולות. אתה לא כותב "כבה את האור". אתה מסדר את הבית כמו שאתה רוצה שייראה, ושומר.
+  </p>
+  <div class="box practice">
+    <span class="box-label">משימה מעשית · 10 דקות</span>
+    <ol>
+      <li><strong>Settings → Automations &amp; scenes → Scenes → Add scene</strong>.</li>
+      <li>הוסף את המכשירים שצריך לכבות כשיוצאים (הדוד, אורות, כל מה שמזווג אצלך).</li>
+      <li>קבע לכל אחד את המצב הרצוי. <strong>שים לב:</strong> בזמן העריכה המכשירים באמת משנים מצב, והעורך מחזיר אותם למצב הקודם כשיוצאים ממנו (<a href="https://www.home-assistant.io/docs/scene/editor/" target="_blank">מקור</a>).</li>
+      <li>שמור בשם <code>Leaving home</code>, צא מהעורך, ואז הפעל אותה מהרשימה (שלוש נקודות ← Activate).</li>
+    </ol>
+  </div>
+  <p>
+    סצנה היא לא toggle. אין לה "כבוי", ואין לה "חזור למה שהיה" (<a href="https://www.home-assistant.io/integrations/scene/" target="_blank">מקור</a>).
+    כדי לחזור, מפעילים סצנה אחרת, או מצלמים את המצב הנוכחי לפני השינוי עם <code>scene.create</code>:
+  </p>
+<pre dir="ltr"><code>- action: scene.create          # צילום מצב לפני שינוי
+  data:
+    scene_id: before_alarm
+    snapshot_entities:
+      - light.salon
+      - light.hallway
+# ... האזעקה מדליקה את כל האורות ...
+- action: scene.turn_on         # החזרה למה שהיה
+  target:
+    entity_id: scene.before_alarm</code></pre>
+  <p>סצנה שנוצרת כך היא זמנית, והיא נמחקת ב-restart או ב-reload (<a href="https://www.home-assistant.io/integrations/scene/" target="_blank">מקור</a>).</p>
+
+  <h2>בדיקת זיכרון: תרחישים מהשטח</h2>
+
+  <div class="quiz">
+    <p class="quiz-q">1. כתבת אוטומציה שקוראת ל-<code>script.turn_on</code> עם <code>ask_phone</code>, והתנאי על <code>reply.answer</code> תמיד נכשל. למה?</p>
+    <button class="quiz-reveal-btn" onclick="revealQuiz(this)">הצג תשובה</button>
+    <p class="quiz-answer"><code>script.turn_on</code> לא מחכה לסקריפט ולא מחזיר תשובה, אז <code>reply</code> אף פעם לא מתמלא. ההתראה עדיין נשלחת, ולכן זה מבלבל. הפתרון: <code>action: script.ask_phone</code> ישירות.</p>
+  </div>
+
+  <div class="quiz">
+    <p class="quiz-q">2. אצל לקוח יש 6 אוטומציות שקוראות ל-<code>ask_phone</code>. הוא מחליף טלפון, ושם המכשיר ב-<code>notify.mobile_app_...</code> משתנה. כמה מקומות צריך לתקן?</p>
+    <button class="quiz-reveal-btn" onclick="revealQuiz(this)">הצג תשובה</button>
+    <p class="quiz-answer">אחד: הסקריפט. זה הערך העסקי האמיתי של סקריפטים בשבילך. כל תיקון בתחזוקה (ריטיינר) נעשה פעם אחת ולא שש. בהמשך אפשר להפוך גם את הטלפון לפרמטר.</p>
+  </div>
+
+  <div class="quiz">
+    <p class="quiz-q">3. לקוח לוחץ על "יוצאים מהבית", ואחר כך שואל "איך מבטלים את זה?". מה אתה עונה?</p>
+    <button class="quiz-reveal-btn" onclick="revealQuiz(this)">הצג תשובה</button>
+    <p class="quiz-answer">לסצנה אין ביטול. בונים סצנה שנייה, "חזרתי הביתה", עם המצבים של הבית כשיש בו אנשים. בדשבורד של לקוח כדאי לשים אותן כזוג, כדי שיהיה ברור שזו החלפה בין שני מצבים ולא כפתור הפעלה וכיבוי.</p>
+  </div>
+
+  <div class="box win">
+    <span class="box-label">הניצחון של היום</span>
+    יש לך "פונקציה" ראשונה בבית: <code>ask_phone</code>. כל שאלה חדשה ללקוח היא עכשיו 8 שורות ולא 40.
+    זה גם צעד ראשון לכיוון ה-Blueprints במסלול ה-full-stack, שם תשכפל את אותו רעיון בין בתים של לקוחות שונים.
+  </div>
+
+  <div class="box ask-teacher">
+    <span class="box-label">נתקעת? שאל</span>
+    אם התשובה לא חוזרת (<code>reply</code> ריק), תדביק לי את ה-YAML של האוטומציה ואת ה-Trace של הסקריפט.
+    ותספר לי: מה ראית ב-Developer tools אחרי הריצה הראשונה של הסקריפט, ואיזה מכשירים נכנסו לסצנה?
+  </div>
+
+  <div class="lesson-footer">
+    <span>שיעור 6 · מסלול הלקוח · OneHome Learning Workspace</span>
+    <a href="0005-actionable-notifications.html">← שיעור 5</a>
+    <a href="../reference/automation-cheatsheet.html">דף עזר: אוטומציות</a>
+    <a href="../reference/glossary.html">מילון מונחים</a>
+  </div>
+</div>
+</body>
+</html>

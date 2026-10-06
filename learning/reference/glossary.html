@@ -138,6 +138,31 @@
     </tr>
   </table>
 
+  <h2>סקריפטים וסצנות (שיעור 6)</h2>
+  <table>
+    <tr><th>מונח</th><th>מה זה</th><th>דוגמה מ-OneHome</th></tr>
+    <tr>
+      <td><strong>Script</strong><br>סקריפט</td>
+      <td>רצף פעולות בלי טריגר, שרץ כשקוראים לו. כמו פונקציה: מקבל פרמטרים ויכול להחזיר תשובה.</td>
+      <td><code>script.ask_phone</code>: שואל בטלפון ומחזיר yes / no / timeout</td>
+    </tr>
+    <tr>
+      <td><strong>Fields</strong><br>שדות</td>
+      <td>הפרמטרים של סקריפט. בתוך הסקריפט הם משתנים, וה-<code>selector</code> קובע איך הם מוצגים בטופס.</td>
+      <td><code>message</code>, <code>yes_title</code>, <code>timeout_minutes</code></td>
+    </tr>
+    <tr>
+      <td><strong>response_variable</strong><br>משתנה תשובה</td>
+      <td>בסקריפט: המשתנה ש-<code>stop</code> מחזיר. אצל מי שקרא: השם שאליו התשובה נכנסת. עובד רק בקריאה ישירה, לא ב-<code>script.turn_on</code>.</td>
+      <td><code>reply.answer</code></td>
+    </tr>
+    <tr>
+      <td><strong>Scene</strong><br>סצנה</td>
+      <td>רשימת מצבים רצויים למכשירים, שמופעלת בבת אחת. אין לה צעדים ואין לה מצב כבוי.</td>
+      <td>"יוצאים מהבית": הדוד והאורות כבויים</td>
+    </tr>
+  </table>
+
   <h2>מונחים שיתווספו בשיעורים הבאים</h2>
   <p>
     <strong>Blueprint</strong>, <strong>Add-on</strong>, <strong>HACS</strong>,
