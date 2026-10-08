@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>דף עזר: דשבורדים</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="page">
+  <div class="course-nav">
+    <span>📖 מסמך רפרנס · מתעדכן עם כל שיעור</span>
+    <a href="../lessons/0007-customer-dashboard.html">← שיעור 7</a>
+  </div>
+
+  <div class="lesson-kicker">רפרנס מהיר</div>
+  <h1>דף עזר: דשבורדים</h1>
+  <p class="subtitle">
+    מבנה, כרטיס Tile, פעולות לחיצה, והפרדה בין לקוח למתקין. מקור:
+    <a href="https://www.home-assistant.io/dashboards/sections/" target="_blank">Sections</a>,
+    <a href="https://www.home-assistant.io/dashboards/tile/" target="_blank">Tile</a> ו-<a href="https://www.home-assistant.io/dashboards/actions/" target="_blank">Card actions</a>.
+  </p>
+
+  <h2>המבנה</h2>
+  <div class="flow-steps">
+    <div class="flow-step"><span class="step-word">דשבורד</span><span class="step-en">Dashboard</span><p>פריט בתפריט הצד.</p></div>
+    <div class="flow-step"><span class="step-word">תצוגה</span><span class="step-en">View</span><p>לשונית. תגים (Badges) בראשה.</p></div>
+    <div class="flow-step"><span class="step-word">מקטע</span><span class="step-en">Section</span><p>קבוצת כרטיסים עם כותרת.</p></div>
+    <div class="flow-step"><span class="step-word">כרטיס</span><span class="step-en">Card</span><p>Tile, Heading ועוד.</p></div>
+  </div>
+  <p><strong>כלל:</strong> לא עורכים את Overview. יוצרים דשבורד חדש, וזוכרים שהוא <strong>לא</strong> מתעדכן לבד כשמוסיפים מכשיר.</p>
+
+  <h2>כרטיס Tile: ברירות מחדל</h2>
+  <table>
+    <tr><th>אזור</th><th>מפתח</th><th>ברירת מחדל</th></tr>
+    <tr><td>גוף הכרטיס</td><td><code>tap_action</code></td><td><code>more-info</code></td></tr>
+    <tr><td>האייקון</td><td><code>icon_tap_action</code></td><td><code>toggle</code> אם אפשר, אחרת <code>more-info</code></td></tr>
+    <tr><td>לחיצה ארוכה</td><td><code>hold_action</code></td><td><code>more-info</code></td></tr>
+  </table>
+
+  <h2>פעולות לחיצה</h2>
+  <table>
+    <tr><th>ערך</th><th>מתי</th></tr>
+    <tr><td><code>toggle</code></td><td>מדליק ומכבה</td></tr>
+    <tr><td><code>more-info</code></td><td>חלון פרטים והיסטוריה</td></tr>
+    <tr><td><code>perform-action</code></td><td>מפעיל action, למשל סצנה או סקריפט</td></tr>
+    <tr><td><code>navigate</code></td><td>מעבר לתצוגה אחרת (<code>navigation_path</code>)</td></tr>
+    <tr><td><code>url</code> · <code>assist</code> · <code>none</code></td><td>קישור חיצוני · עוזר קולי · כלום</td></tr>
+  </table>
+
+  <h2>שלד: כפתור סצנה</h2>
+<pre dir="ltr"><code>type: tile
+entity: scene.leaving_home
+name: יוצאים מהבית
+vertical: true
+hide_state: true
+tap_action:
+  action: perform-action
+  perform_action: scene.turn_on   # כמו action: באוטומציה
+  target:
+    entity_id: scene.leaving_home
+  confirmation:
+    text: לכבות את הדוד והאורות?
+icon_tap_action:                  # אחרת לאייקון ברירת מחדל אחרת
+  action: perform-action
+  perform_action: scene.turn_on
+  target:
+    entity_id: scene.leaving_home</code></pre>
+
+  <h2>שלד: מצב עם זמן</h2>
+<pre dir="ltr"><code>type: tile
+entity: switch.boiler
+state_content:
+  - state
+  - last_changed                  # "דלוק · לפני 12 דקות"</code></pre>
+
+  <h2>לקוח מול מתקין</h2>
+  <table>
+    <tr><th>כלי</th><th>מה הוא עושה</th><th>אבטחה?</th></tr>
+    <tr><td>הרשאת <strong>Administrator</strong> כבויה</td><td>משתמש רגיל ללקוח</td><td>כן</td></tr>
+    <tr><td>דשבורד "רק למנהל"</td><td>הדשבורד לא מוצג למשתמש רגיל</td><td>לא אומת עדיין</td></tr>
+    <tr><td>תנאי <strong>Visibility</strong> מסוג User</td><td>מסתיר כרטיס, תג או מקטע</td><td>לא, רק תצוגה</td></tr>
+    <tr><td>משתמש נפרד לטאבלט קיר</td><td>ברירת מחדל משלו לדשבורד</td><td>לא, נוחות</td></tr>
+  </table>
+
+  <h2>מלכודות</h2>
+  <table>
+    <tr><th>מה קרה</th><th>למה</th></tr>
+    <tr><td>לחיצה על הכרטיס פותחת חלון ולא מדליקה</td><td>גוף הכרטיס הוא <code>more-info</code>. רק האייקון עושה toggle.</td></tr>
+    <tr><td>מכשיר חדש לא מופיע בדשבורד</td><td>דשבורד שבנית בעצמך לא מתעדכן לבד.</td></tr>
+    <tr><td>טאבלט וטלפון באותו משתמש "מתאפסים"</td><td>דשבורד ברירת מחדל שונה לאותו משתמש בשני מכשירים מחזיר את שניהם לברירת המחדל.</td></tr>
+    <tr><td>ראית את הדשבורד "תקין", אבל רק כמנהל</td><td>לבדוק תמיד עם המשתמש <code>test_family</code>.</td></tr>
+  </table>
+
+  <div class="lesson-footer">
+    <span>OneHome Learning Workspace</span>
+    <a href="glossary.html">מילון מונחים</a>
+    <a href="automation-cheatsheet.html">דף עזר: אוטומציות</a>
+  </div>
+</div>
+</body>
+</html>

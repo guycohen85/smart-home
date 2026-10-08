@@ -163,6 +163,46 @@
     </tr>
   </table>
 
+  <h2>דשבורד מותאם ללקוח (שיעור 7)</h2>
+  <table>
+    <tr><th>מונח</th><th>מה זה</th><th>דוגמה מ-OneHome</th></tr>
+    <tr>
+      <td><strong>View</strong><br>תצוגה</td>
+      <td>לשונית בראש דשבורד. סוג התצוגה שנבחר כברירת מחדל לתצוגה חדשה הוא <strong>Sections</strong>.</td>
+      <td>הלשונית הראשית בדשבורד "בית"</td>
+    </tr>
+    <tr>
+      <td><strong>Section</strong><br>מקטע</td>
+      <td>קבוצת כרטיסים עם כותרת, על גריד, בתצוגת Sections. אפשר להסתיר מקטע שלם עם Visibility.</td>
+      <td>"מצבים", "הדוד", "מערכת"</td>
+    </tr>
+    <tr>
+      <td><strong>Tile</strong><br>כרטיס Tile</td>
+      <td>כרטיס עם שני אזורי לחיצה: אייקון (ברירת מחדל: toggle) וגוף (ברירת מחדל: more-info).</td>
+      <td>כרטיס הדוד עם "דלוק · לפני 12 דקות"</td>
+    </tr>
+    <tr>
+      <td><strong>tap_action</strong><br>פעולת לחיצה</td>
+      <td>מה קורה בלחיצה: <code>toggle</code>, <code>more-info</code>, <code>perform-action</code>, <code>navigate</code> ועוד. אפשר להוסיף <code>confirmation</code>.</td>
+      <td><code>perform-action</code> של <code>scene.turn_on</code> בכרטיס "יוצאים מהבית"</td>
+    </tr>
+    <tr>
+      <td><strong>Badge</strong><br>תג</td>
+      <td>ווידג'ט קטן בראש התצוגה, לסקירה מהירה.</td>
+      <td>מי בבית: תג לכל <code>person</code></td>
+    </tr>
+    <tr>
+      <td><strong>Visibility</strong><br>תנאי הצגה</td>
+      <td>מתי להציג כרטיס, תג או מקטע (משתמש, גודל מסך, מצב). רק מסתיר מהעין, ואינו מנגנון אבטחה.</td>
+      <td>המקטע "מערכת" מוצג רק לגיא</td>
+    </tr>
+    <tr>
+      <td><strong>Administrator</strong><br>הרשאת מנהל</td>
+      <td>הרשאה של משתמש. ההפרדה האמיתית בין הלקוח למתקין, ולא תנאי Visibility.</td>
+      <td>המשתמש <code>test_family</code>, בלי הרשאת מנהל</td>
+    </tr>
+  </table>
+
   <h2>מונחים שיתווספו בשיעורים הבאים</h2>
   <p>
     <strong>Blueprint</strong>, <strong>Add-on</strong>, <strong>HACS</strong>,
