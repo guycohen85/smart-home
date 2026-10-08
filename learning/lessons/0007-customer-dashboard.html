@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>הדשבורד של הלקוח — שיעור 7</title>
+<link rel="stylesheet" href="../assets/style.css">
+<script src="../assets/quiz.js" defer></script>
+<script src="../assets/sort.js" defer></script>
+</head>
+<body>
+<div class="page">
+  <div class="course-nav">
+    <span>🏠 מסלול הלקוח · שיעור 7</span>
+    <a href="../reference/dashboard-cheatsheet.html">דף עזר: דשבורדים ←</a>
+  </div>
+
+  <div class="lesson-kicker">מסלול הלקוח · מושג חדש + שימוש בסצנות משיעור 6</div>
+  <h1>המסך שהלקוח רואה: דשבורד משלך</h1>
+  <p class="subtitle">
+    בשיעור 2 ראית את הדשבורד האוטומטי, והבטחתי שנחזור לדשבורד מותאם אישית. זה השיעור.
+    לפי <a href="../../plan-site/prd2.html">PRD 2</a>, הדשבורד הוא "החלק המרכזי בחוויית הלקוח". כלומר, זה המוצר שהלקוח רואה כל יום.
+    היום תבנה דשבורד "בית" עם הסצנות משיעור 6, ותיכנס אליו כמשתמש רגיל, כמו שבן או בת הזוג של הלקוח ייכנסו.
+  </p>
+
+  <div class="box source">
+    <span class="box-label">מקור ראשי</span>
+    <a href="https://www.home-assistant.io/dashboards/sections/" target="_blank">תצוגת Sections</a> ·
+    <a href="https://www.home-assistant.io/dashboards/tile/" target="_blank">כרטיס Tile</a> ·
+    <a href="https://www.home-assistant.io/dashboards/actions/" target="_blank">פעולות לחיצה (Card actions)</a> ·
+    <a href="https://www.home-assistant.io/dashboards/dashboards/" target="_blank">ניהול דשבורדים</a>.
+  </div>
+
+  <h2>חימום: מה זכור?</h2>
+  <div class="quiz">
+    <p class="quiz-q">1. אוטומציה קוראת ל-<code>ask_phone</code> דרך <code>script.turn_on</code>, ו-<code>reply</code> תמיד ריק. למה?</p>
+    <button class="quiz-reveal-btn" onclick="revealQuiz(this)">הצג תשובה</button>
+    <p class="quiz-answer"><code>script.turn_on</code> מפעיל וממשיך הלאה, בלי לחכות ובלי תשובה. כדי לקבל תשובה קוראים ישירות: <code>action: script.ask_phone</code>. במונחי מפתח: fire-and-forget מול await.</p>
+  </div>
+  <div class="quiz">
+    <p class="quiz-q">2. המצב של <code>zone.home</code> הוא <code>"2"</code>. מה זה אומר?</p>
+    <button class="quiz-reveal-btn" onclick="revealQuiz(this)">הצג תשובה</button>
+    <p class="quiz-answer">שני אנשים (person) נמצאים כרגע בבית. המצב של zone הוא מספר האנשים בתוכו, והוא מחרוזת. זה גם תוכן מצוין לראש הדשבורד.</p>
+  </div>
+  <div class="quiz">
+    <p class="quiz-q">3. למה כפתור "יוצאים מהבית" לבד בדשבורד הוא עיצוב גרוע?</p>
+    <button class="quiz-reveal-btn" onclick="revealQuiz(this)">הצג תשובה</button>
+    <p class="quiz-answer">לסצנה אין "כבוי" ואין ביטול. בלי סצנה שנייה ("חזרנו הביתה") לצידה, הלקוח לוחץ ולא יודע איך חוזרים. היום תבנה את הזוג.</p>
+  </div>
+
+  <h2>האנטומיה: ארבע שכבות</h2>
+  <p>דשבורד ב-HA בנוי כמו אפליקציית ווב קטנה:</p>
+  <table>
+    <tr><th>שכבה</th><th>מה זה</th><th>במונחי מפתח</th></tr>
+    <tr><td><strong>דשבורד</strong> (Dashboard)</td><td>פריט בתפריט הצד. אפשר כמה, למשל אחד ללקוח ואחד לך</td><td>אפליקציה</td></tr>
+    <tr><td><strong>תצוגה</strong> (View)</td><td>לשונית בראש הדשבורד</td><td>עמוד / route</td></tr>
+    <tr><td><strong>מקטע</strong> (Section)</td><td>קבוצת כרטיסים עם כותרת, על גריד</td><td>container</td></tr>
+    <tr><td><strong>כרטיס</strong> (Card)</td><td>יחידת התצוגה והשליטה: Tile, Heading ועוד</td><td>component</td></tr>
+  </table>
+  <p>
+    בראש התצוגה יש גם <strong>תגים</strong> (Badges): ווידג'טים קטנים לסקירה מהירה, למשל מי בבית
+    (<a href="https://www.home-assistant.io/dashboards/badges/" target="_blank">מקור</a>).
+    תצוגת <strong>Sections</strong> היא ברירת המחדל לתצוגות חדשות, ובה מסדרים הכול בגרירה
+    (<a href="https://www.home-assistant.io/dashboards/sections/" target="_blank">מקור</a>).
+  </p>
+  <p>
+    עוד כלל אחד מהתיעוד: את ה-Overview לא עורכים. הדשבורדים המובנים מתעדכנים לבד כשמוסיפים מכשירים, ולכן ממליצים ליצור דשבורד חדש ולהשאיר את המובנה כמו שהוא
+    (<a href="https://www.home-assistant.io/dashboards/dashboards/#creating-a-new-dashboard" target="_blank">מקור</a>).
+    המחיר: דשבורד שבנית בעצמך <strong>לא</strong> מתעדכן לבד. מכשיר חדש אצל לקוח נכנס אליו רק כשאתה מוסיף אותו.
+  </p>
+
+  <h2>כרטיס Tile: איפה לוחצים זה משנה</h2>
+  <p>ב-Tile יש שני אזורי לחיצה, ולכל אחד ברירת מחדל אחרת (<a href="https://www.home-assistant.io/dashboards/tile/" target="_blank">מקור</a>):</p>
+  <div class="flow-steps">
+    <div class="flow-step">
+      <span class="step-word">האייקון</span>
+      <span class="step-en">icon_tap_action</span>
+      <p>מדליק ומכבה (<code>toggle</code>) כשאפשר. כשאי אפשר, פותח את חלון הפרטים.</p>
+    </div>
+    <div class="flow-step">
+      <span class="step-word">גוף הכרטיס</span>
+      <span class="step-en">tap_action</span>
+      <p>פותח את חלון הפרטים (<code>more-info</code>): היסטוריה, הגדרות ושליטה מלאה.</p>
+    </div>
+  </div>
+  <p>
+    אפשר לשנות כל אחד מהם. האפשרויות הן <code>toggle</code>, <code>more-info</code>, <code>perform-action</code> (הפעלת action, כמו ב-YAML של אוטומציה), <code>navigate</code> (מעבר לתצוגה אחרת), <code>url</code>, <code>assist</code> ו-<code>none</code>.
+    לכל אחת מהן אפשר להוסיף <code>confirmation</code>, חלון "בטוח?" לפני הביצוע
+    (<a href="https://www.home-assistant.io/dashboards/actions/" target="_blank">מקור</a>).
+  </p>
+
+  <h2>תרגול 1: איזו פעולת לחיצה?</h2>
+  <div class="sort" data-answer="toggle" data-why="מצב של כן/לא שהלקוח מחליף עשר פעמים ביום. זו בדיוק ברירת המחדל של האייקון.">
+    <p class="sort-q">האור בסלון: הלקוח רק רוצה להדליק ולכבות</p>
+    <div class="sort-opts"><button data-v="toggle">toggle</button><button data-v="more-info">more-info</button><button data-v="perform">perform-action</button><button data-v="navigate">navigate</button></div>
+    <p class="sort-fb"></p>
+  </div>
+  <div class="sort" data-answer="perform" data-why="לסצנה אין on/off. מה שרוצים הוא להפעיל את scene.turn_on, וזו בדיוק perform-action.">
+    <p class="sort-q">כרטיס "יוצאים מהבית" שמפעיל את הסצנה</p>
+    <div class="sort-opts"><button data-v="toggle">toggle</button><button data-v="more-info">more-info</button><button data-v="perform">perform-action</button><button data-v="navigate">navigate</button></div>
+    <p class="sort-fb"></p>
+  </div>
+  <div class="sort" data-answer="more-info" data-why="היסטוריה וגרף נמצאים בחלון הפרטים. זו ברירת המחדל של גוף הכרטיס.">
+    <p class="sort-q">הלקוח שואל "מתי הדוד נדלק היום?"</p>
+    <div class="sort-opts"><button data-v="toggle">toggle</button><button data-v="more-info">more-info</button><button data-v="perform">perform-action</button><button data-v="navigate">navigate</button></div>
+    <p class="sort-fb"></p>
+  </div>
+  <div class="sort" data-answer="navigate" data-why="מעבר לתצוגה אחרת באותו דשבורד הוא navigate, עם navigation_path.">
+    <p class="sort-q">כרטיס "סוללות" שמעביר ללשונית עם מצב כל החיישנים</p>
+    <div class="sort-opts"><button data-v="toggle">toggle</button><button data-v="more-info">more-info</button><button data-v="perform">perform-action</button><button data-v="navigate">navigate</button></div>
+    <p class="sort-fb"></p>
+  </div>
+  <p class="sort-score"></p>
+
+  <h2>בונים: דשבורד "בית"</h2>
+  <div class="box practice">
+    <span class="box-label">משימה מעשית · 5 דקות · הכנה</span>
+    <ol>
+      <li>לפני הכול צריך את הסצנה השנייה. ב-<strong>Settings → Automations &amp; scenes → Scenes</strong> צור סצנה בשם <strong>Coming home</strong>: המכשירים במצב שאתה רוצה כשמגיעים הביתה. השם באנגלית, כדי שה-ID יהיה <code>scene.coming_home</code>.</li>
+      <li>עבור ל-<strong>Settings → Dashboards → Add dashboard → New dashboard from scratch</strong>.</li>
+      <li>שם: <strong>בית</strong>. אייקון: <code>mdi:home-heart</code>. השאר את "רק למנהל" (admin only) כבוי, והשאר את "הצג בתפריט הצד" דלוק.</li>
+      <li>פתח את הדשבורד החדש. התצוגה הריקה היא כבר Sections.</li>
+    </ol>
+  </div>
+
+  <h3>מקטע 1: מצבי הבית</h3>
+  <p>
+    במקטע הראשון, ערוך את הכותרת ל<strong>מצבים</strong>. הוסף כרטיס Tile, ובחלון העריכה עבור לעורך הקוד (Show code editor).
+    הדבק את הקוד, ואז הוסף כרטיס שני זהה ל-<code>scene.coming_home</code>, עם השם "חזרנו הביתה", האייקון <code>mdi:home-import-outline</code>, ובלי <code>confirmation</code>:
+  </p>
+<pre dir="ltr"><code>type: tile
+entity: scene.leaving_home
+name: יוצאים מהבית
+icon: mdi:home-export-outline
+vertical: true
+hide_state: true            # למצב של סצנה אין משמעות ללקוח
+tap_action:
+  action: perform-action
+  perform_action: scene.turn_on
+  target:
+    entity_id: scene.leaving_home
+  confirmation:
+    text: לכבות את הדוד והאורות?
+icon_tap_action:            # גם לחיצה על האייקון מפעילה
+  action: perform-action
+  perform_action: scene.turn_on
+  target:
+    entity_id: scene.leaving_home</code></pre>
+  <p>
+    שים לב שזה אותו מבנה כמו ב-YAML של אוטומציה: <code>perform_action</code> + <code>target</code>, כמו <code>action</code> + <code>target</code>.
+    כתבנו את הפעולה גם לגוף הכרטיס וגם לאייקון, כי ברירות המחדל שלהם שונות.
+  </p>
+
+  <h3>מקטע 2: הדוד</h3>
+  <div class="box practice">
+    <span class="box-label">משימה מעשית · 5 דקות</span>
+    <ol>
+      <li>לחץ <strong>Create section</strong>, ושנה את הכותרת ל<strong>הדוד</strong>.</li>
+      <li>הוסף Tile ל-<code>switch.boiler</code> (או המכשיר שלך), ובעורך הקוד הוסף:
+<pre dir="ltr"><code>state_content:
+  - state
+  - last_changed            # "דלוק · לפני 12 דקות"</code></pre>
+      </li>
+      <li>אל תשנה את פעולות הלחיצה. לחץ פעם על האייקון ופעם על גוף הכרטיס, וראה בעיניים את שתי ברירות המחדל.</li>
+    </ol>
+  </div>
+
+  <h3>הראש: מי בבית</h3>
+  <p>
+    בראש התצוגה לחץ <strong>Add badge</strong> והוסף תג לכל <code>person</code> בבית. אפשר גם תג ל-<code>zone.home</code>, שמציג כמה אנשים בבית
+    (<a href="https://www.home-assistant.io/dashboards/sections/#editing-the-header" target="_blank">מקור</a>).
+  </p>
+
+  <h3>מקטע 3: רק בשבילך</h3>
+  <p>
+    לכל מקטע, כרטיס או תג יש לשונית <strong>Visibility</strong>. אפשר להציג אותו רק למשתמשים מסוימים, רק בגודל מסך מסוים, או רק כשמצב מסוים מתקיים.
+    כמה תנאים ביחד הם "וגם"
+    (<a href="https://www.home-assistant.io/dashboards/cards/#showing-or-hiding-a-card-or-badge-conditionally" target="_blank">מקור</a>).
+  </p>
+  <div class="box practice">
+    <span class="box-label">משימה מעשית · 5 דקות</span>
+    <ol>
+      <li>צור מקטע שלישי בשם <strong>מערכת</strong>, והוסף לו Tile של עדכון HA (<code>update.home_assistant_core_update</code>) או כל דבר טכני אחר.</li>
+      <li>בעריכת המקטע ← <strong>Visibility → Add condition → User</strong>, וסמן רק את המשתמש שלך.</li>
+      <li>למעלה בלשונית, <strong>Current visibility</strong> מראה אם המקטע היה מוצג עכשיו. זה מקביל ל-Trace: בודקים לפני ששומרים.</li>
+    </ol>
+  </div>
+
+  <div class="box win">
+    <span class="box-label">התובנה שחשוב לזכור</span>
+    הסתרה בדשבורד היא עניין של <strong>נוחות</strong>, לא של <strong>אבטחה</strong>. התיעוד אומר במפורש על תצוגות שהסתרה משפיעה רק על הלשוניות, ושהכתובת עצמה עדיין נגישה
+    (<a href="https://www.home-assistant.io/dashboards/views/#visible" target="_blank">מקור</a>).
+    ההפרדה האמיתית בין הלקוח לבינך היא <strong>הרשאת המשתמש</strong>: משתמש בלי Administrator.
+  </div>
+
+  <h2>הבדיקה האמיתית: להיות הלקוח</h2>
+  <p>עד עכשיו ראית את הדשבורד כמנהל. הלקוח יראה משהו אחר, ולכן בודקים עם משתמש רגיל.</p>
+  <div class="box practice">
+    <span class="box-label">משימה מעשית · 10 דקות</span>
+    <ol>
+      <li>עבור ל-<strong>Settings → People → Add person</strong>. שם: <strong>בדיקה</strong>. הדלק <strong>Allow login</strong> ← <strong>Create a new username</strong>: <code>test_family</code> (אותיות קטנות, בלי רווחים).</li>
+      <li>השאר <strong>Administrator</strong> כבוי. <strong>Local access only</strong> לא משנה לבדיקה הזו
+        (<a href="https://www.home-assistant.io/integrations/person/#adding-a-person-to-home-assistant" target="_blank">מקור</a>).</li>
+      <li>פתח חלון גלישה בסתר, היכנס עם <code>test_family</code>, ובפרופיל ← <strong>Appearance</strong> ← <strong>Dashboard</strong> בחר את "בית". זו ברירת מחדל אישית, ולא צריך בשבילה הרשאת מנהל
+        (<a href="https://www.home-assistant.io/dashboards/dashboards/#setting-a-default-dashboard" target="_blank">מקור</a>).</li>
+      <li>תסתכל ותרשום: מה יש בתפריט הצד? האם המקטע "מערכת" מוצג? מה קורה כשלוחצים "יוצאים מהבית"?</li>
+    </ol>
+  </div>
+  <p>
+    אחרי הבדיקה, לחץ "חזרנו הביתה" כדי להחזיר את הבית. את המשתמש <code>test_family</code> כדאי להשאיר: הוא כלי הבדיקה שלך לכל שינוי עתידי בדשבורד.
+  </p>
+
+  <h2>בדיקת זיכרון: תרחישים מהשטח</h2>
+  <div class="quiz">
+    <p class="quiz-q">1. לקוחה מתקשרת: "לחצתי על הדוד ונפתח לי חלון עם גרף, במקום שהדוד יידלק". מה קרה, ומה התיקון?</p>
+    <button class="quiz-reveal-btn" onclick="revealQuiz(this)">הצג תשובה</button>
+    <p class="quiz-answer">היא לחצה על גוף הכרטיס, וברירת המחדל שלו היא <code>more-info</code>. רק האייקון עושה toggle. התיקון: <code>tap_action: action: toggle</code>, או להסביר לה ללחוץ על האייקון. בדוד כדאי לשקול גם <code>confirmation</code>, כדי שלחיצה בטעות לא תכבה מים חמים.</p>
+  </div>
+  <div class="quiz">
+    <p class="quiz-q">2. התקנת אצל לקוח חיישן דלת חדש. הוא עובד ומופיע ב-Overview, אבל לא בדשבורד "בית". למה?</p>
+    <button class="quiz-reveal-btn" onclick="revealQuiz(this)">הצג תשובה</button>
+    <p class="quiz-answer">דשבורד שבנית בעצמך לא מתעדכן לבד. רק המובנים מוסיפים מכשירים אוטומטית. כל מכשיר חדש אצל לקוח הוא גם צעד בדשבורד, וכדאי שזה יופיע ב-SOP של <a href="../../plan-site/prd3.html">PRD 3</a>.</p>
+  </div>
+  <div class="quiz">
+    <p class="quiz-q">3. לקוח קנה טאבלט קיר (התוספת מ-<a href="../../plan-site/prd1.html">PRD 1</a>). הטאבלט מחובר עם המשתמש של אמא, והיא קבעה בטלפון דשבורד אחר. מה יקרה?</p>
+    <button class="quiz-reveal-btn" onclick="revealQuiz(this)">הצג תשובה</button>
+    <p class="quiz-answer">לפי התיעוד, כשאותו משתמש קובע דשבורדים שונים בשני מכשירים, שניהם חוזרים לברירת המחדל. הפתרון: משתמש נפרד לטאבלט, למשל <code>wall_tablet</code>, בלי הרשאת מנהל (<a href="https://www.home-assistant.io/dashboards/dashboards/#setting-a-default-dashboard" target="_blank">מקור</a>).</p>
+  </div>
+  <div class="quiz">
+    <p class="quiz-q">4. הסתרת את המקטע "מערכת" מהלקוח עם תנאי User. האם הלקוח מוגן עכשיו מלשבור משהו?</p>
+    <button class="quiz-reveal-btn" onclick="revealQuiz(this)">הצג תשובה</button>
+    <p class="quiz-answer">לא. Visibility רק מסתיר מהעין. מה שמגן הוא שהמשתמש שלו בלי הרשאת Administrator. מה בדיוק משתמש רגיל יכול ולא יכול לעשות, את זה ראית בעצמך בבדיקה עם <code>test_family</code>.</p>
+  </div>
+
+  <div class="box win">
+    <span class="box-label">הניצחון של היום</span>
+    יש לך דשבורד ראשון שבנוי בשביל מי שגר בבית ולא בשביל המתקין: זוג מצבים, דוד עם "מתי נדלק", מי בבית, ומקטע טכני שרק אתה רואה.
+    זו טיוטה ראשונה של מה שיהיה בסוף ה-PRD 2, ואפשר כבר להראות אותה ללקוח פוטנציאלי.
+  </div>
+
+  <div class="box ask-teacher">
+    <span class="box-label">נתקעת? שאל</span>
+    אם כרטיס לא עושה מה שציפית, תדביק לי את ה-YAML שלו מעורך הקוד.
+    ותספר לי: מה ראית בתפריט הצד כ-<code>test_family</code>? האם היה שם Settings? ואיזה מכשירים שמת ב-"Coming home"?
+  </div>
+
+  <div class="lesson-footer">
+    <span>שיעור 7 · מסלול הלקוח · OneHome Learning Workspace</span>
+    <a href="0006-scripts-and-scenes.html">← שיעור 6</a>
+    <a href="../reference/dashboard-cheatsheet.html">דף עזר: דשבורדים</a>
+    <a href="../reference/glossary.html">מילון מונחים</a>
+  </div>
+</div>
+</body>
+</html>
