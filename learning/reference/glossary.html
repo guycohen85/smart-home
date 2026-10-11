@@ -203,9 +203,34 @@
     </tr>
   </table>
 
+  <h2>Apps ו-HACS (שיעור 8)</h2>
+  <table>
+    <tr><th>מונח</th><th>מה זה</th><th>דוגמה מ-OneHome</th></tr>
+    <tr>
+      <td><strong>App</strong><br>אפליקציה (לשעבר Add-on)</td>
+      <td>תוכנה עצמאית שרצה לצד HA, רק ב-HA OS. מתקינים מ-<strong>Settings → Apps</strong>. הרבה פעמים יש לה אינטגרציה תואמת שמחברת אותה ל-HA.</td>
+      <td>File editor, Mosquitto (השרת) + אינטגרציית MQTT (הלקוח)</td>
+    </tr>
+    <tr>
+      <td><strong>Custom integration</strong><br>אינטגרציה מותאמת</td>
+      <td>אינטגרציה מהקהילה שרצה בתוך HA. צוות HA לא בודק אותה, והיא עלולה לפגוע ביציבות.</td>
+      <td>כל מה שמגיע דרך HACS</td>
+    </tr>
+    <tr>
+      <td><strong>HACS</strong><br>חנות הקהילה</td>
+      <td>אינטגרציה מותאמת (לא App) שמנהלת הורדה ועדכון של רכיבים מהקהילה מ-GitHub. מורידים אותה בעזרת האפליקציה Get HACS.</td>
+      <td>מותקן בבית של גיא כמגרש ניסויים. אצל לקוחות: לפי רשימת חריגים (טרם הוחלט)</td>
+    </tr>
+    <tr>
+      <td><strong>/config</strong><br>תיקיית התצורה</td>
+      <td>התיקייה שבה נשמרים קבצי ה-YAML. העורכים ב-UI כותבים ל-<code>automations.yaml</code>, <code>scripts.yaml</code> ו-<code>scenes.yaml</code>.</td>
+      <td><code>ask_phone</code> בתוך <code>scripts.yaml</code></td>
+    </tr>
+  </table>
+
   <h2>מונחים שיתווספו בשיעורים הבאים</h2>
   <p>
-    <strong>Blueprint</strong>, <strong>Add-on</strong>, <strong>HACS</strong>,
+    <strong>Blueprint</strong>,
     <strong>Zigbee / Z-Wave / Matter / Thread</strong>, <strong>Assist</strong> (עוזר קולי מקומי) — עדיין לא נלמדו לעומק, ייכנסו לכאן כשמגיעים אליהם.
   </p>
 
