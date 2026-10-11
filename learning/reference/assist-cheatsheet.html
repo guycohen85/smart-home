@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>דף עזר: Assist</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="page">
+  <div class="course-nav">
+    <span>📖 מסמך רפרנס · מתעדכן עם כל שיעור</span>
+    <a href="../lessons/0009-assist-in-hebrew.html">← שיעור 9</a>
+  </div>
+
+  <div class="lesson-kicker">רפרנס מהיר</div>
+  <h1>דף עזר: Assist בעברית</h1>
+  <p class="subtitle">
+    מה עובד בעברית, איך מגדירים, ואיך מדבגים משפט. מקור:
+    <a href="https://www.home-assistant.io/voice_control/" target="_blank">Assist</a>,
+    <a href="https://www.home-assistant.io/integrations/conversation/" target="_blank">Conversation</a> ו-<a href="https://github.com/OHF-Voice/intents/tree/main/sentences/he" target="_blank">המשפטים בעברית</a>.
+    נבדק ב-11/10/2026. השפות משתנות, אז לבדוק שוב לפני שמבטיחים ללקוח.
+  </p>
+
+  <h2>מצב העברית לפי חוליה</h2>
+  <table>
+    <tr><th>חוליה</th><th>מקומי</th><th>ענן (Nabu Casa)</th></tr>
+    <tr><td><strong>המוח</strong> (Conversation agent)</td><td>✓ כל החובה מכוסה, 26% מכל הצירופים</td><td>אותו מוח, מקומי</td></tr>
+    <tr><td><strong>דיבור לטקסט</strong> (STT)</td><td>✗ במנוע Speech-to-Phrase אין עברית. במנוע Whisper יש, אבל כ-8 שניות לפקודה על Pi 4</td><td>✓ <code>he-IL</code></td></tr>
+    <tr><td><strong>טקסט לדיבור</strong> (TTS)</td><td>✗ ב-Piper אין קול עברי</td><td>✓ הקולות Hila ו-Avri</td></tr>
+  </table>
+  <p><strong>בשורה התחתונה:</strong> טקסט בעברית עובד מקומית. קול בעברית עובד היום רק דרך הענן.</p>
+
+  <h2>הגדרה בבית חדש</h2>
+  <ol>
+    <li><strong>עוזר:</strong> ב-<strong>Settings → Voice assistants → Add assistant</strong> בוחרים שפה עברית ומוח Home Assistant. בלי קול, משאירים את STT ו-TTS ריקים.</li>
+    <li><strong>חשיפה:</strong> בלשונית <strong>Expose</strong> חושפים רק את מה שהלקוח רוצה לשלוט בו בקול. מנעולים ושערים רק בהחלטה מפורשת.</li>
+    <li><strong>כינויים:</strong> לכל מכשיר חשוף ולכל אזור, כינוי בעברית <strong>בלי ה"א הידיעה</strong> (<code>דוד</code>, <code>מטבח</code>).</li>
+    <li><strong>כפתור בדשבורד</strong> (לא חובה): כרטיס Button עם <code>tap_action: action: assist</code> ו-<code>pipeline_id</code> של העוזר העברי (<a href="https://www.home-assistant.io/voice_control/start_assist_from_dashboard/" target="_blank">מקור</a>).</li>
+  </ol>
+
+  <h2>תחביר המשפטים</h2>
+  <table>
+    <tr><th>סימן</th><th>משמעות</th><th>דוגמה</th></tr>
+    <tr><td><code>( | )</code></td><td>אחד מאלה</td><td><code>(יוצא|יוצאת|יוצאים)</code></td></tr>
+    <tr><td><code>[ ]</code></td><td>לא חובה</td><td><code>[את] [ה]{name}</code></td></tr>
+    <tr><td><code>{name}</code> / <code>{area}</code></td><td>שם או כינוי של מכשיר / אזור</td><td><code>ב{area}</code></td></tr>
+  </table>
+  <p>סימני פיסוק ואותיות גדולות לא משנים. מילים שמדלגים עליהן בעברית: אנא, נא, בבקשה, אפשר, תוכל(י).</p>
+
+  <h2>משפט משלך: טריגר מסוג conversation</h2>
+<pre><code>triggers:
+  - trigger: conversation
+    command:
+      - "[אני] (יוצא|יוצאת|יוצאים) [מה]בית"
+actions:
+  - action: scene.turn_on
+    target:
+      entity_id: scene.leaving_home
+  - set_conversation_response: "יצאתם. הבית במצב יציאה."</code></pre>
+  <p>התשובה (<code>set_conversation_response</code>) עובדת רק בתוך האוטומציה, ולא בסקריפט שנקרא ממנה. המשפט רק מתחיל את האוטומציה, בדיוק כמו כפתור בהתראה.</p>
+
+  <h2>דיבוג: מה השגיאה אומרת</h2>
+  <table>
+    <tr><th>תשובת Assist</th><th>החוליה</th><th>התיקון</th></tr>
+    <tr><td>"לא הצלחתי להבין את הבקשה"</td><td>אין משפט מתאים</td><td>לנסח אחרת, או טריגר conversation</td></tr>
+    <tr><td>"לא ידוע לי על מכשיר שנקרא X"</td><td>השם</td><td>כינוי בעברית</td></tr>
+    <tr><td>"X אינו נחשף"</td><td>החשיפה</td><td>Expose</td></tr>
+    <tr><td>"קיימים מספר מכשירים שנקראים X"</td><td>כפילות</td><td>להוסיף אזור למשפט, או כינוי ייחודי</td></tr>
+    <tr><td>תשובה הגיעה, אבל כלום לא קרה</td><td>הפעולה</td><td>Trace של האוטומציה</td></tr>
+  </table>
+  <p><strong>כלי:</strong> ב-<strong>Developer tools → Assist</strong> רואים <code>match</code>, <code>intent</code>, <code>unmatched_slots</code> ו-<code>source</code>, בלי להפעיל כלום. עובד רק עם המוח המובנה.</p>
+
+  <div class="lesson-footer">
+    <span>מסמך רפרנס · OneHome Learning Workspace</span>
+    <a href="../lessons/0009-assist-in-hebrew.html">שיעור 9</a>
+    <a href="glossary.html">מילון מונחים</a>
+  </div>
+</div>
+</body>
+</html>

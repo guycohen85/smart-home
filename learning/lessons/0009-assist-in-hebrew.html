@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Assist בעברית — שיעור 9</title>
+<link rel="stylesheet" href="../assets/style.css">
+<script src="../assets/quiz.js" defer></script>
+<script src="../assets/sort.js" defer></script>
+</head>
+<body>
+<div class="page">
+  <div class="course-nav">
+    <span>🏠 מסלול הלקוח · שיעור 9</span>
+    <a href="../reference/assist-cheatsheet.html">דף עזר: Assist ←</a>
+  </div>
+
+  <div class="lesson-kicker">מסלול הלקוח · מושג חדש + בדיקת מציאות לתוכנית העסקית</div>
+  <h1>הבית מבין עברית: Assist בכתב, ומה עם קול</h1>
+  <p class="subtitle">
+    היום תגרום ל-HA להבין "כבה את הדוד" בעברית, בלי ענן ובלי חומרה חדשה.
+    בדרך תגלה שהמשפט הוא רק טריגר, בדיוק כמו כפתור בהתראה, ותבדוק עובדה שמשנה החלטה ב-<code>plan-site</code>:
+    מה באמת עובד היום בעברית <strong>מדוברת</strong>.
+  </p>
+
+  <div class="box source">
+    <span class="box-label">מקור ראשי</span>
+    <a href="https://www.home-assistant.io/voice_control/" target="_blank">Assist — home-assistant.io</a> ·
+    <a href="https://www.home-assistant.io/voice_control/aliases/" target="_blank">Aliases</a> ·
+    <a href="https://www.home-assistant.io/voice_control/voice_remote_expose_devices/" target="_blank">Exposing entities</a> ·
+    <a href="https://www.home-assistant.io/integrations/conversation/" target="_blank">Sentence triggers</a> ·
+    <a href="https://github.com/OHF-Voice/intents/tree/main/sentences/he" target="_blank">קובצי המשפטים בעברית</a>.
+  </div>
+
+  <h2>חימום: מה זכור?</h2>
+  <div class="quiz">
+    <p class="quiz-q">1. בשיעור 5, כשלחצת "כבה" בהתראה בטלפון: מי בפועל כיבה את הדוד?</p>
+    <button class="quiz-reveal-btn" onclick="revealQuiz(this)">הצג תשובה</button>
+    <p class="quiz-answer">האוטומציה. הכפתור רק שלח תווית (<code>BOILER_OFF_...</code>) שחזרה ל-<code>wait_for_trigger</code>, והפעולה שבאה אחרי ה-<code>if</code> כיבתה. היום תפגוש את אותו מודל בדיוק: המשפט שמקלידים הוא תווית, והפעולה באה אחר כך.</p>
+  </div>
+  <div class="quiz">
+    <p class="quiz-q">2. באיזה קובץ שמורה הסצנה "Leaving home"?</p>
+    <button class="quiz-reveal-btn" onclick="revealQuiz(this)">הצג תשובה</button>
+    <p class="quiz-answer">בקובץ <code>scenes.yaml</code>, בתיקייה <code>/config</code>. ראית אותה שם ב-File editor בשיעור 8.</p>
+  </div>
+  <div class="quiz">
+    <p class="quiz-q">3. מה המצב של <code>zone.home</code> כששניכם בבית?</p>
+    <button class="quiz-reveal-btn" onclick="revealQuiz(this)">הצג תשובה</button>
+    <p class="quiz-answer"><code>"2"</code>. המצב של zone הוא מספר האנשים שנמצאים בו, ולא on/off (<a href="https://www.home-assistant.io/integrations/zone/" target="_blank">מקור</a>).</p>
+  </div>
+
+  <h2>ארבע חוליות, ורק אחת מהן חייבת</h2>
+  <p>
+    העוזר הקולי המובנה ב-HA נקרא Assist (<a href="https://www.home-assistant.io/voice_control/" target="_blank">מקור</a>).
+    בקשה קולית עוברת שרשרת של ארבע חוליות. במונחי מפתח: pipeline, שכל שלב בו הוא שירות שאפשר להחליף.
+  </p>
+  <div class="flow-steps">
+    <div class="flow-step"><span class="step-word">מילת הפעלה</span><span class="step-en">Wake word</span><p>"Okay Nabu". רק במכשיר קולי. בטלפון ובדפדפן לוחצים על כפתור.</p></div>
+    <div class="flow-step"><span class="step-word">דיבור לטקסט</span><span class="step-en">STT</span><p>הופך הקלטה למשפט כתוב.</p></div>
+    <div class="flow-step"><span class="step-word">המוח</span><span class="step-en">Conversation agent</span><p>מבין את המשפט ומפעיל את הבית. <strong>תמיד מקומי</strong> בברירת המחדל.</p></div>
+    <div class="flow-step"><span class="step-word">טקסט לדיבור</span><span class="step-en">TTS</span><p>הופך את התשובה לקול.</p></div>
+  </div>
+  <p>
+    כשמ<strong>קלידים</strong> ל-Assist, שתי החוליות של הקול נעלמות, ונשאר רק המוח. לכן טקסט בעברית עובד היום, מקומית לגמרי.
+    הקול הוא סיפור אחר.
+  </p>
+
+  <h2>מה עובד בעברית, חוליה אחרי חוליה</h2>
+  <table>
+    <tr><th>חוליה</th><th>מקומי (על HA Green)</th><th>ענן (Nabu Casa)</th></tr>
+    <tr>
+      <td><strong>המוח</strong></td>
+      <td>✓ יש משפטים רשמיים בעברית: הדלקה וכיבוי, אורות, טמפרטורה, טיימרים, "האם X דולק", מזג אוויר
+        (<a href="https://github.com/OHF-Voice/intents/tree/main/sentences/he" target="_blank">מקור</a>).
+        כל החובה מכוסה, אבל רק 26% מכל הצירופים (<a href="https://ohf-voice.github.io/intents/" target="_blank">מקור</a>).</td>
+      <td>אותו מוח. גם עם ענן, השליטה בבית נשארת מקומית (<a href="https://www.home-assistant.io/voice_control/voice_remote_cloud_assistant/" target="_blank">מקור</a>).</td>
+    </tr>
+    <tr>
+      <td><strong>דיבור לטקסט</strong></td>
+      <td>✗ המנוע Speech-to-Phrase, המהיר שמתאים ל-HA Green, <strong>לא תומך בעברית</strong> (<a href="https://github.com/OHF-Voice/speech-to-phrase" target="_blank">מקור</a>).
+        Whisper תומך בהרבה שפות, אבל לוקח בערך 8 שניות לפקודה על Raspberry Pi 4 (<a href="https://www.home-assistant.io/voice_control/voice_remote_local_assistant/" target="_blank">מקור</a>).
+        ל-HA Green יש מעבד Cortex-A55 (<a href="https://www.home-assistant.io/green/" target="_blank">מקור</a>), כך שאין סיבה לצפות שיהיה מהיר יותר. לא נמדד.</td>
+      <td>✓ עברית (<code>he-IL</code>) ברשימת השפות (<a href="https://github.com/NabuCasa/hass-nabucasa/blob/main/hass_nabucasa/voice.py" target="_blank">מקור: קוד הספרייה</a>).</td>
+    </tr>
+    <tr>
+      <td><strong>טקסט לדיבור</strong></td>
+      <td>✗ ל-Piper <strong>אין קול עברי</strong> (<a href="https://github.com/OHF-Voice/piper1-gpl/blob/main/docs/VOICES.md" target="_blank">מקור</a>).</td>
+      <td>✓ שני קולות עבריים: Hila ו-Avri (<a href="https://github.com/NabuCasa/hass-nabucasa/blob/main/hass_nabucasa/voice_data.py" target="_blank">מקור: קוד הספרייה</a>).</td>
+    </tr>
+  </table>
+
+  <div class="box win">
+    <span class="box-label">ממצא שמשנה את התוכנית</span>
+    לפי <a href="../../plan-site/claude/decision-nabu-casa-services.md">ההחלטה על שירותי Nabu Casa</a> ו-<a href="../../plan-site/nabu-casa.html">דף Nabu Casa</a>,
+    ברירת המחדל הקולית של OneHome היא Whisper + Piper מקומיים, והענן הוא רק תוספת מוצהרת.
+    <strong>בעברית, הצירוף הזה לא עובד היום</strong>: ל-Piper אין קול עברי, ו-Whisper על HA Green איטי מדי לשימוש יומיומי.
+    כלומר אי אפשר להבטיח ללקוח "שליטה קולית בעברית, מקומית לגמרי". בסוף השיעור נחליט מה כן מבטיחים.
+  </div>
+
+  <h2>תרגול 1: עוזר בעברית שמכיר את הדוד</h2>
+  <div class="box practice">
+    <span class="box-label">משימה מעשית · 10 דקות · טלפון או דפדפן</span>
+    <ol>
+      <li><strong>עוזר חדש:</strong> עבור ל-<strong>Settings → Voice assistants → Add assistant</strong>. בשם כתוב <code>עברית</code>, בשפה בחר <strong>עברית</strong>, ובמוח (Conversation agent) בחר <strong>Home Assistant</strong>. את שדות הקול (STT ו-TTS) השאר ריקים (<a href="https://www.home-assistant.io/voice_control/voice_remote_local_assistant/" target="_blank">מקור</a>).</li>
+      <li><strong>חשיפה:</strong> באותו מסך, בלשונית <strong>Expose</strong>, ודא שהמתג של הדוד ברשימה. אם לא, הוסף אותו דרך <strong>Expose entities</strong> (<a href="https://www.home-assistant.io/voice_control/voice_remote_expose_devices/" target="_blank">מקור</a>).</li>
+      <li><strong>כינוי:</strong> לחץ על הדוד ברשימה, והוסף כינוי (Alias): <code>דוד</code>. <strong>בלי ה"א הידיעה</strong>, ההסבר מיד אחרי המשימה (<a href="https://www.home-assistant.io/voice_control/aliases/" target="_blank">מקור</a>).</li>
+      <li><strong>בדיקה:</strong> בדשבורד, פתח את Assist (האייקון בפינה העליונה), בחר למעלה את העוזר <code>עברית</code>, והקלד <code>כבה את הדוד</code>. אחר כך <code>האם הדוד דולק</code>.</li>
+    </ol>
+  </div>
+  <p>
+    <strong>למה בלי ה"א?</strong> כך נראית תבנית הכיבוי בקובץ המשפטים הרשמי
+    (<a href="https://github.com/OHF-Voice/intents/blob/main/sentences/he/HassTurnOff/name_only.yaml" target="_blank">מקור</a>):
+  </p>
+  <pre style="direction: rtl; text-align: right;"><code>(כב[ה|י]|כיבוי|לכבות|תכב[ה|י]) [את] [של] [ה]{name}</code></pre>
+  <p>
+    סוגריים עגולים הם "אחד מאלה", וסוגריים מרובעים הם "לא חובה". במונחי מפתח: regex מפושט.
+    ה-<code>[ה]</code> שלפני <code>{name}</code> נבלע לבד, ולכן הכינוי <code>דוד</code> מתאים גם ל"כבה את הדוד" וגם ל"כבי דוד".
+    זה כלל אצבע לכל בית של לקוח: <strong>כינויים בעברית, בלי ה"א הידיעה.</strong> לחדרים אותו דבר: אזור בשם "Kitchen" צריך כינוי <code>מטבח</code>, כדי ש"הדלק את האורות במטבח" יעבוד.
+  </p>
+
+  <h2>תרגול 2: נחש, ואז תבדוק</h2>
+  <p>
+    לכל משפט, נחש אם Assist יבין אותו. אחר כך הקלד אותו ב-<strong>Developer tools → Assist</strong>, עם השפה עברית.
+    הלשונית הזו מראה מה Assist הבין <strong>בלי להפעיל כלום</strong>: השדה <code>match</code>, ה-intent, ומה לא הותאם (<code>unmatched_slots</code>)
+    (<a href="https://www.home-assistant.io/docs/tools/dev-tools/" target="_blank">מקור</a>). במונחי מפתח: dry run.
+    בכל המשפטים, לדוד יש כינוי <code>דוד</code>, אלא אם כתוב אחרת.
+  </p>
+  <div class="sort" data-answer="yes" data-why="&quot;כבי&quot; מכוסה על ידי כב[ה|י]. גם &quot;את&quot; וגם ה-ה&quot;א הם לא חובה.">
+    <p class="sort-q">כבי דוד</p>
+    <div class="sort-opts"><button data-v="yes">יתאים</button><button data-v="no">לא יתאים</button></div>
+    <p class="sort-fb"></p>
+  </div>
+  <div class="sort" data-answer="no" data-why="&quot;תפעיל&quot; לא נמצא ברשימת פעלי ההדלקה: הדלק, הדליקי, הדלקה, להדליק, תדליק(י). לקוח שאומר &quot;תפעיל&quot; צריך משפט משלך (תרגול 3).">
+    <p class="sort-q">תפעיל את הדוד</p>
+    <div class="sort-opts"><button data-v="yes">יתאים</button><button data-v="no">לא יתאים</button></div>
+    <p class="sort-fb"></p>
+  </div>
+  <div class="sort" data-answer="yes" data-why="&quot;בבקשה&quot; ברשימת המילים שמדלגים עליהן בעברית, יחד עם &quot;אנא&quot;, &quot;נא&quot; ו&quot;אפשר&quot;.">
+    <p class="sort-q">כבה את הדוד בבקשה</p>
+    <div class="sort-opts"><button data-v="yes">יתאים</button><button data-v="no">לא יתאים</button></div>
+    <p class="sort-fb"></p>
+  </div>
+  <div class="sort" data-answer="no" data-why="העוזר מכיר רק שמות וכינויים. ל-Boiler אין כינוי עברי, אז &quot;דוד&quot; לא מוכר לו. התשובה תהיה &quot;סליחה, לא ידוע לי על מכשיר שנקרא דוד&quot;.">
+    <p class="sort-q">הדלק את הדוד (המכשיר נקרא Boiler, ואין לו כינוי)</p>
+    <div class="sort-opts"><button data-v="yes">יתאים</button><button data-v="no">לא יתאים</button></div>
+    <p class="sort-fb"></p>
+  </div>
+  <p class="sort-score"></p>
+
+  <h2>תרגול 3: משפט משלך, "יוצאים מהבית"</h2>
+  <p>
+    כשהמשפטים המובנים לא מספיקים, אוטומציה יכולה להתחיל ממשפט. זה טריגר מסוג <code>conversation</code>.
+    התחביר זהה: <code>()</code> לחלופות ו-<code>[]</code> למילים שלא חובה. סימני פיסוק ואותיות גדולות לא משנים
+    (<a href="https://www.home-assistant.io/integrations/conversation/" target="_blank">מקור</a>).
+    התשובה ש-Assist מציג נקבעת עם <code>set_conversation_response</code>, והיא עובדת רק בתוך האוטומציה ולא בסקריפט שהיא קוראת לו
+    (<a href="https://www.home-assistant.io/docs/scripts/#respond-to-a-conversation" target="_blank">מקור</a>).
+  </p>
+  <div class="box practice">
+    <span class="box-label">משימה מעשית · 10 דקות</span>
+    <ol>
+      <li>צור אוטומציה חדשה ← שלוש נקודות ← <strong>Edit in YAML</strong>, והדבק:</li>
+    </ol>
+<pre><code>alias: "Assist: יוצאים מהבית"
+triggers:
+  - trigger: conversation
+    command:
+      - "[אני] (יוצא|יוצאת|יוצאים) [מה]בית"
+      - "(ביי|להתראות) בית"
+actions:
+  - action: scene.turn_on
+    target:
+      entity_id: scene.leaving_home   # ← לשנות: ה-entity_id של הסצנה שלך
+  - set_conversation_response: "יצאתם. הבית במצב יציאה."</code></pre>
+    <ol start="2">
+      <li>שמור, והקלד ב-Assist (העוזר <code>עברית</code>): <code>יוצאים מהבית</code>.</li>
+      <li>בדוק גם ב-<strong>Developer tools → Assist</strong>. בשדה <code>source</code> תראה שההתאמה הגיעה מטריגר, ולא מהמשפטים המובנים.</li>
+      <li>פתח את ה-Trace של האוטומציה. זו ריצה רגילה לגמרי.</li>
+    </ol>
+  </div>
+  <p>
+    שים לב שהמשפט לא "יודע" כלום על הסצנה. הוא רק מתחיל את האוטומציה, והפעולה באה אחר כך.
+    זה המודל של הכפתור בהתראה מתרגיל החימום, בצורה אחרת.
+  </p>
+
+  <h2>ההחלטה העסקית: מה מבטיחים ללקוח?</h2>
+  <p>שלוש אפשרויות, לפי הממצאים בטבלה:</p>
+  <table>
+    <tr><th>אפשרות</th><th>מה הלקוח מקבל</th><th>המחיר</th></tr>
+    <tr><td><strong>א. טקסט בעברית</strong></td><td>עוזר Assist בכתב, בטלפון ובדשבורד. מקומי לגמרי.</td><td>אין קול. נשמע פחות "וואו".</td></tr>
+    <tr><td><strong>ב. קול בעברית דרך הענן</strong></td><td>קול אמיתי בעברית, עם Hila או Avri.</td><td>ההקלטה יוצאת ל-Nabu Casa. זה בדיוק החריג שכבר הוגדר כתוספת מוצהרת עם checkbox.</td></tr>
+    <tr><td><strong>ג. קול מקומי באנגלית</strong></td><td>שילוב של Speech-to-Phrase ו-Piper. מהיר ומקומי.</td><td>רוב המשפחות בישראל לא ידברו עם הבית באנגלית.</td></tr>
+  </table>
+  <p>
+    ההמלצה שלי, כנקודת פתיחה לדיון: <strong>ברירת המחדל היא א', וב' כתוספת מוצהרת ללקוח שרוצה קול.</strong>
+    את הטענה "שליטה קולית מקומית בלי חדירה לפרטיות" בכרטיס של Voice PE ב-<a href="../../plan-site/products.html">קטלוג המוצרים</a> צריך לסייג לעברית, עד שיהיה קול מקומי בעברית.
+    שווה גם לבדוק איך <a href="../../plan-site/competitors.html">Homeii</a> מספקים את "AI קולי בעברית" שהם מפרסמים. אם זה בענן, יש לך כאן טיעון שקוף ולא חיסרון.
+  </p>
+
+  <h2>בדיקת זיכרון: תרחישים מהשטח</h2>
+  <div class="quiz">
+    <p class="quiz-q">1. לקוחה מקלידה "כבי את המזגן" ומקבלת "סליחה, המזגן אינו נחשף". ואחרי שבוע, לקוח אחר מקבל "סליחה, לא ידוע לי על מכשיר שנקרא מזגן". מה מתקנים בכל מקרה?</p>
+    <button class="quiz-reveal-btn" onclick="revealQuiz(this)">הצג תשובה</button>
+    <p class="quiz-answer">במקרה הראשון Assist מכיר את השם, אבל המכשיר לא נחשף: מוסיפים אותו ב-Expose. במקרה השני השם לא מוכר: מוסיפים כינוי <code>מזגן</code>. נוסח השגיאה אומר לך באיזו חוליה לחפש (<a href="https://github.com/OHF-Voice/intents/blob/main/sentences/he/_common.yaml" target="_blank">מקור</a>).</p>
+  </div>
+  <div class="quiz">
+    <p class="quiz-q">2. לקוח מבקש: "אני רוצה להגיד לבית לפתוח את השער". מה שואלים לפני שחושפים את השער ל-Assist?</p>
+    <button class="quiz-reveal-btn" onclick="revealQuiz(this)">הצג תשובה</button>
+    <p class="quiz-answer">מי עוד יכול לדבר עם הבית. החשיפה ל-Assist היא בחירה לכל מכשיר בדיוק בגלל זה: כדי שמנעולים ודלתות מוסך לא יופעלו בקול בטעות (<a href="https://www.home-assistant.io/voice_control/voice_remote_expose_devices/" target="_blank">מקור</a>). מנעולים ושערים לא נחשפים בברירת מחדל, ונכנסים רק בהחלטה מפורשת של הלקוח.</p>
+  </div>
+  <div class="quiz">
+    <p class="quiz-q">3. לקוח קנה Voice PE ומבקש: "קול בעברית, ושום דבר לא יוצא מהבית". מה אתה עונה לו?</p>
+    <button class="quiz-reveal-btn" onclick="revealQuiz(this)">הצג תשובה</button>
+    <p class="quiz-answer">שהיום אי אפשר לקבל את שניהם יחד. ל-Piper אין קול עברי, Speech-to-Phrase לא תומך בעברית, ו-Whisper על HA Green איטי מדי. הוא בוחר: קול בעברית דרך הענן, או קול מקומי באנגלית. בשני המקרים, השליטה עצמה בבית נשארת מקומית.</p>
+  </div>
+  <div class="quiz">
+    <p class="quiz-q">4. הקלדת "יוצאים מהבית", ו-Assist ענה "יצאתם. הבית במצב יציאה." אבל האורות נשארו דלוקים. איפה מחפשים?</p>
+    <button class="quiz-reveal-btn" onclick="revealQuiz(this)">הצג תשובה</button>
+    <p class="quiz-answer">ב-Trace של האוטומציה ובסצנה עצמה. המשפט הותאם, כי התשובה הגיעה. מה שנכשל הוא הפעולה: entity_id שגוי, או סצנה שלא כוללת את האורות. המשפט הוא רק הטריגר.</p>
+  </div>
+
+  <div class="box win">
+    <span class="box-label">הניצחון של היום</span>
+    הבית שלך מבין עברית בכתב, מקומית, כולל משפט שכתבת בעצמך.
+    ויש לך תשובה כנה לשאלה ש<strong>כל</strong> לקוח ישאל: "אפשר לדבר איתו בעברית?"
+  </div>
+
+  <div class="box ask-teacher">
+    <span class="box-label">נתקעת? שאל</span>
+    אם משפט לא מותאם, תדביק לי את מה ש-Developer tools → Assist מחזיר.
+    ותספר לי: (1) האם "האם הדוד דולק" עבד? (2) מה ענה Assist על "תפעיל את הדוד"? (3) מה דעתך על ההמלצה: טקסט כברירת מחדל, וקול בעברית רק בענן כתוספת מוצהרת?
+  </div>
+
+  <div class="lesson-footer">
+    <span>שיעור 9 · מסלול הלקוח · OneHome Learning Workspace</span>
+    <a href="0008-apps-and-hacs.html">← שיעור 8</a>
+    <a href="../reference/assist-cheatsheet.html">דף עזר: Assist</a>
+    <a href="../reference/glossary.html">מילון מונחים</a>
+    <a href="../reference/automation-cheatsheet.html">דף עזר: אוטומציות</a>
+  </div>
+</div>
+</body>
+</html>
