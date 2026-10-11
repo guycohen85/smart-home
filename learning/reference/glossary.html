@@ -263,6 +263,46 @@
     </tr>
   </table>
 
+  <h2>בית התבנית (שיעור 10)</h2>
+  <table>
+    <tr><th>מונח</th><th>מה זה</th><th>דוגמה מ-OneHome</th></tr>
+    <tr>
+      <td><strong>Template</strong><br>בית התבנית</td>
+      <td>התקנת HA נקייה ונפרדת, שנכנס אליה רק מה שמשותף לכל הלקוחות. לא הבית של גיא.</td>
+      <td>המכונה <code>onehome-template</code> ב-VirtualBox</td>
+    </tr>
+    <tr>
+      <td><strong>Golden backup</strong><br>גיבוי התבנית</td>
+      <td>גיבוי של בית התבנית, עם תאריך וגרסת HA בשם, שמשחזרים אצל כל לקוח.</td>
+      <td><code>onehome-template_2026-10-11_ha-2026.10.1</code></td>
+    </tr>
+    <tr>
+      <td><strong>VM</strong><br>מכונה וירטואלית</td>
+      <td>מחשב מדומה שרץ בתוך מחשב אחר. HA OS נתמך רשמית ב-VirtualBox, ב-VMware, ב-Hyper-V, ב-KVM וב-Unraid.</td>
+      <td>בית התבנית רץ על המחשב של גיא</td>
+    </tr>
+    <tr>
+      <td><strong>Bridged Adapter</strong><br>רשת מגושרת</td>
+      <td>מצב רשת שבו ה-VM מקבל IP משלו מהראוטר, כמו מכשיר אמיתי. לכן הוא גם רואה את המכשירים בבית.</td>
+      <td>התבנית מגלה את ה-Shelly של גיא, ולא מוסיפים אותו</td>
+    </tr>
+    <tr>
+      <td><strong>Onboarding</strong><br>הגדרה ראשונית</td>
+      <td>המסכים הראשונים אחרי התקנה: משתמש מנהל, מיקום, שיתוף נתונים. אפשר לבחור בהם גם שחזור מגיבוי.</td>
+      <td>בתבנית: משתמש <code>onehome</code> ומיקום ציבורי</td>
+    </tr>
+    <tr>
+      <td><strong>Emergency kit</strong><br>ערכת חירום</td>
+      <td>קובץ עם מפתח ההצפנה של הגיבויים. בלעדיו אי אפשר לשחזר גיבוי מוצפן.</td>
+      <td>שמור במנהל הסיסמאות, עם שם הגיבוי</td>
+    </tr>
+    <tr>
+      <td><strong>Hostname</strong><br>שם המכונה ברשת</td>
+      <td>השם שממנו נגזרת הכתובת <code>&lt;שם&gt;.local</code>. ברירת המחדל היא <code>homeassistant</code>, ולכן שני בתים באותה רשת מתנגשים.</td>
+      <td><code>onehome-template</code></td>
+    </tr>
+  </table>
+
   <h2>מונחים שיתווספו בשיעורים הבאים</h2>
   <p>
     <strong>Blueprint</strong>,
