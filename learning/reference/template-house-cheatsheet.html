@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>דף עזר: בית התבנית</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="page">
+  <div class="course-nav">
+    <span>📖 מסמך רפרנס · מתעדכן עם כל שיעור בחלק ב'</span>
+    <a href="../lessons/0010-template-house.html">← שיעור 10</a>
+  </div>
+
+  <div class="lesson-kicker">רפרנס מהיר</div>
+  <h1>דף עזר: בית התבנית ו-golden backup</h1>
+  <p class="subtitle">
+    איך מקימים התקנה נקייה, מה נכנס אליה, ואיך מגבים אותה. מקור:
+    <a href="https://www.home-assistant.io/installation/windows" target="_blank">התקנה ב-Windows</a>,
+    <a href="https://www.home-assistant.io/installation/macos" target="_blank">התקנה ב-macOS</a>,
+    <a href="https://www.home-assistant.io/getting-started/onboarding/" target="_blank">Onboarding</a>,
+    <a href="https://www.home-assistant.io/common-tasks/general/" target="_blank">גיבוי ושחזור</a>,
+    ו-<a href="../../plan-site/claude/golden-backup-checklist.md">הצ'ק-ליסט</a>.
+  </p>
+
+  <div class="box win">
+    <span class="box-label">הכלל</span>
+    רכיבים עוברים בכיוון אחד: <strong>הבית שלך ← בית התבנית ← golden backup ← לקוח</strong>.
+    לעולם לא מגבים את הבית שלך כדי לשחזר אצל לקוח.
+  </div>
+
+  <h2>הקמה ב-VirtualBox</h2>
+  <table>
+    <tr><th>הגדרה</th><th>ערך</th></tr>
+    <tr><td><strong>קובץ ל-Windows או Mac עם Intel</strong></td><td>הקובץ <code>haos_ova-&lt;גרסה&gt;.vdi.zip</code>, מערכת Oracle Linux (64-bit), בקר SATA</td></tr>
+    <tr><td><strong>קובץ ל-Mac עם מעבד Apple</strong></td><td>הקובץ <code>haos_generic-aarch64-&lt;גרסה&gt;.vdi.zip</code>, מערכת Oracle Linux (ARM 64-bit), בקר VirtioSCSI</td></tr>
+    <tr><td><strong>זיכרון ומעבדים</strong></td><td>לפחות 2048 MB, ולפחות 2 מעבדים</td></tr>
+    <tr><td><strong>הגדרת EFI</strong></td><td>חובה. "Home Assistant requires UEFI to boot"</td></tr>
+    <tr><td><strong>דיסק</strong></td><td>מוחקים את הדיסק הריק, ומחברים את ה-<code>.vdi</code> שחולץ</td></tr>
+    <tr><td><strong>רשת</strong></td><td>מצב Bridged Adapter, על הכרטיס שמחובר לאינטרנט</td></tr>
+    <tr><td><strong>רדיו Zigbee</strong></td><td>לא מחברים. בלי רדיו אי אפשר ליצור רשת בטעות</td></tr>
+  </table>
+
+  <h2>שני בתים באותה רשת</h2>
+  <ul>
+    <li>כתובת <code>homeassistant.local</code> עלולה להוביל לבית שלך. פותחים את התבנית לפי IP: <code>http://&lt;IP&gt;:8123</code>.</li>
+    <li>כתובת ה-IP נמצאת ברשימת המכשירים בראוטר.</li>
+    <li>שם המכונה: משנים ל-<code>onehome-template</code> ב-Settings → System → Network (לפי הפורום, לא אומת בתיעוד).</li>
+  </ul>
+
+  <h2>הגדרה ראשונית של תבנית</h2>
+  <table>
+    <tr><th>שדה</th><th>בתבנית</th><th>אצל הלקוח</th></tr>
+    <tr><td><strong>משתמש ראשון</strong></td><td>שם <code>onehome</code>, סיסמה חזקה במנהל הסיסמאות</td><td>אחרי שחזור מתחברים רק איתו. מחליפים סיסמה ויוצרים משתמש ללקוח</td></tr>
+    <tr><td><strong>מיקום</strong></td><td>נקודה ציבורית בישראל, לא הכתובת שלך</td><td>מזיזים לכתובת של הלקוח. ממנה נגזר <code>zone.home</code></td></tr>
+    <tr><td><strong>שיתוף נתונים</strong></td><td>כבוי (ברירת המחדל)</td><td>הלקוח מחליט</td></tr>
+    <tr><td><strong>מכשירים שהתגלו</strong></td><td>לא מוסיפים אף אחד</td><td>מוסיפים את המכשירים של הלקוח</td></tr>
+  </table>
+
+  <h2>מה נכנס לתבנית, ומה לא</h2>
+  <table>
+    <tr><th>נכנס</th><th>נשאר בחוץ</th></tr>
+    <tr><td>דשבורד בסיסי</td><td>רשת Zigbee, Z-Wave, Thread או Matter</td></tr>
+    <tr><td>אינטגרציות שיש אצל כל לקוח</td><td>מכשירים מזווגים, וכל מכשיר שהתגלה ברשת שלך</td></tr>
+    <tr><td>אינטגרציית Alert והאוטומציות של ה-Watchman</td><td>רישומי Companion App</td></tr>
+    <tr><td>קובצי Blueprints</td><td>סודות אמיתיים ב-<code>secrets.yaml</code></td></tr>
+    <tr><td>אפליקציות קבועות (Apps)</td><td>חשבון Nabu Casa</td></tr>
+    <tr><td>רכיבי HACS מרשימת החריגים בלבד</td><td>סיסמת הצפנת גיבויים ו-bucket ב-R2 של הלקוח</td></tr>
+  </table>
+
+  <h2>גיבוי</h2>
+  <ul>
+    <li>מסלול בתפריט: <strong>Settings → System → Backups → Backup now → Manual backup</strong>.</li>
+    <li>גיבוי מלא כולל את התיקיות <code>config</code>, <code>share</code>, <code>addons</code>, <code>ssl</code> ו-<code>media</code>.</li>
+    <li>שם הקובץ: <code>onehome-template_&lt;תאריך&gt;_ha-&lt;גרסה&gt;</code>. הגרסה מופיעה ב-Settings → About.</li>
+    <li>ערכת חירום (Emergency kit): שומרים במנהל הסיסמאות עם שם הגיבוי. בלעדיה אי אפשר לשחזר גיבוי מוצפן.</li>
+  </ul>
+
+  <h2>שחזור: עובדות שחשובות אצל לקוח</h2>
+  <ul>
+    <li>במסך ההגדרה הראשונית אפשר לבחור <strong>Upload backup</strong> במקום התקנה חדשה.</li>
+    <li>השחזור דורס את המערכת. מתחברים עם המשתמש והסיסמה שהיו בזמן הגיבוי.</li>
+    <li>צריך את מפתח ההצפנה מערכת החירום.</li>
+    <li>למכשיר היעד צריך להיות יותר מקום פנוי מאשר למכשיר המקור.</li>
+    <li>בהתקנה גדולה השחזור יכול לקחת כ-45 דקות. לא מרעננים את הדף.</li>
+    <li>גרסה: לפי הצ'ק-ליסט, גרסת HA בתבנית צריכה להיות זהה לזו של הלקוח או ישנה ממנה. לא מופיע בתיעוד הרשמי, ובודקים בשיעור 12.</li>
+  </ul>
+
+  <div class="lesson-footer">
+    <span>דף עזר · חלק ב' · OneHome Learning Workspace</span>
+    <a href="../lessons/0010-template-house.html">שיעור 10</a>
+    <a href="glossary.html">מילון מונחים</a>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>בית התבנית — שיעור 10</title>
+<link rel="stylesheet" href="../assets/style.css">
+<script src="../assets/quiz.js" defer></script>
+<script src="../assets/sort.js" defer></script>
+</head>
+<body>
+<div class="page">
+  <div class="course-nav">
+    <span>🛠️ חלק ב': מסלול המתקין · שיעור 10</span>
+    <a href="../reference/template-house-cheatsheet.html">דף עזר: בית התבנית ←</a>
+  </div>
+
+  <div class="lesson-kicker">חלק ב' · פתיחה · רענון התקנה + מושג חדש</div>
+  <h1>בית התבנית: HA נקי שממנו משכפלים</h1>
+  <p class="subtitle">
+    עד עכשיו עבדת על הבית שלך. מהיום יש לך בית שני, ריק, שאף אחד לא גר בו:
+    התקנת Home Assistant נקייה במכונה וירטואלית. ממנה ייצא ה-golden backup שתשחזר אצל כל לקוח.
+    בסוף השיעור הבית הזה רץ, עבר הגדרה ראשונית כמו שתבנית צריכה, ויש לו גיבוי ראשון עם שם נכון.
+  </p>
+
+  <div class="box source">
+    <span class="box-label">מקור ראשי</span>
+    <a href="https://www.home-assistant.io/installation/windows" target="_blank">התקנה ב-Windows</a> ·
+    <a href="https://www.home-assistant.io/installation/macos" target="_blank">התקנה ב-macOS</a> ·
+    <a href="https://www.home-assistant.io/getting-started/onboarding/" target="_blank">Onboarding</a> ·
+    <a href="https://www.home-assistant.io/common-tasks/general/" target="_blank">גיבוי ושחזור</a> ·
+    וגם הצ'ק-ליסט שלך: <a href="../../plan-site/claude/golden-backup-checklist.md">golden-backup-checklist.md</a>.
+  </div>
+
+  <h2>חימום: מה זכור?</h2>
+  <div class="quiz">
+    <p class="quiz-q">1. בשיעור 8 פתחת את <code>scripts.yaml</code> ב-File editor. איפה שמורים <code>ask_phone</code>, אוטומציית הדוד והסצנות?</p>
+    <button class="quiz-reveal-btn" onclick="revealQuiz(this)">הצג תשובה</button>
+    <p class="quiz-answer">בקבצי YAML בתיקייה <code>/config</code>: <code>scripts.yaml</code>, <code>automations.yaml</code> ו-<code>scenes.yaml</code>. העורכים ב-UI פשוט כותבים לשם. וגיבוי מלא כולל את <code>config</code> (<a href="https://www.home-assistant.io/common-tasks/general/" target="_blank">מקור</a>), כלומר כל מה שבנית בעורכים נוסע עם הגיבוי.</p>
+  </div>
+  <div class="quiz">
+    <p class="quiz-q">2. מצאת בבית שלך כרטיס דשבורד מ-HACS שנראה מעולה. מתי מותר לו להיכנס לבית של לקוח?</p>
+    <button class="quiz-reveal-btn" onclick="revealQuiz(this)">הצג תשובה</button>
+    <p class="quiz-answer">רק אם הוא ברשימת החריגים הכתובה, ואחרי שנבדק אצלך בבית (<a href="../learning-records/0004-community-code-exception-list.md">LR-0004</a>). מהיום יש לזה גם מקום פיזי: מה שלא ברשימה לא נכנס לבית התבנית, ולכן לא מגיע לאף לקוח.</p>
+  </div>
+  <div class="quiz">
+    <p class="quiz-q">3. בשיעור 4: מה קובע איפה נמצא <code>zone.home</code>?</p>
+    <button class="quiz-reveal-btn" onclick="revealQuiz(this)">הצג תשובה</button>
+    <p class="quiz-answer">כתובת הבית שמוגדרת ב-HA. ה-zone נוצר ממנה ברדיוס ברירת מחדל של 100 מטר (<a href="https://www.home-assistant.io/getting-started/onboarding/" target="_blank">מקור</a>). זה יחזור היום, כשתחליט מה לכתוב בשדה המיקום של התבנית.</p>
+  </div>
+
+  <h2>למה לא פשוט לגבות את הבית שלך?</h2>
+  <p>
+    כי בגיבוי של הבית שלך יש דברים שהם <strong>שלך</strong>: מפתחות ההצפנה של רשת ה-Zigbee, המשתמשים והסיסמאות, הטלפון שלך, והמיקום של הבית.
+    אם תשחזר אותו אצל שלושה לקוחות, לשלושתם יהיו אותם מפתחות (<a href="../../plan-site/claude/golden-backup-checklist.md">הצ'ק-ליסט, "העיקרון"</a>).
+    לכן יש שלוש תחנות, וכל רכיב עובר ביניהן בכיוון אחד בלבד:
+  </p>
+  <div class="flow-steps">
+    <div class="flow-step"><span class="step-word">הבית שלך</span><span class="step-en">Sandbox</span><p>מגרש הניסויים. כאן מנסים ובודקים כל דבר חדש.</p></div>
+    <div class="flow-step"><span class="step-word">בית התבנית</span><span class="step-en">Template</span><p>התקנה נקייה. נכנס אליה רק מה שהוכיח את עצמו, ונבנה מחדש ביד.</p></div>
+    <div class="flow-step"><span class="step-word">הגיבוי</span><span class="step-en">Golden backup</span><p>קובץ אחד עם תאריך וגרסה בשם. משחזרים אותו אצל כל לקוח.</p></div>
+    <div class="flow-step"><span class="step-word">הלקוח</span><span class="step-en">Customer</span><p>שחזור, ואז כל מה שאישי: משתמשים, רשת Zigbee חדשה, מיקום.</p></div>
+  </div>
+
+  <h2>תרגול 1: מה נכנס לתבנית?</h2>
+  <p>לכל פריט, החלט: נכנס לבית התבנית, או נשאר בחוץ? (מבוסס על סעיפים א' ו-ב' בצ'ק-ליסט שלך.)</p>
+  <div class="sort" data-answer="out" data-why="כל לקוח צריך רשת עם מפתחות ו-PAN ID משלו. הרשת נוצרת אצל הלקוח. ואם כבר נוצרה רשת בתבנית, לא משתמשים בגיבוי הזה.">
+    <p class="sort-q">רשת Zigbee שיצרת עם SkyConnect</p>
+    <div class="sort-opts"><button data-v="in">נכנס לתבנית</button><button data-v="out">נשאר בחוץ</button></div>
+    <p class="sort-fb"></p>
+  </div>
+  <div class="sort" data-answer="in" data-why="זה בדיוק התפקיד של התבנית: מה שמופיע אצל כל לקוח. אצל הלקוח רק מחליפים את הכרטיסים במכשירים שלו.">
+    <p class="sort-q">דשבורד "בית" בסיסי, במבנה של שיעור 7</p>
+    <div class="sort-opts"><button data-v="in">נכנס לתבנית</button><button data-v="out">נשאר בחוץ</button></div>
+    <p class="sort-fb"></p>
+  </div>
+  <div class="sort" data-answer="out" data-why="זה מכשיר שקיים רק אצלך. אחרי שחזור אצל לקוח הוא יופיע כמכשיר שלא זמין, ובבית של הלקוח זה זבל.">
+    <p class="sort-q">ממסר Shelly של הבית שלך, ש-HA בתבנית גילה לבד ברשת</p>
+    <div class="sort-opts"><button data-v="in">נכנס לתבנית</button><button data-v="out">נשאר בחוץ</button></div>
+    <p class="sort-fb"></p>
+  </div>
+  <div class="sort" data-answer="in" data-why="ה-Watchman של OneHome מבוסס על Alert מובנה ואוטומציות. זה רשמי, זהה אצל כולם, ולכן נכנס.">
+    <p class="sort-q">אינטגרציית Alert והאוטומציות של ה-Watchman</p>
+    <div class="sort-opts"><button data-v="in">נכנס לתבנית</button><button data-v="out">נשאר בחוץ</button></div>
+    <p class="sort-fb"></p>
+  </div>
+  <div class="sort" data-answer="out" data-why="רישומי Companion App הם של מכשירים אישיים. כל בן משפחה מחבר את הטלפון שלו אצל הלקוח.">
+    <p class="sort-q">הטלפון שלך, מחובר דרך אפליקציית Companion</p>
+    <div class="sort-opts"><button data-v="in">נכנס לתבנית</button><button data-v="out">נשאר בחוץ</button></div>
+    <p class="sort-fb"></p>
+  </div>
+  <div class="sort" data-answer="in" data-why="אותו Blueprint משרת את כל הלקוחות, ורק ה-inputs משתנים. זה הנושא של השיעור הבא.">
+    <p class="sort-q">Blueprint של התראת "הדוד דלוק"</p>
+    <div class="sort-opts"><button data-v="in">נכנס לתבנית</button><button data-v="out">נשאר בחוץ</button></div>
+    <p class="sort-fb"></p>
+  </div>
+  <div class="sort" data-answer="out" data-why="בתבנית יש ב-secrets.yaml רק placeholders. סוד אמיתי שנכנס לגיבוי מגיע לכל לקוח, וכל מי שמחזיק את קובץ הגיבוי יכול לקרוא אותו.">
+    <p class="sort-q">סיסמה אמיתית בתוך <code>secrets.yaml</code></p>
+    <div class="sort-opts"><button data-v="in">נכנס לתבנית</button><button data-v="out">נשאר בחוץ</button></div>
+    <p class="sort-fb"></p>
+  </div>
+  <div class="sort" data-answer="out" data-why="כל עוד הוא לא ברשימת החריגים (LR-0004). התבנית היא השער: מה שלא עבר את הרשימה לא נכנס.">
+    <p class="sort-q">כרטיס דשבורד מ-HACS שעוד לא ברשימת החריגים</p>
+    <div class="sort-opts"><button data-v="in">נכנס לתבנית</button><button data-v="out">נשאר בחוץ</button></div>
+    <p class="sort-fb"></p>
+  </div>
+  <p class="sort-score"></p>
+
+  <h2>תרגול 2: מקימים את הבית במכונה וירטואלית</h2>
+  <p>
+    מכונה וירטואלית (VM) היא מחשב מדומה שרץ בתוך המחשב שלך. במונחי מפתח: כמו קונטיינר, אבל עם מערכת הפעלה שלמה.
+    HA OS נתמך רשמית ב-VirtualBox, ב-VMware Workstation, ב-Hyper-V, ב-KVM וב-Unraid (<a href="https://www.home-assistant.io/installation/windows" target="_blank">מקור</a>).
+    בשיעור הזה נשתמש ב-VirtualBox, כי הוא חינמי ועובד גם ב-Windows וגם ב-Mac.
+    אם יש לך מכשיר פנוי (Mini PC, Raspberry Pi או HA Green נוסף), אפשר להתקין עליו במקום, ושאר השיעור זהה.
+  </p>
+  <table>
+    <tr><th>המחשב שלך</th><th>הקובץ להורדה (גרסה 18.3)</th><th>סוג מערכת ב-VirtualBox</th><th>בקר דיסק</th></tr>
+    <tr><td>מחשב Windows, או Mac עם מעבד Intel</td><td>קובץ <code>haos_ova-18.3.vdi.zip</code></td><td>מערכת Oracle Linux (64-bit)</td><td>בקר SATA</td></tr>
+    <tr><td>מחשב Mac עם מעבד Apple (M1 ומעלה)</td><td>קובץ <code>haos_generic-aarch64-18.3.vdi.zip</code></td><td>מערכת Oracle Linux (ARM 64-bit)</td><td>בקר VirtioSCSI</td></tr>
+  </table>
+  <p>המקור: דפי ההתקנה ל-<a href="https://www.home-assistant.io/installation/windows" target="_blank">Windows</a> ול-<a href="https://www.home-assistant.io/installation/macos" target="_blank">macOS</a>. אם יש בדף גרסה חדשה יותר, קח אותה.</p>
+
+  <div class="box practice">
+    <span class="box-label">משימה מעשית · 20 דקות · רוב הזמן הורדה</span>
+    <ol>
+      <li><strong>הורדה:</strong> התקן את <a href="https://www.virtualbox.org/" target="_blank">VirtualBox</a>, הורד את הקובץ מהטבלה מתוך דף ההתקנה, וחלץ את ה-ZIP.</li>
+      <li><strong>מכונה חדשה:</strong> בשם כתוב <code>onehome-template</code>. את ISO Image השאר ריק. בסוג בחר Linux, ובהפצה את מה שכתוב בטבלה.</li>
+      <li><strong>חומרה:</strong> זיכרון 2048 MB לפחות, ו-2 מעבדים לפחות. <strong>סמן Use EFI</strong>. בלי EFI המכונה לא תעלה, כי "Home Assistant requires UEFI to boot".</li>
+      <li><strong>דיסק:</strong> ב-Storage, מחק את הדיסק הריק שנוצר מתחת לבקר, וחבר במקומו את קובץ ה-<code>.vdi</code> שחילצת.</li>
+      <li><strong>רשת:</strong> ב-Network, בשדה Attached to בחר <strong>Bridged Adapter</strong>, ובחר את כרטיס הרשת שמחובר לאינטרנט (Wi-Fi או כבל). כך ה-VM מקבל כתובת IP משלו מהראוטר, כמו מכשיר אמיתי בבית.</li>
+      <li><strong>הפעלה:</strong> הפעל את המכונה וחכה שהאתחול יסתיים.</li>
+    </ol>
+  </div>
+
+  <div class="box win">
+    <span class="box-label">מלכודת: שני בתים באותה רשת</span>
+    בדף ההתקנה כתוב לפתוח <code>homeassistant.local</code>. אבל זה <strong>גם השם של הבית שלך</strong>.
+    עם שני HA ברשת, הכתובת הזו עלולה להוביל לבית הלא נכון. אם תראה מסך התחברות ולא מסך "Create my smart home", אתה בבית שלך.
+    <strong>לכן:</strong> מצא את כתובת ה-IP של ה-VM ברשימת המכשירים בראוטר (<a href="https://www.home-assistant.io/common-tasks/os/" target="_blank">מקור</a>), ופתח <code>http://&lt;IP&gt;:8123</code>.
+  </div>
+
+  <h2>תרגול 3: הגדרה ראשונית כמו שתבנית צריכה</h2>
+  <p>
+    בהגדרה הראשונית (Onboarding), HA מוריד קודם את הגרסה העדכנית, כ-700 MB, ולכן זה לוקח זמן (<a href="https://www.home-assistant.io/getting-started/onboarding/" target="_blank">מקור</a>).
+    אחר כך הוא שואל כמה שאלות. בבית שלך ענית עליהן בלי לחשוב. בתבנית, כל תשובה מגיעה לכל הלקוחות:
+  </p>
+  <table>
+    <tr><th>שדה</th><th>מה כותבים בתבנית</th><th>למה</th></tr>
+    <tr>
+      <td><strong>המשתמש הראשון</strong></td>
+      <td>שם משתמש <code>onehome</code>, וסיסמה חזקה שתשמור במנהל הסיסמאות.</td>
+      <td>זה משתמש מנהל, ואין דרך לשחזר את הסיסמה שלו. ובשחזור, מתחברים עם המשתמש והסיסמה שהיו בזמן הגיבוי (<a href="https://www.home-assistant.io/common-tasks/general/" target="_blank">מקור</a>). כלומר הסיסמה הזו תגיע לכל לקוח, ולכן מחליפים אותה אצלו מיד (צ'ק-ליסט, ג'.2).</td>
+    </tr>
+    <tr>
+      <td><strong>מיקום הבית</strong></td>
+      <td>נקודה ציבורית בישראל, <strong>לא</strong> הכתובת שלך.</td>
+      <td>מהמיקום נקבעים אזור הזמן, יחידות המידה והמטבע, ונוצר <code>zone.home</code>. אצל הלקוח מזיזים אותו לכתובת שלו. אחרת תנאי הנוכחות משיעור 4 לא יעבדו.</td>
+    </tr>
+    <tr>
+      <td><strong>שיתוף נתונים</strong> (Analytics)</td>
+      <td>להשאיר כבוי.</td>
+      <td>זו ברירת המחדל. ההחלטה אם לשתף שייכת ללקוח, לא לתבנית.</td>
+    </tr>
+    <tr>
+      <td><strong>מכשירים שהתגלו</strong></td>
+      <td>לא להוסיף אף אחד.</td>
+      <td>ה-VM יושב ברשת של הבית שלך, ולכן הוא יגלה את המכשירים שלך. ראית בתרגול 1 למה הם לא נכנסים.</td>
+    </tr>
+  </table>
+  <p>
+    <strong>שם המכונה ברשת.</strong> כדי ששני הבתים לא יתנגשו, שנה את שם המכונה (hostname) ל-<code>onehome-template</code>.
+    לפי <a href="https://community.home-assistant.io/t/change-ha-server-name/551486" target="_blank">הפורום</a>, השדה נמצא ב-<strong>Settings → System → Network</strong>, ונדרשת הפעלה מחדש של המערכת.
+    זה לא מהתיעוד הרשמי, אז ספר לי אם השדה במקום אחר.
+  </p>
+
+  <h2>תרגול 4: הגיבוי הראשון, עם שם נכון</h2>
+  <p>
+    זה עוד לא ה-golden backup, כי התבנית עדיין ריקה. זו נקודת אפס נקייה, ותרגול של התהליך שתחזור עליו בכל גרסה של התבנית.
+  </p>
+  <div class="box practice">
+    <span class="box-label">משימה מעשית · 5 דקות</span>
+    <ol>
+      <li><strong>גרסה:</strong> בדוק ב-<strong>Settings → About</strong> מה גרסת HA בתבנית.</li>
+      <li><strong>גיבוי:</strong> עבור ל-<strong>Settings → System → Backups</strong>, לחץ <strong>Backup now</strong> ואז <strong>Manual backup</strong>, והשאר את הנתונים שמסומנים (<a href="https://www.home-assistant.io/common-tasks/general/" target="_blank">מקור</a>).</li>
+      <li><strong>שם:</strong> לפי הצ'ק-ליסט (סעיף ד'), תאריך וגרסה בשם. למשל: <code>onehome-template_2026-10-11_ha-2026.10.1</code>.</li>
+      <li><strong>ערכת חירום:</strong> הורד את ה-Emergency kit ושמור אותו במנהל הסיסמאות, עם שם הגיבוי. בלעדיו אי אפשר לשחזר גיבוי מוצפן.</li>
+      <li><strong>תצפית:</strong> כמה שוקל הגיבוי? רשום את המספר. בשיעור 12 נשווה אותו לגיבוי של תבנית מלאה.</li>
+    </ol>
+  </div>
+
+  <h2>בדיקת זיכרון: תרחישים מהשטח</h2>
+  <div class="quiz">
+    <p class="quiz-q">1. שחזרת את ה-golden backup אצל לקוח. בעלת הבית מנסה להתחבר עם המשתמש שפתחה לעצמה בהגדרה הראשונית של ה-HA Green שלה, וזה לא עובד. למה?</p>
+    <button class="quiz-reveal-btn" onclick="revealQuiz(this)">הצג תשובה</button>
+    <p class="quiz-answer">השחזור דורס את המערכת, ומתחברים עם המשתמש והסיסמה שהיו בזמן הגיבוי (<a href="https://www.home-assistant.io/common-tasks/general/" target="_blank">מקור</a>). כלומר רק <code>onehome</code> עובד. לכן הסדר בצ'ק-ליסט הוא קודם שחזור, ורק אחר כך יצירת משתמש ללקוח (ג'.1 ו-ג'.2).</p>
+  </div>
+  <div class="quiz">
+    <p class="quiz-q">2. ב-Hyper-V אין תמיכה ב-USB (<a href="https://www.home-assistant.io/installation/windows" target="_blank">מקור</a>), כך שאי אפשר לחבר SkyConnect ל-VM. למה זה דווקא טוב לבית התבנית?</p>
+    <button class="quiz-reveal-btn" onclick="revealQuiz(this)">הצג תשובה</button>
+    <p class="quiz-answer">כי בלי רדיו אי אפשר ליצור רשת Zigbee בטעות. הכלל "אין רשת בתבנית" נאכף לבד, ולא תלוי בזה שתזכור. אותו דבר ב-VirtualBox: פשוט לא מחברים את הרדיו ל-VM.</p>
+  </div>
+  <div class="quiz">
+    <p class="quiz-q">3. בהגדרה הראשונית של התבנית כתבת את הכתובת שלך, כי היה יותר מהר. מה יישבר אצל לקוח בחיפה, אם תשכח לשנות?</p>
+    <button class="quiz-reveal-btn" onclick="revealQuiz(this)">הצג תשובה</button>
+    <p class="quiz-answer">ה-<code>zone.home</code> שלו יהיה בבית שלך. כל תנאי נוכחות (למשל "הדוד דלוק ואין אף אחד בבית" משיעור 4) יחשוב שהמשפחה אף פעם לא בבית. וגם הכתובת שלך נמצאת עכשיו בבית של לקוח. זה צעד שחייב להיות ברשימה אחרי השחזור.</p>
+  </div>
+  <div class="quiz">
+    <p class="quiz-q">4. פתחת <code>homeassistant.local</code> אחרי שה-VM עלה, וקיבלת מסך התחברות עם התמונה שלך. מה קרה?</p>
+    <button class="quiz-reveal-btn" onclick="revealQuiz(this)">הצג תשובה</button>
+    <p class="quiz-answer">הגעת לבית שלך, לא לתבנית. לשניהם אותו שם ברשת. פותחים את התבנית לפי כתובת ה-IP, ומשנים לה את שם המכונה.</p>
+  </div>
+
+  <div class="box win">
+    <span class="box-label">הניצחון של היום</span>
+    יש לך בית שני, נקי, שרץ לצד הבית שלך בלי להתנגש בו. הוא עבר הגדרה ראשונית בלי שום דבר אישי,
+    ויש לו גיבוי ראשון עם שם שמספר מתי הוא נוצר ובאיזו גרסה. מכאן כל מה שתבנה בו מגיע לכל לקוח.
+  </div>
+
+  <h2>מה הלאה בחלק ב'</h2>
+  <p>
+    שיעור 11: Blueprints בתוך התבנית, החל מהתראת הדוד.
+    שיעור 12: הופכים את התבנית ל-golden backup, ובודקים שחזור אמיתי על VM שני.
+    בדרך נענה על השאלות הפתוחות בצ'ק-ליסט, למשל גיבוי מלא מול שחזור חלקי.
+  </p>
+
+  <div class="box ask-teacher">
+    <span class="box-label">נתקעת? שאל</span>
+    אם ה-VM לא עולה, או שאתה לא מוצא את כתובת ה-IP, תכתוב לי מה רואים במסך של המכונה.
+    ותספר לי: (1) על איזה מחשב התקנת, ואיזה קובץ הורדת? (2) אילו מכשירים HA גילה בהגדרה הראשונית? (3) איפה מצאת את שדה שם המכונה? (4) מה גרסת HA, וכמה שוקל הגיבוי הראשון?
+  </div>
+
+  <div class="lesson-footer">
+    <span>שיעור 10 · חלק ב' · OneHome Learning Workspace</span>
+    <a href="0009-assist-in-hebrew.html">← שיעור 9</a>
+    <a href="../reference/template-house-cheatsheet.html">דף עזר: בית התבנית</a>
+    <a href="../reference/glossary.html">מילון מונחים</a>
+    <a href="../reference/apps-hacs-cheatsheet.html">דף עזר: Apps ו-HACS</a>
+  </div>
+</div>
+</body>
+</html>
