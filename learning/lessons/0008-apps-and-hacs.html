@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Apps ו-HACS — שיעור 8</title>
+<link rel="stylesheet" href="../assets/style.css">
+<script src="../assets/quiz.js" defer></script>
+<script src="../assets/sort.js" defer></script>
+</head>
+<body>
+<div class="page">
+  <div class="course-nav">
+    <span>🏠 מסלול הלקוח · שיעור 8</span>
+    <a href="../reference/glossary.html">מילון מונחים ←</a>
+  </div>
+
+  <div class="lesson-kicker">מסלול הלקוח · מושג חדש + הצצה מתחת למכסה המנוע</div>
+  <h1>מה רץ ליד HA ומה רץ בתוכו: Apps ו-HACS</h1>
+  <p class="subtitle">
+    עד עכשיו עבדת רק בתוך HA: אינטגרציות, אוטומציות, דשבורד. היום תתקין לראשונה תוכנה <strong>לצד</strong> HA,
+    ותראה שכל מה שבנית ב-UI הוא בסוף קבצי YAML על הדיסק.
+    אחר כך נפגוש את HACS, ונחליט מה מותר להכניס לבית של לקוח.
+  </p>
+
+  <div class="box source">
+    <span class="box-label">מקור ראשי</span>
+    <a href="https://www.home-assistant.io/apps/" target="_blank">Apps — home-assistant.io</a> ·
+    <a href="https://www.home-assistant.io/common-tasks/os/#configuring-access-to-files" target="_blank">גישה לקבצים ב-HA OS</a> ·
+    <a href="https://www.hacs.xyz/docs/use/" target="_blank">תיעוד HACS</a> ·
+    <a href="https://www.home-assistant.io/docs/glossary/" target="_blank">Glossary: App, Custom integration</a>.
+  </div>
+
+  <div class="box win">
+    <span class="box-label">שינוי שם שחשוב להכיר</span>
+    מה שנקרא פעם <strong>Add-ons</strong> נקרא היום <strong>Apps</strong>, והתפריט הוא <strong>Settings → Apps</strong>
+    (<a href="https://www.home-assistant.io/apps/" target="_blank">מקור</a>).
+    בפורומים, בסרטונים ובמסמכים שלנו ב-<code>plan-site</code> עוד תפגוש "Add-on". זה אותו דבר.
+  </div>
+
+  <h2>חימום: מה זכור?</h2>
+  <div class="quiz">
+    <p class="quiz-q">1. לקוח לוחץ על גוף כרטיס ה-Tile של הדוד, ונפתח לו חלון במקום שהדוד יידלק. למה?</p>
+    <button class="quiz-reveal-btn" onclick="revealQuiz(this)">הצג תשובה</button>
+    <p class="quiz-answer">ברירת המחדל של גוף הכרטיס היא <code>more-info</code>. רק האייקון עושה <code>toggle</code>.</p>
+  </div>
+  <div class="quiz">
+    <p class="quiz-q">2. ראית שלמשתמש <code>test_family</code> אין Settings בתפריט הצד. מה מגן כאן על הבית: ה-Visibility או משהו אחר?</p>
+    <button class="quiz-reveal-btn" onclick="revealQuiz(this)">הצג תשובה</button>
+    <p class="quiz-answer">משהו אחר: הרשאת המשתמש. ל-<code>test_family</code> אין Administrator. Visibility רק מסתיר כרטיסים ומקטעים מהעין.</p>
+  </div>
+  <div class="quiz">
+    <p class="quiz-q">3. בנית את <code>script.ask_phone</code> בעורך של HA. איפה הוא שמור לדעתך? (נחש, ובהמשך השיעור תבדוק)</p>
+    <button class="quiz-reveal-btn" onclick="revealQuiz(this)">הצג תשובה</button>
+    <p class="quiz-answer">בקובץ <code>scripts.yaml</code>. סקריפטים מהעורך נשמרים שם, וסצנות נשמרות ב-<code>scenes.yaml</code> (<a href="https://www.home-assistant.io/integrations/script/" target="_blank">מקור</a>, <a href="https://www.home-assistant.io/integrations/scene/" target="_blank">מקור</a>). היום תפתח את הקובץ ותראה.</p>
+  </div>
+
+  <h2>שלושה סוגי תוספות, שלוש רמות אמון</h2>
+  <table>
+    <tr><th>סוג</th><th>איפה רץ</th><th>מי בודק אותו</th><th>במונחי מפתח</th></tr>
+    <tr>
+      <td><strong>אינטגרציה רשמית</strong></td>
+      <td>בתוך HA</td>
+      <td>צוות HA</td>
+      <td>ספרייה מתוך הספרייה הסטנדרטית</td>
+    </tr>
+    <tr>
+      <td><strong>אינטגרציה מותאמת</strong> (Custom integration)</td>
+      <td>בתוך HA</td>
+      <td>אף אחד. "על אחריותך", ועלולה לפגוע ביציבות (<a href="https://www.home-assistant.io/docs/glossary/" target="_blank">מקור</a>)</td>
+      <td>חבילת npm של זר, באותו תהליך</td>
+    </tr>
+    <tr>
+      <td><strong>אפליקציה</strong> (App, לשעבר Add-on)</td>
+      <td>לצד HA, כתוכנה נפרדת</td>
+      <td>תלוי במאגר: רשמי, קהילתי, או צד שלישי בלי שום ערובה (<a href="https://www.home-assistant.io/common-tasks/os/#installing-a-third-party-app-repository" target="_blank">מקור</a>)</td>
+      <td>קונטיינר sidecar, שה-Supervisor מנהל</td>
+    </tr>
+  </table>
+  <p>
+    לפי ההגדרה הרשמית, App היא "חבילת תוכנה עצמאית" שמותקנת על HA OS: למשל MQTT broker, מסד נתונים או שרת קבצים.
+    את רובן מחברים ל-HA דרך אינטגרציה (<a href="https://www.home-assistant.io/docs/glossary/" target="_blank">מקור</a>).
+    כלומר הרבה פעמים יש <strong>זוג</strong>: האפליקציה היא השרת, והאינטגרציה היא הלקוח שמחבר אותו ל-HA.
+  </p>
+  <p>
+    מגבלה חשובה: Apps קיימות רק בהתקנה מסוג <strong>Home Assistant OS</strong>. בשיטות התקנה אחרות מתקינים את אותן תוכנות ידנית
+    (<a href="https://www.home-assistant.io/apps/" target="_blank">מקור</a>).
+  </p>
+
+  <h2>תרגול 1: איזה סוג?</h2>
+  <div class="sort" data-answer="app" data-why="תוכנה נפרדת (broker) שרצה לצד HA. כדי ש-HA ידבר איתה צריך בנוסף את אינטגרציית MQTT.">
+    <p class="sort-q">Mosquitto: שרת MQTT שמכשירים מתחברים אליו</p>
+    <div class="sort-opts"><button data-v="official">אינטגרציה רשמית</button><button data-v="custom">אינטגרציה מותאמת</button><button data-v="app">אפליקציה (App)</button></div>
+    <p class="sort-fb"></p>
+  </div>
+  <div class="sort" data-answer="official" data-why="קוד שרץ בתוך HA, נבדק על ידי צוות HA, ומגיע איתו מהקופסה.">
+    <p class="sort-q">Shelly: מחבר את ממסר הדוד ל-HA</p>
+    <div class="sort-opts"><button data-v="official">אינטגרציה רשמית</button><button data-v="custom">אינטגרציה מותאמת</button><button data-v="app">אפליקציה (App)</button></div>
+    <p class="sort-fb"></p>
+  </div>
+  <div class="sort" data-answer="app" data-why="עורך קבצים בדפדפן. תוכנה נפרדת שרצה לצד HA ונכנסת לתיקיית /config.">
+    <p class="sort-q">File editor: עורך קבצים בדפדפן</p>
+    <div class="sort-opts"><button data-v="official">אינטגרציה רשמית</button><button data-v="custom">אינטגרציה מותאמת</button><button data-v="app">אפליקציה (App)</button></div>
+    <p class="sort-fb"></p>
+  </div>
+  <div class="sort" data-answer="custom" data-why="זו המלכודת: מורידים אותו בעזרת אפליקציה בשם Get HACS, אבל HACS עצמו הוא אינטגרציה מותאמת ולא App (מקור: דרישות HACS).">
+    <p class="sort-q">HACS עצמו</p>
+    <div class="sort-opts"><button data-v="official">אינטגרציה רשמית</button><button data-v="custom">אינטגרציה מותאמת</button><button data-v="app">אפליקציה (App)</button></div>
+    <p class="sort-fb"></p>
+  </div>
+  <p class="sort-score"></p>
+
+  <h2>האפליקציה הראשונה: לראות את ה-YAML</h2>
+  <p>
+    כל מה שבנית ב-UI נשמר בקבצים בתיקייה <code>/config</code>. אפליקציה לעריכת קבצים נותנת לך לראות אותם.
+    יש שתי אפשרויות רשמיות: <strong>File editor</strong>, קל ופשוט, שבודק תחביר YAML תוך כדי עריכה,
+    ו-<strong>Studio Code Server</strong>, שהוא VS Code מלא בדפדפן עם טרמינל
+    (<a href="https://www.home-assistant.io/common-tasks/os/#installing-and-using-the-visual-studio-code-vsc-app" target="_blank">מקור</a>).
+    בשביל השיעור מספיק File editor. אם תרצה לעבוד בנוח כמפתח, Studio Code Server מתאים למעבד ARM64 כמו של HA Green.
+  </p>
+  <div class="box practice">
+    <span class="box-label">משימה מעשית · 10 דקות</span>
+    <ol>
+      <li>עבור ל-<strong>Settings → Apps → Install app</strong>, חפש <strong>File editor</strong> ולחץ <strong>Install</strong>.</li>
+      <li>בלשונית <strong>Info</strong> לחץ <strong>Start</strong> ← <strong>Open Web UI</strong>. אם יש שם האפשרות <strong>Show in sidebar</strong>, כדאי להפעיל אותה.</li>
+      <li>פתח את <code>scripts.yaml</code> ומצא את <code>ask_phone</code>. זה ה-YAML שהדבקת בשיעור 6.</li>
+      <li>פתח את <code>automations.yaml</code> ואת <code>scenes.yaml</code>. מצא את אוטומציית הדוד ואת "Leaving home".</li>
+      <li>אל תשנה כלום. היום רק קוראים. השאר את האפשרות <strong>Enforce basepath</strong> דלוקה: היא מגינה מפני שינוי בטעות של קבצים מחוץ ל-<code>/config</code> (<a href="https://www.home-assistant.io/common-tasks/os/#installing-and-using-the-file-editor-app" target="_blank">מקור</a>).</li>
+    </ol>
+  </div>
+
+  <div class="box win">
+    <span class="box-label">התובנה שחשוב לזכור</span>
+    ה-UI הוא עורך של קבצי טקסט. סצנה, סקריפט ואוטומציה הם בסוף שורות בקובץ, שאפשר להעתיק, להשוות ולשמור ב-git.
+    זה הבסיס של חלק ב': ה-<a href="../../plan-site/claude/golden-backup-checklist.md">golden backup</a> כבר מתכנן לנהל YAML ו-Blueprints ב-git.
+  </div>
+
+  <h2>HACS: חנות הקהילה</h2>
+  <p>
+    HACS (Home Assistant Community Store) הוא אינטגרציה מותאמת שנותנת ממשק לגלות, להוריד ולעדכן רכיבים מהקהילה: אינטגרציות, כרטיסי דשבורד וערכות עיצוב
+    (<a href="https://www.hacs.xyz/" target="_blank">מקור</a>).
+    במונחי מפתח: מנהל חבילות שמושך קוד ישירות מ-GitHub, בלי ביקורת של צוות HA.
+  </p>
+  <p>הדרישות מהתיעוד של HACS, בקיצור (<a href="https://www.hacs.xyz/docs/use/download/prerequisites/" target="_blank">מקור</a>):</p>
+  <ul>
+    <li>גרסת HA 2024.4.1 ומעלה, בהתקנה נתמכת.</li>
+    <li>גישה לקבצים ולקובץ הלוג. את זה כבר יש לך מהמשימה הקודמת.</li>
+    <li>חיבור אינטרנט יציב, בלי חסימה של GitHub או Cloudflare.</li>
+    <li>חשבון GitHub. ההתחברות נעשית עם קוד חד-פעמי (device code) (<a href="https://www.hacs.xyz/docs/use/configuration/basic/" target="_blank">מקור</a>).</li>
+  </ul>
+  <p>
+    התיעוד של HACS גם אומר במפורש: אם אתה לא יודע איזה סוג התקנה יש לך, אל תשתמש ב-HACS ולא באף אינטגרציה מותאמת
+    (<a href="https://www.hacs.xyz/docs/use/download/download/" target="_blank">מקור</a>).
+  </p>
+
+  <div class="box practice">
+    <span class="box-label">משימה מעשית · 15 דקות · רק בבית שלך</span>
+    <ol>
+      <li>הוסף מאגר אפליקציות: <strong>Settings → Apps → Install app</strong> ← שלוש נקודות ← <strong>Repositories</strong>, והדבק <code>https://github.com/hacs/addons</code> (<a href="https://www.hacs.xyz/docs/use/download/download/" target="_blank">מקור</a>).</li>
+      <li>באותה חנות בחר <strong>Get HACS</strong> ← <strong>Install</strong> ← <strong>Start</strong>, ופתח את לשונית הלוג. בצע את ההוראות שמופיעות שם.</li>
+      <li>אתחל את HA (restart).</li>
+      <li>נקה את המטמון של הדפדפן (או רענון קשיח). בלי זה HACS לא יופיע ברשימה (<a href="https://www.hacs.xyz/docs/use/configuration/basic/" target="_blank">מקור</a>).</li>
+      <li>עבור ל-<strong>Settings → Devices &amp; services → Add integration</strong>, חפש <strong>HACS</strong>, ואשר את ההצהרות.</li>
+      <li>העתק את הקוד, היכנס ל-<code>github.com/login/device</code>, הדבק אותו ואשר.</li>
+      <li>פתח את HACS מתפריט הצד ותסתובב. <strong>אל תוריד כלום עדיין.</strong></li>
+    </ol>
+  </div>
+
+  <h2>ההחלטה העסקית: מה נכנס לבית של לקוח?</h2>
+  <p>ב-<code>plan-site</code> יש היום שני כיוונים שמושכים לצדדים שונים:</p>
+  <table>
+    <tr><th>מסמך</th><th>מה כתוב שם</th></tr>
+    <tr><td><a href="../../plan-site/ohf.html">Open Home Foundation</a></td><td>"כמעט כל התקנה מקצועית של HA משתמשת בזה". שווה לבדוק אם HACS צריך להיות חלק קבוע מצ'ק-ליסט ההתקנה.</td></tr>
+    <tr><td><a href="../../plan-site/prd4.html">PRD 4</a></td><td>Watchman ייבנה על Alert המובנה ולא על HACS, כדי "לצמצם תלות בקוד חיצוני שגיא לא כתב ולא שולט בו".</td></tr>
+  </table>
+  <p>
+    ההמלצה שלי, כנקודת פתיחה לדיון: <strong>אצל לקוחות, ברירת המחדל היא רק אינטגרציות רשמיות ואפליקציות מהמאגר הרשמי.</strong>
+    כל רכיב מ-HACS נכנס רק אם הוא ברשימת חריגים כתובה, שיש בה למה הוא נחוץ, מי מתחזק אותו ומה התוכנית אם הוא מפסיק להתעדכן.
+    הסיבה: כל רכיב כזה הוא קוד שאף אחד לא בדק, שרץ בתוך HA של הלקוח. כשהוא נשבר בעדכון, אתה זה שמקבל את הטלפון, במסגרת הריטיינר.
+    הבית שלך הוא בדיוק המקום לנסות רכיבים לפני שהם נכנסים לרשימה.
+  </p>
+
+  <h2>בדיקת זיכרון: תרחישים מהשטח</h2>
+  <div class="quiz">
+    <p class="quiz-q">1. התקנת אצל לקוח את Mosquitto מ-Settings → Apps, והפעלת אותו. אבל אף מכשיר MQTT לא מופיע ב-HA. מה חסר?</p>
+    <button class="quiz-reveal-btn" onclick="revealQuiz(this)">הצג תשובה</button>
+    <p class="quiz-answer">האינטגרציה. האפליקציה היא השרת שרץ לצד HA. כדי ש-HA עצמו יראה את המכשירים צריך גם את אינטגרציית MQTT, שמתחברת לשרת. זה הזוג: App + אינטגרציה.</p>
+  </div>
+  <div class="quiz">
+    <p class="quiz-q">2. לקוח טכני מתעקש להריץ HA ב-Docker על השרת שלו. מה הוא מפסיד מבחינת Apps?</p>
+    <button class="quiz-reveal-btn" onclick="revealQuiz(this)">הצג תשובה</button>
+    <p class="quiz-answer">את כל חנות האפליקציות. Apps קיימות רק ב-HA OS, ובהתקנות אחרות צריך להריץ את אותן תוכנות ידנית. זו עוד סיבה לתקנן את כל הלקוחות על HA Green עם HA OS: אותו SOP לכולם.</p>
+  </div>
+  <div class="quiz">
+    <p class="quiz-q">3. טכנאי שכיר אומר: "התקנתי את HACS דרך Settings → Apps, אז הוא App ואפשר לסמוך עליו". מה לא נכון?</p>
+    <button class="quiz-reveal-btn" onclick="revealQuiz(this)">הצג תשובה</button>
+    <p class="quiz-answer">שני דברים. Get HACS היא רק אפליקציה שמורידה את HACS, ו-HACS עצמו הוא אינטגרציה מותאמת. ומה שמגיע דרכו הוא קוד שצוות HA לא בדק. הדרך להתקנה לא אומרת כלום על רמת האמון.</p>
+  </div>
+  <div class="quiz">
+    <p class="quiz-q">4. אחרי עדכון HA, הבית של לקוח מתחיל להיות איטי ולא יציב. מותקנות אצלו שתי אינטגרציות מ-HACS. מה בודקים ראשון?</p>
+    <button class="quiz-reveal-btn" onclick="revealQuiz(this)">הצג תשובה</button>
+    <p class="quiz-answer">את האינטגרציות המותאמות. לפי ההגדרה הרשמית הן לא נבדקות על ידי צוות HA ועלולות לפגוע ביציבות. בודקים בלוג, ומנטרלים אותן אחת אחת. זה בדיוק התסריט שרשימת החריגים נועדה לצמצם.</p>
+  </div>
+
+  <div class="box win">
+    <span class="box-label">הניצחון של היום</span>
+    התקנת אפליקציה ראשונה, ראית שכל מה שבנית הוא YAML על הדיסק, ו-HACS מותקן אצלך כמגרש ניסויים.
+    ויש לך שאלה עסקית אמיתית להחליט עליה: מה המדיניות של OneHome לגבי קוד מהקהילה אצל לקוחות.
+  </div>
+
+  <div class="box ask-teacher">
+    <span class="box-label">נתקעת? שאל</span>
+    אם HACS לא מופיע אחרי ה-restart, תדביק לי מה כתוב בלוג של Get HACS.
+    ותספר לי: מה הפתיע אותך ב-<code>scripts.yaml</code> או ב-<code>automations.yaml</code>? ומה דעתך על רשימת החריגים: מסכים, או ש-HACS צריך להיות חלק קבוע מכל התקנה?
+  </div>
+
+  <div class="lesson-footer">
+    <span>שיעור 8 · מסלול הלקוח · OneHome Learning Workspace</span>
+    <a href="0007-customer-dashboard.html">← שיעור 7</a>
+    <a href="../reference/glossary.html">מילון מונחים</a>
+    <a href="../reference/dashboard-cheatsheet.html">דף עזר: דשבורדים</a>
+  </div>
+</div>
+</body>
+</html>
