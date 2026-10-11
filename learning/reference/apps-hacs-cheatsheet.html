@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>דף עזר: Apps ו-HACS</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="page">
+  <div class="course-nav">
+    <span>📖 מסמך רפרנס · מתעדכן עם כל שיעור</span>
+    <a href="../lessons/0008-apps-and-hacs.html">← שיעור 8</a>
+  </div>
+
+  <div class="lesson-kicker">רפרנס מהיר</div>
+  <h1>דף עזר: Apps ו-HACS</h1>
+  <p class="subtitle">
+    מה רץ בתוך HA ומה לצידו, איפה הקבצים, ואיך מתקינים. מקור:
+    <a href="https://www.home-assistant.io/apps/" target="_blank">Apps</a>,
+    <a href="https://www.home-assistant.io/common-tasks/os/" target="_blank">Common tasks: HA OS</a> ו-<a href="https://www.hacs.xyz/docs/use/" target="_blank">תיעוד HACS</a>.
+  </p>
+
+  <div class="box win">
+    <span class="box-label">שינוי שם</span>
+    מה שנקרא פעם <strong>Add-on</strong> נקרא היום <strong>App</strong>. התפריט: <strong>Settings → Apps</strong>. קיים רק ב-<strong>HA OS</strong>.
+  </div>
+
+  <h2>שלוש רמות אמון</h2>
+  <table>
+    <tr><th>סוג</th><th>איפה רץ</th><th>מי בודק</th><th>אצל לקוח</th></tr>
+    <tr><td><strong>אינטגרציה רשמית</strong></td><td>בתוך HA</td><td>צוות HA</td><td>כן</td></tr>
+    <tr><td><strong>App</strong> ממאגר רשמי</td><td>לצד HA</td><td>צוות HA</td><td>כן</td></tr>
+    <tr><td><strong>App</strong> ממאגר צד שלישי</td><td>לצד HA</td><td>אף אחד: "בלי ערובה לאיכות או לאבטחה"</td><td>רק בחריג</td></tr>
+    <tr><td><strong>אינטגרציה מותאמת</strong> (כולל כל מה שמגיע מ-HACS)</td><td>בתוך HA</td><td>אף אחד: "עלולה לפגוע ביציבות"</td><td>רק בחריג</td></tr>
+  </table>
+  <p><strong>זוג נפוץ:</strong> App היא השרת, ואינטגרציה היא הלקוח. למשל Mosquitto (App) ואינטגרציית MQTT. בלי האינטגרציה, HA לא רואה את המכשירים.</p>
+
+  <h2>איפה הקבצים</h2>
+  <table>
+    <tr><th>מה בנית ב-UI</th><th>נשמר ב-</th></tr>
+    <tr><td>אוטומציות</td><td><code>/config/automations.yaml</code></td></tr>
+    <tr><td>סקריפטים</td><td><code>/config/scripts.yaml</code></td></tr>
+    <tr><td>סצנות</td><td><code>/config/scenes.yaml</code></td></tr>
+  </table>
+  <p>העורך ב-UI יכול לשנות רק את מה שבקבצים האלה. מה שכתוב ישירות ב-<code>configuration.yaml</code> מוצג בעורך, אבל אי אפשר לערוך אותו שם.</p>
+
+  <h2>עורכי קבצים</h2>
+  <table>
+    <tr><th>App</th><th>מתי</th><th>שים לב</th></tr>
+    <tr><td><strong>File editor</strong></td><td>קריאה ותיקון מהיר. בודק תחביר YAML תוך כדי</td><td>להשאיר את <strong>Enforce basepath</strong> דלוק</td></tr>
+    <tr><td><strong>Studio Code Server</strong></td><td>VS Code מלא בדפדפן, עם טרמינל ו-CLI של HA</td><td>רק AMD64 / ARM64</td></tr>
+    <tr><td><strong>Samba share</strong></td><td>עריכה מהמחשב שלך דרך הרשת</td><td>שם משתמש וסיסמה נפרדים מ-HA</td></tr>
+  </table>
+
+  <h2>הוספת מאגר Apps של צד שלישי</h2>
+  <ol>
+    <li>עבור ל-<strong>Settings → Apps → Install app</strong> ← שלוש נקודות ← <strong>Repositories</strong>.</li>
+    <li>הדבק את כתובת ה-git (ב-GitHub: <strong>Code</strong> ← HTTPS) ולחץ <strong>Add</strong>.</li>
+    <li>אם המאגר לא מופיע, רענן את הדפדפן. אם עדיין לא, בדוק ב-<strong>Settings → System → Logs</strong>.</li>
+  </ol>
+
+  <h2>התקנת HACS ב-HA OS</h2>
+  <div class="flow-steps">
+    <div class="flow-step"><span class="step-word">מאגר</span><span class="step-en">hacs/addons</span><p>להוסיף את <code>https://github.com/hacs/addons</code></p></div>
+    <div class="flow-step"><span class="step-word">אפליקציה</span><span class="step-en">Get HACS</span><p>להתקין, להפעיל, ולבצע את מה שכתוב בלוג</p></div>
+    <div class="flow-step"><span class="step-word">אתחול</span><span class="step-en">restart</span><p>לאתחל את HA ולנקות מטמון בדפדפן</p></div>
+    <div class="flow-step"><span class="step-word">אינטגרציה</span><span class="step-en">Add integration</span><p>HACS, עם device code ב-<code>github.com/login/device</code></p></div>
+  </div>
+  <p><strong>דרישות:</strong> HA 2024.4.1 ומעלה, התקנה נתמכת, גישה לקבצים וללוג, אינטרנט בלי חסימה של GitHub ו-Cloudflare, וחשבון GitHub. <strong>HACS הוא אינטגרציה מותאמת ולא App.</strong></p>
+
+  <h2>רכיב HACS אצל לקוח: שאלות לפני שמכניסים</h2>
+  <p class="subtitle">טיוטה. המדיניות של OneHome עוד לא הוחלטה (ראו שיעור 8).</p>
+  <ol>
+    <li>למה הוא נחוץ? האם אינטגרציה רשמית או Alert ואוטומציות פותרים את אותו צורך?</li>
+    <li>מי מתחזק אותו, ומתי היה העדכון האחרון?</li>
+    <li>מה קורה ללקוח אם הרכיב נשבר בעדכון של HA, ומה תוכנית החלופה?</li>
+    <li>האם הוא נבדק קודם בבית של גיא, לפחות לאורך עדכון HA אחד?</li>
+    <li>האם הוא רשום ברשימת החריגים של אותו לקוח?</li>
+  </ol>
+
+  <h2>מלכודות</h2>
+  <table>
+    <tr><th>מה קרה</th><th>למה</th></tr>
+    <tr><td>אין Settings → Apps</td><td>זו לא התקנת HA OS. Apps קיימות רק שם.</td></tr>
+    <tr><td>Mosquitto רץ ואין מכשירי MQTT</td><td>חסרה אינטגרציית MQTT. ה-App היא רק השרת.</td></tr>
+    <tr><td>HACS לא מופיע ב-Add integration</td><td>לא נעשה restart, או שלא נוקה המטמון בדפדפן.</td></tr>
+    <tr><td>"התקנתי דרך Apps, אז אפשר לסמוך"</td><td>הדרך להתקנה לא אומרת כלום על אמון. מה שקובע הוא מי כתב ומי בדק.</td></tr>
+    <tr><td>HA לא יציב אחרי עדכון</td><td>לבדוק קודם את האינטגרציות המותאמות.</td></tr>
+  </table>
+
+  <div class="lesson-footer">
+    <span>OneHome Learning Workspace</span>
+    <a href="glossary.html">מילון מונחים</a>
+    <a href="dashboard-cheatsheet.html">דף עזר: דשבורדים</a>
+    <a href="automation-cheatsheet.html">דף עזר: אוטומציות</a>
+  </div>
+</div>
+</body>
+</html>
