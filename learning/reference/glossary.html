@@ -219,7 +219,7 @@
     <tr>
       <td><strong>HACS</strong><br>חנות הקהילה</td>
       <td>אינטגרציה מותאמת (לא App) שמנהלת הורדה ועדכון של רכיבים מהקהילה מ-GitHub. מורידים אותה בעזרת האפליקציה Get HACS.</td>
-      <td>מותקן בבית של גיא כמגרש ניסויים. אצל לקוחות: לפי רשימת חריגים (טרם הוחלט)</td>
+      <td>מותקן בבית של גיא כמגרש ניסויים. אצל לקוחות: רק לפי רשימת חריגים כתובה (הוחלט 11/10/2026)</td>
     </tr>
     <tr>
       <td><strong>/config</strong><br>תיקיית התצורה</td>
@@ -228,10 +228,45 @@
     </tr>
   </table>
 
+  <h2>עוזר Assist (שיעור 9)</h2>
+  <table>
+    <tr><th>מונח</th><th>מה זה</th><th>דוגמה מ-OneHome</th></tr>
+    <tr>
+      <td><strong>Assist</strong><br>העוזר הקולי</td>
+      <td>העוזר המובנה ב-HA. שרשרת של ארבע חוליות: מילת הפעלה, דיבור לטקסט, מוח, טקסט לדיבור. כשמקלידים, נשאר רק המוח.</td>
+      <td>העוזר <code>עברית</code>, בלי קול</td>
+    </tr>
+    <tr>
+      <td><strong>Conversation agent</strong><br>המוח</td>
+      <td>החוליה שמבינה את המשפט ומפעילה את הבית. המוח המובנה מקומי, ויש לו משפטים רשמיים בעברית.</td>
+      <td>"כבה את הדוד"</td>
+    </tr>
+    <tr>
+      <td><strong>STT / TTS</strong><br>דיבור לטקסט / טקסט לדיבור</td>
+      <td>חוליות הקול. מקומית: Speech-to-Phrase, Whisper ו-Piper. בענן: Nabu Casa. בעברית, היום עובד רק הענן.</td>
+      <td>הקולות Hila ו-Avri של Nabu Casa</td>
+    </tr>
+    <tr>
+      <td><strong>Expose</strong><br>חשיפה</td>
+      <td>בחירה לכל מכשיר אם Assist רשאי לשלוט בו. נועדה למנוע הפעלה קולית בטעות של מנעולים ושערים.</td>
+      <td>הדוד חשוף, השער לא</td>
+    </tr>
+    <tr>
+      <td><strong>Alias</strong><br>כינוי</td>
+      <td>שם נוסף למכשיר, לאזור או לקומה, שבו Assist מזהה אותם. בעברית: בלי ה"א הידיעה.</td>
+      <td><code>דוד</code> ל-Boiler, <code>מטבח</code> ל-Kitchen</td>
+    </tr>
+    <tr>
+      <td><strong>Sentence trigger</strong><br>טריגר משפט</td>
+      <td>טריגר מסוג <code>conversation</code> שמתחיל אוטומציה ממשפט שהגדרת. התשובה נקבעת עם <code>set_conversation_response</code>.</td>
+      <td>"יוצאים מהבית" ← סצנת Leaving home</td>
+    </tr>
+  </table>
+
   <h2>מונחים שיתווספו בשיעורים הבאים</h2>
   <p>
     <strong>Blueprint</strong>,
-    <strong>Zigbee / Z-Wave / Matter / Thread</strong>, <strong>Assist</strong> (עוזר קולי מקומי) — עדיין לא נלמדו לעומק, ייכנסו לכאן כשמגיעים אליהם.
+    <strong>Zigbee / Z-Wave / Matter / Thread</strong> — עדיין לא נלמדו לעומק, ייכנסו לכאן כשמגיעים אליהם.
   </p>
 
   <div class="lesson-footer">
