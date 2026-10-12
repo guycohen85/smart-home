@@ -1,0 +1,300 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Blueprint לדוד — שיעור 11</title>
+<link rel="stylesheet" href="../assets/style.css">
+<script src="../assets/quiz.js" defer></script>
+<script src="../assets/sort.js" defer></script>
+</head>
+<body>
+<div class="page">
+  <div class="course-nav">
+    <span>🛠️ חלק ב': מסלול המתקין · שיעור 11</span>
+    <a href="../reference/blueprint-cheatsheet.html">דף עזר: Blueprints ←</a>
+  </div>
+
+  <div class="lesson-kicker">חלק ב' · אוטומציה אחת לכל הלקוחות · מושג חדש</div>
+  <h1>אוטומציית הדוד, פעם אחת לכל הלקוחות: Blueprint</h1>
+  <p class="subtitle">
+    אוטומציית הדוד משיעור 5 עובדת, אבל היא מכירה רק את <code>switch.boiler</code> ואת <code>pixel_8</code> שלך.
+    היום הופכים אותה ל-Blueprint: אותה לוגיקה, עם "חורים" במקום הדוד, הטלפון והזמנים.
+    בסוף השיעור הקובץ נבדק אצלך בבית ויושב בבית התבנית, מוכן לכל לקוח.
+  </p>
+
+  <div class="box source">
+    <span class="box-label">מקור ראשי</span>
+    <a href="https://www.home-assistant.io/docs/blueprint/tutorial/" target="_blank">Creating an automation blueprint</a> (המדריך הרשמי, 15 דקות קריאה) ·
+    <a href="https://www.home-assistant.io/docs/blueprint/schema/" target="_blank">Blueprint schema</a> ·
+    <a href="https://www.home-assistant.io/docs/blueprint/selectors/" target="_blank">Selectors</a> ·
+    <a href="https://www.home-assistant.io/docs/automation/using_blueprints/" target="_blank">Using blueprints</a>.
+  </div>
+
+  <h2>שלב 0: בית התבנית עלה?</h2>
+  <p>
+    השיעור הזה מסתיים בבית התבנית משיעור 10. אם הוא עוד לא רץ, תעשה קודם את <a href="0010-template-house.html">תרגולים 2 ו-3 שם</a>.
+    תרגולים 1 ו-2 כאן עובדים גם בלעדיו, כי הם נעשים אצלך בבית.
+    רשום לעצמך את התשובות לשאלות מסוף שיעור 10: על איזה מחשב התקנת, אילו מכשירים התגלו, איפה היה שדה ה-hostname, ומה גרסת HA וגודל הגיבוי. תשלח לי אותן בסוף.
+  </p>
+
+  <h2>חימום: מה זכור?</h2>
+  <div class="quiz">
+    <p class="quiz-q">1. בשיעור 5 לחצת "כבה" בהתראה, והדוד כבה. מי בדיוק כיבה אותו: הכפתור, או משהו אחר?</p>
+    <button class="quiz-reveal-btn" onclick="revealQuiz(this)">הצג תשובה</button>
+    <p class="quiz-answer">משהו אחר. הכפתור רק שולח תווית (<code>BOILER_OFF_...</code>) באירוע <code>mobile_app_notification_action</code>. ה-<code>wait_for_trigger</code> קולט אותה, ורק ה-<code>if</code> שבא אחריו מכבה (<a href="../learning-records/0002-yaml-read-and-modify-not-author.md">LR-0002</a>). היום יופיע עוד מנגנון של "סימון עכשיו, ערך אחר כך", וכדאי לזכור את המודל הזה.</p>
+  </div>
+  <div class="quiz">
+    <p class="quiz-q">2. בתרגיל המיון של שיעור 10, "Blueprint של התראת הדוד" נכנס לתבנית, אבל "הטלפון שלך" נשאר בחוץ. אז איך התבנית תשלח התראה לטלפון של לקוח?</p>
+    <button class="quiz-reveal-btn" onclick="revealQuiz(this)">הצג תשובה</button>
+    <p class="quiz-answer">ה-Blueprint לא מכיר אף טלפון. יש לו שדה ריק, "הטלפון שמקבל את השאלה", שממלאים אצל הלקוח, אחרי שהוא מחבר את אפליקציית Companion. זה בדיוק מה שנבנה היום.</p>
+  </div>
+  <div class="quiz">
+    <p class="quiz-q">3. בשלוש התחנות (הבית שלך, התבנית, הלקוח): איפה בודקים דבר חדש קודם?</p>
+    <button class="quiz-reveal-btn" onclick="revealQuiz(this)">הצג תשובה</button>
+    <p class="quiz-answer">אצלך בבית. רק מה שהוכיח את עצמו שם עובר לתבנית, ותמיד בכיוון אחד (<a href="../../plan-site/claude/golden-backup-checklist.md">הצ'ק-ליסט, "העיקרון"</a>). ככה גם השיעור בנוי: קודם בדיקה אצלך, אחר כך העתקה לתבנית.</p>
+  </div>
+
+  <h2>מה זה Blueprint</h2>
+  <p>
+    Blueprint הוא אוטומציה (או סקריפט) שחלקים ממנה נשארו ריקים, כדי שאפשר יהיה להשתמש בה שוב ושוב עם מכשירים והגדרות אחרים
+    (<a href="https://www.home-assistant.io/docs/blueprint/" target="_blank">מקור</a>).
+    במונחי מפתח: Blueprint הוא פונקציה, וכל אוטומציה שנוצרת ממנו היא קריאה לפונקציה עם ארגומנטים.
+  </p>
+  <div class="flow-steps">
+    <div class="flow-step"><span class="step-word">קובץ ה-Blueprint</span><span class="step-en">blueprints/automation/…</span><p>הלוגיקה, וכל חור מסומן ב-<code>!input</code>. אין בו אף מכשיר.</p></div>
+    <div class="flow-step"><span class="step-word">מילוי בטופס</span><span class="step-en">Create automation</span><p>HA מציג טופס לפי ה-selectors: בוחרים דוד, טלפון וזמנים.</p></div>
+    <div class="flow-step"><span class="step-word">אוטומציה רגילה</span><span class="step-en">use_blueprint</span><p>נשמרים רק הנתיב לקובץ והערכים שבחרת. הלוגיקה נשארת בקובץ.</p></div>
+  </div>
+  <p>
+    <strong>הנקודה החשובה:</strong> האוטומציה לא מעתיקה את הלוגיקה, אלא מצביעה עליה. אם תתקן את הקובץ, כל האוטומציות שנוצרו ממנו יקבלו את התיקון בטעינה הבאה של האוטומציות
+    (<a href="https://www.home-assistant.io/docs/blueprint/" target="_blank">מקור</a>). אבל זה נכון רק בתוך אותו HA. נחזור לזה בבדיקת הזיכרון.
+  </p>
+  <p>
+    <strong>ה-<code>!input</code> מתמלא כשיוצרים את האוטומציה, לא כשהיא רצה.</strong> לכן אי אפשר לכתוב אותו בתוך <code>{{ }}</code>.
+    כדי להשתמש בו בטמפלט, קודם מעבירים אותו למשתנה תחת <code>variables</code> (<a href="https://www.home-assistant.io/docs/blueprint/schema/#blueprint-inputs-in-templates" target="_blank">מקור</a>).
+    זו טעות נפוצה, והיא מופיעה פעם אחת בקובץ של היום.
+  </p>
+
+  <h2>תרגול 1: מה הופך לחור?</h2>
+  <p>
+    לפניך חלקים מאוטומציית הדוד של <a href="0005-actionable-notifications.html">שיעור 5</a>.
+    לכל חלק, החלט: הוא הופך ל-input שממלאים אצל כל לקוח, או נשאר קבוע בקובץ?
+    הכלל: אם זה משתנה בין בתים, או שהלקוח צריך להחליט עליו, זה input.
+  </p>
+  <div class="sort" data-answer="in" data-why="לכל לקוח יש entity אחר לדוד (switch.dud, switch.water_heater...). זה החור הראשון.">
+    <p class="sort-q">הישות <code>switch.boiler</code></p>
+    <div class="sort-opts"><button data-v="in">הופך ל-input</button><button data-v="fixed">נשאר קבוע</button></div>
+    <p class="sort-fb"></p>
+  </div>
+  <div class="sort" data-answer="fixed" data-why="כל HA יוצר את zone.home מהמיקום בהגדרה הראשונית, ו-&quot;0&quot; פירושו שאין אף אחד בבית. זה זהה אצל כולם, בתנאי שהמיקום תוקן אחרי השחזור (שיעור 10).">
+    <p class="sort-q">התנאי <code>zone.home</code> שווה <code>"0"</code></p>
+    <div class="sort-opts"><button data-v="in">הופך ל-input</button><button data-v="fixed">נשאר קבוע</button></div>
+    <p class="sort-fb"></p>
+  </div>
+  <div class="sort" data-answer="in" data-why="הטלפון של הלקוח. ב-Blueprint זה יהיה בורר מכשירים שמציג רק טלפונים עם אפליקציית Companion.">
+    <p class="sort-q">הפעולה <code>notify.mobile_app_pixel_8</code></p>
+    <div class="sort-opts"><button data-v="in">הופך ל-input</button><button data-v="fixed">נשאר קבוע</button></div>
+    <p class="sort-fb"></p>
+  </div>
+  <div class="sort" data-answer="fixed" data-why="זה שם האירוע שאפליקציית Companion שולחת. הוא חלק מהמנגנון, לא העדפה, וזהה אצל כל לקוח.">
+    <p class="sort-q">סוג האירוע <code>mobile_app_notification_action</code></p>
+    <div class="sort-opts"><button data-v="in">הופך ל-input</button><button data-v="fixed">נשאר קבוע</button></div>
+    <p class="sort-fb"></p>
+  </div>
+  <div class="sort" data-answer="in" data-why="משפחה שמתקלחת בערב רוצה זמן אחר ממשפחה עם דוד שמש. זה input עם ברירת מחדל, ושאלה לשיחת ה-Onboarding.">
+    <p class="sort-q">כמה זמן הדוד דלוק לפני השאלה (<code>for</code>)</p>
+    <div class="sort-opts"><button data-v="in">הופך ל-input</button><button data-v="fixed">נשאר קבוע</button></div>
+    <p class="sort-fb"></p>
+  </div>
+  <div class="sort" data-answer="fixed" data-why="זה מנגנון שמבטיח שכל ריצה מחכה רק לכפתורים של עצמה. אם הלקוח היה משנה אותו, זה רק היה שובר משהו.">
+    <p class="sort-q">התווית <code>'BOILER_OFF_' ~ context.id</code></p>
+    <div class="sort-opts"><button data-v="in">הופך ל-input</button><button data-v="fixed">נשאר קבוע</button></div>
+    <p class="sort-fb"></p>
+  </div>
+  <div class="sort" data-answer="in" data-why="ב-NOTES זה כבר רשום כשאלה ל-Onboarding: כמה זמן לחכות לתשובה לפני שמכבים. ברירת המחדל היא 10 דקות.">
+    <p class="sort-q">זמן ההמתנה לתשובה (<code>timeout</code>)</p>
+    <div class="sort-opts"><button data-v="in">הופך ל-input</button><button data-v="fixed">נשאר קבוע</button></div>
+    <p class="sort-fb"></p>
+  </div>
+  <p class="sort-score"></p>
+
+  <h2>תרגול 2: כותבים את הקובץ ובודקים אצלך בבית</h2>
+  <p>
+    זה הקובץ המלא. הוא אוטומציית שיעור 5, עם שלושה שינויים: בלוק <code>blueprint:</code> למעלה, <code>!input</code> במקום ערכים קבועים,
+    ושליחה לטלפון לפי <strong>מכשיר</strong> ולא לפי שם פעולה. לפי LR-0002, לא צריך לכתוב אותו מאפס, רק לקרוא ולהבין. החצים בהערות מסמנים את מה שחדש.
+  </p>
+  <pre dir="ltr"><code>blueprint:
+  name: "OneHome: הדוד נשאר דלוק"
+  description: >
+    הדוד דלוק זמן רב ואין אף אחד בבית: שואלים בטלפון אם לכבות.
+    אם אין תשובה עד שנגמר הזמן, מכבים.
+  domain: automation
+  author: OneHome
+  input:                         # ← החורים, וה-selector של כל אחד
+    boiler:
+      name: הדוד
+      selector:
+        entity:
+          filter:
+            - domain: switch
+    on_for:
+      name: כמה זמן דלוק לפני שאלה
+      default:
+        hours: 2
+      selector:
+        duration:
+    phone:
+      name: הטלפון שמקבל את השאלה
+      selector:
+        device:
+          filter:
+            - integration: mobile_app   # רק טלפונים עם Companion
+    answer_timeout:
+      name: זמן לתשובה
+      default:
+        minutes: 10
+      selector:
+        duration:
+
+mode: single
+
+variables:
+  boiler_entity: !input boiler   # ← הגשר: !input לא עובד בתוך {{ }}
+
+triggers:
+  - trigger: state
+    entity_id: !input boiler
+    to: "on"
+    for: !input on_for
+
+conditions:
+  - condition: state
+    entity_id: zone.home
+    state: "0"
+
+actions:
+  - variables:
+      action_off: "{{ 'BOILER_OFF_' ~ context.id }}"
+      action_keep: "{{ 'BOILER_KEEP_' ~ context.id }}"
+  - domain: mobile_app           # ← שליחה לפי מכשיר, לא notify.mobile_app_xxx
+    type: notify
+    device_id: !input phone
+    message: "{{ state_attr(boiler_entity, 'friendly_name') }} דלוק ואין אף אחד בבית. לכבות?"
+    data:
+      actions:
+        - action: "{{ action_off }}"
+          title: כבה
+        - action: "{{ action_keep }}"
+          title: השאר דלוק
+  - wait_for_trigger:
+      - trigger: event
+        event_type: mobile_app_notification_action
+        event_data:
+          action: "{{ action_off }}"
+        id: "off"
+      - trigger: event
+        event_type: mobile_app_notification_action
+        event_data:
+          action: "{{ action_keep }}"
+        id: keep
+    timeout: !input answer_timeout
+  - if:
+      - condition: template
+        value_template: "{{ wait.trigger is none or wait.trigger.id == 'off' }}"
+    then:
+      - action: switch.turn_off
+        target:
+          entity_id: !input boiler
+      - domain: mobile_app
+        type: notify
+        device_id: !input phone
+        message: "כיביתי את {{ state_attr(boiler_entity, 'friendly_name') }}."</code></pre>
+  <p>
+    <strong>למה לפי מכשיר?</strong> השם <code>notify.mobile_app_pixel_8</code> נגזר מהשם של הטלפון, ואי אפשר לבחור אותו בטופס.
+    פעולת מכשיר (device action) של <code>mobile_app</code> מקבלת מזהה מכשיר, ותומכת ב-<code>message</code>, ב-<code>title</code> וב-<code>data</code>, כך שהכפתורים עוברים כמו קודם
+    (<a href="https://github.com/home-assistant/core/blob/dev/homeassistant/components/mobile_app/device_action.py" target="_blank">מקור: קוד הרכיב</a>).
+    <strong>למה אין כאן <code>ask_phone</code>?</strong> כי בסקריפט משיעור 6 הטלפון קבוע, ו-Blueprint צריך לעמוד בפני עצמו. גם סקריפטים יכולים להיות Blueprints (<a href="https://www.home-assistant.io/docs/blueprint/tutorial/" target="_blank">מקור</a>), אבל זה לשלב מאוחר יותר.
+  </p>
+
+  <div class="box practice">
+    <span class="box-label">משימה מעשית · 15 דקות · בבית שלך</span>
+    <ol>
+      <li><strong>קובץ:</strong> ב-File editor (שיעור 8), צור תיקייה <code>onehome</code> בתוך <code>/config/blueprints/automation/</code>, ובתוכה קובץ <code>boiler_left_on.yaml</code>. הדבק את הקוד ושמור. קבצי Blueprint חיים בתיקייה הזו, ומותר לפתוח בה תת-תיקיות (<a href="https://www.home-assistant.io/docs/blueprint/tutorial/#creating-the-blueprint-file" target="_blank">מקור</a>).</li>
+      <li><strong>טעינה:</strong> טען מחדש את האוטומציות: <strong>Settings → Tools → YAML</strong> ואז Automations. בגרסאות קודמות זה תחת Developer tools → YAML.</li>
+      <li><strong>כיבוי הישנה:</strong> השבת את אוטומציית הדוד הקודמת (משיעור 6), אחרת תקבל שתי שאלות על אותו דוד.</li>
+      <li><strong>יצירה מהטופס:</strong> עבור ל-<strong>Settings → Automations &amp; scenes → Blueprints</strong>, מצא את "OneHome: הדוד נשאר דלוק" ולחץ <strong>Create automation</strong>. בחר את הדוד ואת הטלפון שלך, ושנה את זמן ההמתנה לתשובה לדקה אחת כדי שהבדיקה תהיה מהירה. שמור.</li>
+      <li><strong>בדיקה:</strong> הדלק את הדוד, ובתפריט ⋮ של האוטומציה החדשה בחר <strong>Run actions</strong>. זה מדלג על הטריגר ועל תנאי הנוכחות, כמו בשיעור 5. נסה "השאר דלוק", ובריצה שנייה אל תענה עד שהזמן ייגמר.</li>
+      <li><strong>תצפית:</strong> פתח את האוטומציה, ובתפריט ⋮ בחר <strong>Edit in YAML</strong>. רשום מה יש שם, ומה <em>אין</em> שם.</li>
+    </ol>
+  </div>
+  <div class="quiz">
+    <p class="quiz-q">ניחוש לפני התצפית: כמה שורות יהיו ב-YAML של האוטומציה החדשה? בערך 10, או בערך 60 כמו הקובץ?</p>
+    <button class="quiz-reveal-btn" onclick="revealQuiz(this)">הצג תשובה</button>
+    <p class="quiz-answer">בערך 10. יהיו שם <code>use_blueprint</code>, עם <code>path: onehome/boiler_left_on.yaml</code> ו-<code>input</code> עם הערכים שבחרת, וזהו (<a href="https://www.home-assistant.io/docs/blueprint/tutorial/#using-your-blueprint-via-configurationyaml" target="_blank">מקור</a>). אין שם טריגר, תנאי או פעולות: הם נשארים בקובץ ה-Blueprint. זה מה שתראה גם ב-<code>automations.yaml</code> של כל לקוח.</p>
+  </div>
+
+  <h2>תרגול 3: מעבירים לבית התבנית</h2>
+  <p>
+    הקובץ עבד אצלך, אז מותר לו לעבור לתבנית. אבל עובר <strong>רק הקובץ</strong>: בתבנית אין דוד ואין טלפון, אז אין ממה ליצור אוטומציה.
+    האוטומציה נוצרת אצל הלקוח, אחרי השחזור, כשיש לו דוד וטלפון מחובר.
+  </p>
+  <div class="box practice">
+    <span class="box-label">משימה מעשית · 10 דקות · בבית התבנית</span>
+    <ol>
+      <li><strong>כלי:</strong> התקן את File editor גם בתבנית. הוא App רשמי, ובתבנית הוא הכלי לתחזוקת קבצים (רמת אמון ראשונה, <a href="../reference/apps-hacs-cheatsheet.html">דף העזר</a>).</li>
+      <li><strong>העתקה:</strong> צור את אותו נתיב, <code>blueprints/automation/onehome/boiler_left_on.yaml</code>, והדבק את אותו תוכן בדיוק. אחר כך טען מחדש את האוטומציות.</li>
+      <li><strong>בדיקה:</strong> ב-Blueprints, ודא ש-"OneHome: הדוד נשאר דלוק" מופיע. לחץ Create automation ופתח את בורר הטלפון, <strong>אבל אל תשמור</strong>. מה מופיע ברשימה?</li>
+      <li><strong>גיבוי:</strong> צור גיבוי חדש לפי שיטת השמות משיעור 10, למשל <code>onehome-template_2026-10-12_ha-&lt;גרסה&gt;</code>. זו גרסה 2 של התבנית. היא עוד לא ה-golden backup.</li>
+    </ol>
+  </div>
+
+  <h2>בדיקת זיכרון: תרחישים מהשטח</h2>
+  <div class="quiz">
+    <p class="quiz-q">1. שלושה לקוחות כבר רצים עם ה-Blueprint. גילית באג ותיקנת את הקובץ בתבנית, ויצרת golden backup חדש. מה קורה לאוטומציה אצל שלושת הלקוחות?</p>
+    <button class="quiz-reveal-btn" onclick="revealQuiz(this)">הצג תשובה</button>
+    <p class="quiz-answer">כלום. אוטומציה מקבלת תיקון רק מהקובץ שנמצא באותו HA (<a href="https://www.home-assistant.io/docs/blueprint/" target="_blank">מקור</a>), והגיבוי משמש רק לקוחות חדשים. אצל כל לקוח קיים צריך להחליף את הקובץ ולטעון מחדש. בגלל זה בצ'ק-ליסט (סעיף ד') כתוב לנהל Blueprints ב-git, וזה בסיס לניהול הצי ב-PRD 4.</p>
+  </div>
+  <div class="quiz">
+    <p class="quiz-q">2. כתבת הודעה <code>"{{ !input boiler }} דלוק"</code>, וההודעה נשברה. למה, ומה התיקון?</p>
+    <button class="quiz-reveal-btn" onclick="revealQuiz(this)">הצג תשובה</button>
+    <p class="quiz-answer">ה-<code>!input</code> הוא תגית YAML שמתמלאת כשיוצרים את האוטומציה, והוא לא משתנה בטמפלט. התיקון: <code>boiler_entity: !input boiler</code> תחת <code>variables</code>, ואז <code>{{ boiler_entity }}</code> (<a href="https://www.home-assistant.io/docs/blueprint/schema/#blueprint-inputs-in-templates" target="_blank">מקור</a>). זה בדיוק מה שעשינו בקובץ.</p>
+  </div>
+  <div class="quiz">
+    <p class="quiz-q">3. לקוח ביקש שינוי קטן רק אצלו. בתפריט של ה-Blueprint יש <strong>Take control</strong>, שהופך את האוטומציה לאוטומציה רגילה שאפשר לערוך. מה המחיר?</p>
+    <button class="quiz-reveal-btn" onclick="revealQuiz(this)">הצג תשובה</button>
+    <p class="quiz-answer">ההמרה חד-כיוונית: אי אפשר להחזיר אותה ל-Blueprint (<a href="https://www.home-assistant.io/docs/automation/using_blueprints/#editing-an-imported-blueprint" target="_blank">מקור</a>). מאותו רגע הלקוח הזה לא יקבל תיקונים לקובץ, וזה הלקוח היחיד שהאוטומציה שלו שונה. עדיף להוסיף input עם ברירת מחדל, וכך כולם נשארים על אותו קובץ.</p>
+  </div>
+  <div class="quiz">
+    <p class="quiz-q">4. בתרגול 3 פתחת את בורר הטלפון בתבנית. מה ראית, ולמה זה סימן טוב?</p>
+    <button class="quiz-reveal-btn" onclick="revealQuiz(this)">הצג תשובה</button>
+    <p class="quiz-answer">הניחוש שלי: רשימה ריקה. ה-selector מציג רק מכשירים של <code>mobile_app</code>, ובתבנית אין אף טלפון. זה סימן שהתבנית נקייה. אם הופיע שם טלפון, משהו אישי נכנס לתבנית ויגיע לכל לקוח. ספר לי מה ראית בפועל.</p>
+  </div>
+
+  <div class="box win">
+    <span class="box-label">הניצחון של היום</span>
+    יש לך Blueprint ראשון של OneHome. הוא נבדק על דוד וטלפון אמיתיים, והוא יושב בבית התבנית בלי אף מכשיר.
+    אצל כל לקוח חדש, אוטומציית הדוד היא טופס של ארבעה שדות ולא העתקה ועריכה של YAML.
+  </div>
+
+  <h2>מה הלאה בחלק ב'</h2>
+  <p>
+    שיעור 12: הופכים את התבנית ל-golden backup ומשחזרים אותו על VM שני. כך נראה שה-Blueprint מגיע עם הגיבוי, ונענה על השאלות הפתוחות בצ'ק-ליסט.
+  </p>
+
+  <div class="box ask-teacher">
+    <span class="box-label">נתקעת? שאל</span>
+    אם ה-Blueprint לא מופיע ברשימה אחרי הטעינה, תעתיק לי את השגיאה מ-<strong>Settings → System → Logs</strong>. בדרך כלל זו בעיית הזחה.
+    ותספר לי: (1) את ארבע התשובות משיעור 10 (שלב 0). (2) האם שלושת המסלולים עבדו (כבה, השאר, timeout)? (3) מה ראית ב-YAML של האוטומציה החדשה? (4) מה הופיע בבורר הטלפון בתבנית?
+  </div>
+
+  <div class="lesson-footer">
+    <span>שיעור 11 · חלק ב' · OneHome Learning Workspace</span>
+    <a href="0010-template-house.html">← שיעור 10</a>
+    <a href="../reference/blueprint-cheatsheet.html">דף עזר: Blueprints</a>
+    <a href="../reference/template-house-cheatsheet.html">דף עזר: בית התבנית</a>
+    <a href="../reference/glossary.html">מילון מונחים</a>
+  </div>
+</div>
+</body>
+</html>
