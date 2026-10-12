@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>דף עזר: Blueprints</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="page">
+  <div class="course-nav">
+    <span>📖 מסמך רפרנס · מתעדכן עם כל שיעור בחלק ב'</span>
+    <a href="../lessons/0011-boiler-blueprint.html">← שיעור 11</a>
+  </div>
+
+  <div class="lesson-kicker">רפרנס מהיר</div>
+  <h1>דף עזר: Blueprints</h1>
+  <p class="subtitle">
+    איך הופכים אוטומציה שעובדת לקובץ אחד שמשרת את כל הלקוחות. מקור:
+    <a href="https://www.home-assistant.io/docs/blueprint/tutorial/" target="_blank">Tutorial</a>,
+    <a href="https://www.home-assistant.io/docs/blueprint/schema/" target="_blank">Schema</a>,
+    <a href="https://www.home-assistant.io/docs/blueprint/selectors/" target="_blank">Selectors</a>,
+    <a href="https://www.home-assistant.io/docs/automation/using_blueprints/" target="_blank">Using blueprints</a>.
+  </p>
+
+  <div class="box win">
+    <span class="box-label">הכלל</span>
+    <strong>הקובץ</strong> נכנס לתבנית. <strong>האוטומציה</strong> שנוצרת ממנו נוצרת רק אצל הלקוח, כי רק שם יש מכשירים למלא בחורים.
+  </div>
+
+  <h2>שלד של קובץ</h2>
+  <pre dir="ltr"><code>blueprint:
+  name: "OneHome: ..."          # חובה
+  domain: automation             # חובה (automation / script / template)
+  description: ...
+  author: OneHome
+  input:
+    my_input:
+      name: ...
+      default: ...               # אופציונלי. בלי default השדה חובה
+      selector: { entity: { filter: [ { domain: switch } ] } }
+
+variables:
+  my_var: !input my_input        # רק כך אפשר להשתמש ב-input בתוך {{ }}
+
+triggers:
+  - trigger: state
+    entity_id: !input my_input
+# ... conditions / actions כמו באוטומציה רגילה</code></pre>
+
+  <h2>הבוררים שבשימוש</h2>
+  <table>
+    <tr><th>בורר</th><th>ערך שמתקבל</th><th>שימוש אצלנו</th></tr>
+    <tr><td><strong>בורר</strong> <code>entity</code> עם <code>filter: domain</code></td><td>מזהה ישות, למשל <code>switch.boiler</code></td><td>הדוד</td></tr>
+    <tr><td><strong>בורר</strong> <code>device</code> עם <code>filter: integration: mobile_app</code></td><td>מזהה מכשיר (device ID)</td><td>הטלפון, לשליחה בפעולת מכשיר</td></tr>
+    <tr><td><strong>בורר</strong> <code>duration</code></td><td>מבנה כמו <code>{hours: 2}</code>, ומתאים ישר ל-<code>for</code> ול-<code>timeout</code></td><td>זמן דלוק, זמן לתשובה</td></tr>
+    <tr><td><strong>בורר</strong> <code>target</code></td><td>מבנה עם entity, device או area</td><td>עוד לא. מתאים ל"כל האורות בסלון"</td></tr>
+  </table>
+  <p>
+    <strong>זהירות</strong> עם סינון לפי integration: הוא לא אמין במכשירים שמתחברים דרך כמה אינטגרציות, כמו Zigbee או Matter. שם משלבים סינון לפי יצרן או דגם
+    (<a href="https://www.home-assistant.io/docs/blueprint/selectors/#entity-selector" target="_blank">מקור</a>).
+  </p>
+
+  <h2>שליחת התראה לטלפון מתוך Blueprint</h2>
+  <pre dir="ltr"><code>- domain: mobile_app
+  type: notify
+  device_id: !input phone
+  message: "..."
+  data:                          # כפתורים עוברים כמו ב-notify רגיל
+    actions:
+      - action: "{{ action_off }}"
+        title: כבה</code></pre>
+
+  <h2>איפה ומה</h2>
+  <table>
+    <tr><th>פעולה</th><th>איפה</th></tr>
+    <tr><td><strong>קובץ</strong> ה-Blueprint</td><td><code>/config/blueprints/automation/onehome/&lt;שם&gt;.yaml</code></td></tr>
+    <tr><td><strong>טעינה</strong> אחרי שינוי</td><td>Settings → Tools → YAML ← Automations (בגרסאות קודמות Developer tools → YAML)</td></tr>
+    <tr><td><strong>יצירת</strong> אוטומציה</td><td>Settings → Automations &amp; scenes → Blueprints ← Create automation</td></tr>
+    <tr><td><strong>בדיקה</strong> בלי טריגר ותנאים</td><td>תפריט ⋮ באוטומציה ← Run actions</td></tr>
+    <tr><td><strong>ייבוא</strong> מבחוץ</td><td>Blueprints ← Import blueprint (מהפורום, מ-GitHub או מ-Gist)</td></tr>
+  </table>
+
+  <h2>מלכודות</h2>
+  <ul>
+    <li><strong>כתיבת</strong> <code>!input</code> בתוך <code>{{ }}</code> לא עובדת. קודם מעבירים אותו ל-<code>variables</code>.</li>
+    <li><strong>תיקון</strong> בקובץ מגיע לכל האוטומציות <em>באותו HA</em> בטעינה הבאה. לקוחות קיימים לא מקבלים אותו מגיבוי חדש: צריך להחליף אצלם את הקובץ. זו הסיבה לנהל Blueprints ב-git.</li>
+    <li><strong>האפשרות</strong> Take control היא חד-כיוונית, ומנתקת את הלקוח מתיקונים. עדיף להוסיף input עם ברירת מחדל.</li>
+    <li><strong>הפעולה</strong> Re-import דורסת את הקובץ. אם הגרסה החדשה לא תואמת, אוטומציות קיימות עלולות להישבר.</li>
+    <li><strong>אוטומציה</strong> ישנה שעושה אותו דבר: משביתים אותה לפני הבדיקה, אחרת יש שתי שאלות על אותו דוד.</li>
+    <li><strong>מקטעי</strong> input (sections) דורשים <code>min_version: 2024.6.0</code> בבלוק <code>homeassistant</code>.</li>
+  </ul>
+
+  <div class="lesson-footer">
+    <span>דף עזר · OneHome Learning Workspace</span>
+    <a href="../lessons/0011-boiler-blueprint.html">שיעור 11</a>
+    <a href="template-house-cheatsheet.html">דף עזר: בית התבנית</a>
+    <a href="glossary.html">מילון מונחים</a>
+  </div>
+</div>
+</body>
+</html>

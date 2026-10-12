@@ -303,9 +303,38 @@
     </tr>
   </table>
 
+  <h2>Blueprints (שיעור 11)</h2>
+  <table>
+    <tr><th>מונח</th><th>מה זה</th><th>דוגמה מ-OneHome</th></tr>
+    <tr>
+      <td><strong>Blueprint</strong><br>תבנית אוטומציה</td>
+      <td>אוטומציה (או סקריפט) שחלקים ממנה נשארו ריקים. קובץ YAML בתיקייה <code>blueprints/automation/</code>. כל אוטומציה שנוצרת ממנו מצביעה עליו, ולא מעתיקה אותו.</td>
+      <td><code>onehome/boiler_left_on.yaml</code></td>
+    </tr>
+    <tr>
+      <td><strong>Input</strong><br>שדה קלט</td>
+      <td>חור ב-Blueprint, מסומן ב-<code>!input &lt;שם&gt;</code>. מתמלא כשיוצרים את האוטומציה, ולא כשהיא רצה. לכן הוא לא עובד בתוך <code>{{ }}</code> בלי לעבור קודם דרך <code>variables</code>.</td>
+      <td><code>boiler</code>, <code>phone</code>, <code>on_for</code>, <code>answer_timeout</code></td>
+    </tr>
+    <tr>
+      <td><strong>Selector</strong><br>בורר</td>
+      <td>קובע איזה שדה יוצג בטופס, ומה מותר לבחור בו.</td>
+      <td>בורר <code>device</code> שמציג רק מכשירים של <code>mobile_app</code></td>
+    </tr>
+    <tr>
+      <td><strong>use_blueprint</strong></td>
+      <td>מה שנשמר באוטומציה שנוצרה מ-Blueprint: הנתיב לקובץ והערכים שנבחרו. בלי טריגר, תנאי או פעולות.</td>
+      <td>מה שיופיע ב-<code>automations.yaml</code> אצל כל לקוח</td>
+    </tr>
+    <tr>
+      <td><strong>Take control</strong><br>השתלטות</td>
+      <td>ממיר אוטומציה מבוססת Blueprint לאוטומציה רגילה. חד-כיווני: מאותו רגע היא לא מקבלת תיקונים לקובץ.</td>
+      <td>להימנע אצל לקוחות. עדיף להוסיף input עם ברירת מחדל</td>
+    </tr>
+  </table>
+
   <h2>מונחים שיתווספו בשיעורים הבאים</h2>
   <p>
-    <strong>Blueprint</strong>,
     <strong>Zigbee / Z-Wave / Matter / Thread</strong> — עדיין לא נלמדו לעומק, ייכנסו לכאן כשמגיעים אליהם.
   </p>
 
