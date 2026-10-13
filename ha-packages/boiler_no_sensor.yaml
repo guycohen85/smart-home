@@ -1,0 +1,291 @@
+# דוד חשמל עם Shelly 1PM Gen3, בלי חיישן טמפרטורה
+#
+# מה החבילה עושה:
+#   1. משערת את טמפרטורת המים לפי צריכת החשמל של הדוד ולפי הרגע שבו התרמוסטט ניתק.
+#   2. משערת כמה מקלחות נשארו (נגזר מהטמפרטורה המשוערת).
+#   3. מזהה ארבע תקלות: אין חימום, הספק חריג, צריכה כשהמתג כבוי, חימום ארוך מדי.
+#
+# כל המספרים כאן הם השערה. אין בדוד חיישן, ולכן החבילה לא רואה מים שנצרכו.
+# ההסבר המלא: plan-site/claude/design-boiler-no-sensor.md
+#
+# התקנה:
+#   1. לשנות את מזהי הישויות של ה-Shelly ל: switch.boiler, sensor.boiler_power, sensor.boiler_energy
+#   2. לעדכן את ארבעת הערכים בבלוק variables למטה (נפח, תרמוסטט, הספק, ציון שמש).
+#   3. להעתיק את הקובץ ל-config/packages/ ולהוסיף ל-configuration.yaml:
+#        homeassistant:
+#          packages: !include_dir_named packages
+
+template:
+  # מודל: זוכר את ההשערה האחרונה ומעדכן אותה כל 5 דקות ובכל אירוע של הדוד.
+  # הזיכרון נשמר ב-attributes, ו-HA משחזר אותם אחרי הפעלה מחדש.
+  - triggers:
+      - trigger: time_pattern
+        minutes: "/5"
+        id: tick
+      - trigger: homeassistant
+        event: start
+        id: tick
+      # גוף החימום התחיל לצרוך חשמל
+      - trigger: numeric_state
+        entity_id: sensor.boiler_power
+        above: 100
+        for: "00:00:20"
+        id: heat_start
+      # הצריכה ירדה לאפס. אם המתג עדיין דלוק, זה התרמוסטט שניתק.
+      - trigger: numeric_state
+        entity_id: sensor.boiler_power
+        below: 20
+        for: "00:00:30"
+        id: power_stop
+      # דקה אחרי הדלקה: אם לא הייתה צריכה, הדוד כבר חם (או שיש תקלה)
+      - trigger: state
+        entity_id: switch.boiler
+        to: "on"
+        for: "00:01:00"
+        id: on_check
+    variables:
+      # ערכים לכל לקוח
+      volume_l: 120        # נפח הדוד בליטרים (מהמדבקה)
+      setpoint_c: 60       # טמפרטורת התרמוסטט. לכייל פעם אחת עם מדחום (ראו מסמך התכנון)
+      rated_w: 2500        # הספק גוף החימום בוואט (מהמדבקה)
+      solar: false         # true לדוד שמש. משפיע רק על סף התראת "אין חימום"
+      # קבועים של המודל
+      tau_h: 72            # קבוע הזמן של איבוד החום בשעות
+      hyst_c: 6            # כמה מעלות התרמוסטט נותן לירידה לפני שהוא מחמם שוב
+    actions:
+      - variables:
+          m: >-
+            {%- set prev = states.sensor.boiler_model -%}
+            {%- set p = prev.attributes if prev is not none else {} -%}
+            {%- set now_ts = as_timestamp(now()) -%}
+            {%- set last_ts = p.get('updated_ts') or now_ts -%}
+            {%- set dt_h = [(now_ts - last_ts) / 3600, 0] | max -%}
+            {#- טמפרטורת מים נכנסים וסביבה לפי חודש, הערכה גסה לישראל -#}
+            {%- set inlet = [16, 16, 18, 21, 24, 27, 29, 29, 28, 25, 21, 17][now().month - 1] -%}
+            {%- set k = 860 / volume_l -%}
+            {%- set full_kwh = volume_l * (setpoint_c - inlet) / 860 -%}
+            {%- set e_now = states('sensor.boiler_energy') | float(none) -%}
+            {%- set e_last = p.get('energy_kwh') -%}
+            {%- set d_e = (e_now - e_last) if (e_now is not none and e_last is not none and e_now >= e_last) else 0 -%}
+            {%- set power = states('sensor.boiler_power') | float(0) -%}
+            {%- set sw_on = is_state('switch.boiler', 'on') -%}
+            {%- set sw_since = as_timestamp(states.switch.boiler.last_changed) if states.switch.boiler is not none else now_ts -%}
+            {%- set rate = p.get('use_rate_c_per_h') or 0 -%}
+            {%- set s = namespace(
+                  t=p.get('t'), anchor_ts=p.get('anchor_ts'), anchor_kind=p.get('anchor_kind'),
+                  hs_ts=p.get('heat_start_ts'), hs_e=p.get('heat_start_energy'), hs_model=p.get('heat_start_model'),
+                  rate=rate, no_draw=p.get('no_draw_count') or 0, last_start=p.get('last_start_temp'),
+                  no_draw_model=p.get('no_draw_model_t')) -%}
+            {#- שלב 1: התפתחות מאז העדכון הקודם: איבוד חום, שימוש ממוצע שנלמד, אנרגיה שנכנסה -#}
+            {%- if s.t is not none -%}
+              {%- set s.t = inlet + (s.t - inlet) * e ** (-dt_h / tau_h) -%}
+              {%- set s.t = s.t - s.rate * dt_h + d_e * k -%}
+              {%- set cap = setpoint_c - 1 if power > 100 else setpoint_c -%}
+              {%- set s.t = [[s.t, cap] | min, inlet] | max -%}
+            {%- endif -%}
+            {#- שלב 2: אירועים -#}
+            {%- if trigger.id == 'heat_start' -%}
+              {#- התרמוסטט סגור, אז המים לפחות hyst מעלות מתחת לתרמוסטט -#}
+              {%- set s.hs_model = s.t -%}
+              {%- if s.t is not none -%}
+                {%- set s.t = [s.t, setpoint_c - hyst_c] | min -%}
+              {%- endif -%}
+              {%- set s.hs_ts = now_ts -%}
+              {%- set s.hs_e = e_now -%}
+              {%- set s.no_draw = 0 -%}
+            {%- elif trigger.id == 'power_stop' and sw_on -%}
+              {#- התרמוסטט ניתק: המים בטמפרטורת התרמוסטט. מכאן גם מחשבים בדיעבד כמה קרים היו בהתחלה -#}
+              {%- if s.hs_e is not none and e_now is not none and s.hs_ts is not none and (s.anchor_ts is none or s.hs_ts > s.anchor_ts) -%}
+                {%- set start = [setpoint_c - (e_now - s.hs_e) * k, inlet] | max -%}
+                {%- set s.last_start = start | round(1) -%}
+                {%- if s.hs_model is not none and s.anchor_ts is not none -%}
+                  {%- set hours = (s.hs_ts - s.anchor_ts) / 3600 -%}
+                  {%- if hours >= 1 -%}
+                    {%- set target = [[s.rate + (s.hs_model - start) / hours, 0] | max, 2] | min -%}
+                    {%- set s.rate = 0.7 * s.rate + 0.3 * target -%}
+                  {%- endif -%}
+                {%- endif -%}
+              {%- endif -%}
+              {%- set s.t = setpoint_c -%}
+              {%- set s.anchor_ts = now_ts -%}
+              {%- set s.anchor_kind = 'thermostat' -%}
+            {%- elif trigger.id == 'on_check' and sw_on and power < 20 and (s.hs_ts is none or s.hs_ts < sw_since) -%}
+              {#- הדלקה בלי צריכה: התרמוסטט פתוח, כלומר המים חמים. או שיש תקלה -#}
+              {%- set s.no_draw_model = s.t | round(1) if s.t is not none else none -%}
+              {%- set s.no_draw = s.no_draw + 1 -%}
+              {%- set s.t = setpoint_c -%}
+              {%- set s.anchor_ts = now_ts -%}
+              {%- set s.anchor_kind = 'no_draw' -%}
+            {%- endif -%}
+            {{ {
+              't': s.t | round(2) if s.t is not none else none,
+              'updated_ts': now_ts,
+              'energy_kwh': e_now if e_now is not none else e_last,
+              'anchor_ts': s.anchor_ts,
+              'anchor_kind': s.anchor_kind,
+              'heat_start_ts': s.hs_ts,
+              'heat_start_energy': s.hs_e,
+              'heat_start_model': s.hs_model | round(2) if s.hs_model is not none else none,
+              'use_rate_c_per_h': s.rate | round(3),
+              'no_draw_count': s.no_draw,
+              'no_draw_model_t': s.no_draw_model,
+              'last_start_temp': s.last_start,
+              'inlet_c': inlet,
+              'full_tank_kwh': full_kwh | round(2),
+              'volume_l': volume_l,
+              'setpoint_c': setpoint_c,
+              'rated_w': rated_w,
+              'solar': solar
+            } }}
+    sensor:
+      - name: "מודל הדוד"
+        default_entity_id: sensor.boiler_model
+        unique_id: onehome_boiler_model
+        icon: mdi:water-boiler
+        state: "{{ m.anchor_kind or 'waiting' }}"
+        attributes:
+          t: "{{ m.t }}"
+          updated_ts: "{{ m.updated_ts }}"
+          energy_kwh: "{{ m.energy_kwh }}"
+          anchor_ts: "{{ m.anchor_ts }}"
+          anchor_kind: "{{ m.anchor_kind }}"
+          heat_start_ts: "{{ m.heat_start_ts }}"
+          heat_start_energy: "{{ m.heat_start_energy }}"
+          heat_start_model: "{{ m.heat_start_model }}"
+          use_rate_c_per_h: "{{ m.use_rate_c_per_h }}"
+          no_draw_count: "{{ m.no_draw_count }}"
+          no_draw_model_t: "{{ m.no_draw_model_t }}"
+          last_start_temp: "{{ m.last_start_temp }}"
+          inlet_c: "{{ m.inlet_c }}"
+          full_tank_kwh: "{{ m.full_tank_kwh }}"
+          volume_l: "{{ m.volume_l }}"
+          setpoint_c: "{{ m.setpoint_c }}"
+          rated_w: "{{ m.rated_w }}"
+          solar: "{{ m.solar }}"
+
+  # תצוגה: מה שהלקוח רואה בדשבורד
+  - sensor:
+      - name: "טמפרטורת דוד משוערת"
+        default_entity_id: sensor.boiler_estimated_temperature
+        unique_id: onehome_boiler_estimated_temperature
+        unit_of_measurement: "°C"
+        device_class: temperature
+        state_class: measurement
+        icon: mdi:thermometer-water
+        availability: "{{ state_attr('sensor.boiler_model', 't') is number }}"
+        state: "{{ state_attr('sensor.boiler_model', 't') | round(0) }}"
+        attributes:
+          הסבר: "השערה לפי צריכת חשמל וניתוק התרמוסטט. לא רואה מים שנצרכו."
+          בהדלקה_האחרונה: >-
+            {% set v = state_attr('sensor.boiler_model', 'last_start_temp') %}
+            {{ (v | round(0) | string ~ '°') if v is number else 'אין נתון' }}
+
+      - name: "מקלחות משוערות"
+        default_entity_id: sensor.boiler_estimated_showers
+        unique_id: onehome_boiler_estimated_showers
+        unit_of_measurement: "מקלחות"
+        state_class: measurement
+        icon: mdi:shower-head
+        availability: "{{ state_attr('sensor.boiler_model', 't') is number }}"
+        # מקלחת = 50 ליטר ב-40 מעלות, אחרי ערבוב עם מים קרים
+        state: >-
+          {% set t = state_attr('sensor.boiler_model', 't') %}
+          {% set tin = state_attr('sensor.boiler_model', 'inlet_c') | float(20) %}
+          {% set vol = state_attr('sensor.boiler_model', 'volume_l') | float(120) %}
+          {{ 0 if t <= 40 else ((vol * (t - tin) / (40 - tin)) / 50) | round(1) }}
+
+      - name: "מצב הדוד"
+        default_entity_id: sensor.boiler_status
+        unique_id: onehome_boiler_status
+        icon: mdi:water-boiler-alert
+        state: >-
+          {% set power = states('sensor.boiler_power') | float(0) %}
+          {% if is_state('binary_sensor.boiler_fault_power_when_off', 'on') %}תקלה: צריכה כשהמתג כבוי
+          {% elif is_state('binary_sensor.boiler_fault_long_heating', 'on') %}תקלה: חימום ארוך מדי
+          {% elif is_state('binary_sensor.boiler_fault_abnormal_power', 'on') %}תקלה: הספק חריג
+          {% elif is_state('binary_sensor.boiler_fault_no_heating', 'on') %}תקלה: אין חימום
+          {% elif states('switch.boiler') in ['unavailable', 'unknown'] %}אין חיבור ל-Shelly
+          {% elif is_state('switch.boiler', 'off') %}כבוי
+          {% elif power > 100 %}מחמם
+          {% elif states.switch.boiler.last_changed > now() - timedelta(minutes=1)
+               and (state_attr('sensor.boiler_model', 'heat_start_ts') or 0) < as_timestamp(states.switch.boiler.last_changed) %}בודק
+          {% else %}חם, התרמוסטט ניתק
+          {% endif %}
+
+  # תקלות
+  - binary_sensor:
+      # 3 הדלקות ברצף בלי צריכה (5 בדוד שמש): מפסק תרמי שקפץ, גוף חימום שרוף, חיווט
+      - name: "תקלת דוד: אין חימום"
+        default_entity_id: binary_sensor.boiler_fault_no_heating
+        unique_id: onehome_boiler_fault_no_heating
+        device_class: problem
+        state: >-
+          {% set limit = 5 if state_attr('sensor.boiler_model', 'solar') else 3 %}
+          {{ state_attr('sensor.boiler_model', 'no_draw_count') | int(0) >= limit }}
+
+      # הספק רחוק מהנקוב: מגע רופף, מתח חריג, גוף חימום פגום
+      - name: "תקלת דוד: הספק חריג"
+        default_entity_id: binary_sensor.boiler_fault_abnormal_power
+        unique_id: onehome_boiler_fault_abnormal_power
+        device_class: problem
+        delay_on: "00:02:00"
+        state: >-
+          {% set power = states('sensor.boiler_power') | float(0) %}
+          {% set rated = state_attr('sensor.boiler_model', 'rated_w') | float(2500) %}
+          {{ is_state('switch.boiler', 'on') and power > 100 and (power < 0.7 * rated or power > 1.25 * rated) }}
+
+      # המתג כבוי ועדיין יש צריכה: ממסר תקוע. מסוכן, צריך חשמלאי
+      - name: "תקלת דוד: צריכה כשכבוי"
+        default_entity_id: binary_sensor.boiler_fault_power_when_off
+        unique_id: onehome_boiler_fault_power_when_off
+        device_class: problem
+        delay_on: "00:01:00"
+        state: "{{ is_state('switch.boiler', 'off') and states('sensor.boiler_power') | float(0) > 30 }}"
+
+      # חימום רציף שצרך יותר מ-125% ממה שצריך לחמם דוד קר לגמרי:
+      # תרמוסטט תקוע, נזילת מים חמים, או תרמוסטט שמכוון גבוה מ-setpoint_c
+      - name: "תקלת דוד: חימום ארוך מדי"
+        default_entity_id: binary_sensor.boiler_fault_long_heating
+        unique_id: onehome_boiler_fault_long_heating
+        device_class: problem
+        state: >-
+          {% set e_now = states('sensor.boiler_energy') | float(none) %}
+          {% set e_start = state_attr('sensor.boiler_model', 'heat_start_energy') %}
+          {% set full = state_attr('sensor.boiler_model', 'full_tank_kwh') | float(0) %}
+          {{ is_state('switch.boiler', 'on')
+             and states('sensor.boiler_power') | float(0) > 100
+             and e_now is not none and e_start is number and full > 0
+             and (e_now - e_start) > 1.25 * full }}
+
+automation:
+  - id: onehome_boiler_fault_alert
+    alias: "דוד: התראה על תקלה"
+    description: "התראה כשאחד מחיישני התקלה של הדוד נדלק."
+    mode: queued
+    triggers:
+      - trigger: state
+        entity_id:
+          - binary_sensor.boiler_fault_no_heating
+          - binary_sensor.boiler_fault_abnormal_power
+          - binary_sensor.boiler_fault_power_when_off
+          - binary_sensor.boiler_fault_long_heating
+        from: "off"
+        to: "on"
+    variables:
+      messages:
+        binary_sensor.boiler_fault_no_heating: >-
+          הדוד לא צרך חשמל בכמה הדלקות ברצף. ייתכן שהמפסק התרמי בדוד קפץ או שגוף החימום שרוף.
+          בדוד שמש ביום חם זה יכול להיות תקין.
+        binary_sensor.boiler_fault_abnormal_power: >-
+          הדוד מחמם בהספק רחוק מהנקוב. ייתכן מגע רופף או גוף חימום פגום. כדאי לבדוק עם חשמלאי.
+        binary_sensor.boiler_fault_power_when_off: >-
+          המתג של הדוד כבוי אבל עדיין יש צריכת חשמל. ייתכן שהממסר תקוע. לנתק את הדוד במפסק ולהזמין חשמלאי.
+        binary_sensor.boiler_fault_long_heating: >-
+          הדוד מחמם יותר זמן ממה שצריך כדי לחמם דוד קר לגמרי. ייתכן תרמוסטט תקוע או נזילת מים חמים.
+    actions:
+      - action: persistent_notification.create
+        data:
+          notification_id: "{{ trigger.entity_id }}"
+          title: "תקלה בדוד"
+          message: "{{ messages[trigger.entity_id] }}"
+      # התראה לטלפון: להוסיף כאן פעולת מכשיר של mobile_app, כמו ב-Blueprint של שיעור 11

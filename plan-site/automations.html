@@ -199,6 +199,20 @@
       </div>
 
       <div class="card">
+        <div class="card-head"><h3>🌡️ השערת טמפרטורת הדוד בלי חיישן</h3><span class="badge badge-adv">מתקדם</span></div>
+        <p class="flow"><strong>טריגר:</strong> כל 5 דקות, התחלת חימום, ניתוק התרמוסטט (הצריכה יורדת ל-0 כשהמתג דלוק), הדלקה בלי צריכה &nbsp;·&nbsp; <strong>פעולה:</strong> עדכון השערת הטמפרטורה ומספר המקלחות לפי האנרגיה שנכנסה, איבוד חום ושימוש ממוצע שנלמד</p>
+        <p class="card-note"><strong>למה זה שווה:</strong> "כמה מים חמים יש?" בלי לפתוח את הדוד ובלי חיישן. אחרי כל חימום מוצג גם בדיעבד כמה קרים היו המים בהדלקה.</p>
+        <p class="card-note"><strong>דורש:</strong> Shelly 1PM Gen3 על קו הדוד. הקוד ב-<code>ha-packages/boiler_no_sensor.yaml</code>, וההסבר ב-<code>claude/design-boiler-no-sensor.md</code>. השערה בלבד: המודל לא רואה מקלחות.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><h3>🛠️ זיהוי תקלה בדוד</h3><span class="badge badge-med">בינוני</span></div>
+        <p class="flow"><strong>טריגר:</strong> 3 הדלקות ברצף בלי צריכה · הספק רחוק מהנקוב · צריכה כשהמתג כבוי · חימום רציף ארוך מחימום מלא של דוד קר &nbsp;·&nbsp; <strong>פעולה:</strong> התראה עם הסבר מה כנראה התקלקל</p>
+        <p class="card-note"><strong>למה זה שווה:</strong> הלקוח מגלה שגוף החימום שרוף לפני שהוא נכנס למקלחת קרה, וממסר תקוע מתגלה לפני שהוא מסוכן. זה בדיוק הניטור שמצדיק את הריטיינר.</p>
+        <p class="card-note"><strong>דורש:</strong> Shelly 1PM Gen3 (מדידת הספק) על קו הדוד. אותה חבילה כמו השערת הטמפרטורה.</p>
+      </div>
+
+      <div class="card">
         <div class="card-head"><h3>🔌 עומס חשמלי מתקרב למגבלת המונה</h3><span class="badge badge-adv">מתקדם</span></div>
         <p class="flow"><strong>טריגר:</strong> צריכת חשמל כוללת (מד חשמל חכם) חוצה סף מוגדר &nbsp;·&nbsp; <strong>תנאי:</strong> מכשיר "לא קריטי" פועל (למשל דוד/טעינת רכב) &nbsp;·&nbsp; <strong>פעולה:</strong> השבתה זמנית של המכשיר הלא-קריטי, עד שהעומס יורד</p>
         <p class="card-note"><strong>למה זה שווה:</strong> מונע "קפיצת פקק" בבתים עם הרבה מכשירי חשמל כבדים בו-זמנית (מזגנים + דוד + טעינת EV).</p>
