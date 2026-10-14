@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>בחירת שם — OneHome</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0f172a;
+    --ink-soft: #475569;
+    --muted: #64748b;
+    --bg: #f8fafc;
+    --card-bg: #ffffff;
+    --border: #e2e8f0;
+    --brand-blue: #0284c7;
+    --brand-green: #059669;
+    --draft-bg: #fffbeb; --draft-fg: #92400e; --draft-bd: #fde68a;
+    --done-bg: #ecfdf5; --done-fg: #047857; --done-bd: #a7f3d0;
+    --out-bg: #f1f5f9; --out-fg: #64748b; --out-bd: #cbd5e1;
+    --hot-bg: #eff6ff; --hot-fg: #1d4ed8; --hot-bd: #bfdbfe;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin:0; background: var(--bg); color: var(--ink);
+    font-family: 'Heebo', sans-serif; line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; }
+  header.top {
+    background: linear-gradient(135deg, #0f172a 0%, #0c4a6e 100%);
+    color: #fff; padding: 52px 24px 44px;
+  }
+  .top-inner { max-width: 880px; margin: 0 auto; }
+  .eyebrow {
+    display:inline-flex; align-items:center; gap:8px;
+    background: rgba(255,255,255,0.12); border:1px solid rgba(255,255,255,0.25);
+    padding:6px 14px; border-radius:20px; font-size:13px; font-weight:600; margin-bottom:16px;
+  }
+  h1.page-title { font-size: 36px; font-weight:800; margin: 0 0 10px; }
+  h1.page-title span { color:#5eead4; }
+  .page-sub { color: #cbd5e1; font-size: 15.5px; max-width: 640px; margin:0; }
+
+  nav.chipnav {
+    position: sticky; top:58px; z-index:50;
+    background: rgba(248,250,252,0.92); backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border);
+    padding: 12px 24px; overflow-x:auto; white-space:nowrap;
+  }
+  nav.chipnav .chipnav-inner { max-width:880px; margin:0 auto; display:flex; gap:8px; }
+  .chip {
+    display:inline-flex; align-items:center; gap:6px; text-decoration:none;
+    font-size:13px; font-weight:600; color: var(--ink-soft);
+    background:#fff; border:1px solid var(--border); border-radius:20px;
+    padding:7px 14px; flex:0 0 auto; transition: all .15s ease;
+  }
+  .chip:hover { border-color: var(--brand-blue); color: var(--brand-blue); }
+
+  main { max-width: 880px; margin: 0 auto; padding: 40px 24px 80px; }
+
+  section.block {
+    background:#fff; border:1px solid var(--border); border-radius:18px;
+    padding: 28px 30px; margin-bottom: 22px; scroll-margin-top: 90px;
+  }
+  .block-head { display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:14px; }
+  .block-head-left { display:flex; align-items:center; gap:14px; }
+  .letter-badge {
+    flex:0 0 auto; width:42px; height:42px; border-radius:12px;
+    background: linear-gradient(135deg, var(--brand-blue), var(--brand-green));
+    color:#fff; display:flex; align-items:center; justify-content:center;
+    font-weight:800; font-size:17px;
+  }
+  .block-head h2 { margin:0; font-size:20px; font-weight:800; }
+  .status {
+    font-size:11.5px; font-weight:700; padding:4px 12px; border-radius:20px; border:1px solid; white-space:nowrap;
+  }
+  .status-draft { background: var(--draft-bg); color: var(--draft-fg); border-color: var(--draft-bd); }
+  .status-done { background: var(--done-bg); color: var(--done-fg); border-color: var(--done-bd); }
+  .status-out { background: var(--out-bg); color: var(--out-fg); border-color: var(--out-bd); }
+  .status-hot { background: var(--hot-bg); color: var(--hot-fg); border-color: var(--hot-bd); }
+
+  .block p { margin: 0 0 10px; color: var(--ink-soft); font-size:15px; }
+  .block ul { margin: 8px 0 0; padding-inline-start: 22px; }
+  .block li { margin-bottom: 9px; font-size:15px; color: var(--ink-soft); }
+  .block li strong { color: var(--ink); }
+
+  /* Association clouds */
+  .cloud-grid { display:grid; grid-template-columns: 1fr; gap:12px; margin-top:6px; }
+  @media (min-width: 640px) { .cloud-grid { grid-template-columns: 1fr 1fr; } }
+  .cloud { background: var(--bg); border:1px solid var(--border); border-radius:12px; padding:14px 16px; }
+  .cloud .c-title { font-weight:800; font-size:14.5px; margin-bottom:8px; }
+  .cloud .words { display:flex; flex-wrap:wrap; gap:6px; }
+  .cloud .w { font-size:13px; background:#fff; border:1px solid var(--border); border-radius:14px; padding:3px 10px; color: var(--ink-soft); }
+
+  /* Candidates */
+  .cand-grid { display:grid; grid-template-columns: 1fr; gap:12px; margin-top:6px; }
+  @media (min-width: 640px) { .cand-grid { grid-template-columns: 1fr 1fr; } }
+  .cand { border:1px solid var(--border); border-radius:14px; padding:16px 18px; background:#fff; }
+  .cand.out { opacity:.55; }
+  .cand-head { display:flex; align-items:baseline; justify-content:space-between; gap:8px; flex-wrap:wrap; margin-bottom:4px; }
+  .cand-name { font-weight:800; font-size:18px; }
+  .cand-name small { font-weight:500; font-size:13px; color: var(--muted); }
+  .cand .meaning { font-size:13.5px; color: var(--ink-soft); margin-bottom:8px; }
+  .cand .pc { font-size:13px; color: var(--ink-soft); margin:2px 0; }
+  .cand .pc b { color: var(--ink); }
+  .group-label { font-size:12px; font-weight:800; letter-spacing:.04em; color: var(--brand-blue); margin: 18px 0 8px; }
+  .group-label:first-of-type { margin-top: 4px; }
+
+  table.crit { width:100%; border-collapse:collapse; font-size:14px; margin-top:6px; }
+  table.crit th, table.crit td { text-align:right; padding:9px 10px; border-bottom:1px solid var(--border); vertical-align:top; }
+  table.crit th { font-size:12.5px; color: var(--muted); font-weight:800; }
+  table.crit td:first-child { font-weight:700; color: var(--ink); white-space:nowrap; }
+  table.crit td { color: var(--ink-soft); }
+
+  .q-list li { margin-bottom: 12px; }
+
+  .bg-note { background:#fff; border:1px dashed var(--border); border-radius:14px; padding:18px 22px; margin-top:8px; }
+  .bg-note h3 { margin:0 0 10px; font-size:14px; color: var(--muted); font-weight:800; letter-spacing:.04em; }
+  .bg-note ul { margin:0; padding-inline-start: 20px; }
+  .bg-note li { font-size:13.5px; color: var(--muted); margin-bottom:8px; }
+
+  footer { text-align:center; color: var(--muted); font-size:12.5px; padding: 10px 24px 50px; }
+
+  @media (max-width: 640px) {
+    h1.page-title { font-size:27px; }
+    .block-head h2 { font-size:17px; }
+    section.block { padding: 22px 18px; }
+    table.crit td:first-child { white-space:normal; }
+  }
+
+  .sitebar { position:sticky; top:0; z-index:60; background:#020617; border-bottom:1px solid #1e293b; }
+  .sitebar-inner { max-width: 1000px; margin:0 auto; padding: 10px 24px; display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap; }
+  .sitebar-logo { font-weight:800; font-size:15px; color:#f8fafc; text-decoration:none; display:flex; align-items:center; gap:8px; }
+  .sitebar-logo span { color:#5eead4; }
+  .sitebar-logo small { font-weight:500; color:#94a3b8; font-size:11.5px; }
+  .sitebar-links { display:flex; gap:4px; flex-wrap:wrap; }
+  .sitebar-links a {
+    text-decoration:none; color:#cbd5e1; font-size:13.5px; font-weight:600;
+    padding:7px 14px; border-radius:8px; transition: background .15s ease, color .15s ease;
+  }
+  .sitebar-links a:hover { background: rgba(255,255,255,0.08); color:#fff; }
+  .sitebar-links a.active { background: rgba(94,234,212,0.15); color:#5eead4; }
+  /* Mobile: let the top nav wrap freely; avoid sticky overlap with chip nav */
+  @media (max-width: 720px) { .sitebar { position: static; } nav.chipnav { top: 0; } }
+</style>
+</head>
+<body>
+<div class="sitebar"><div class="sitebar-inner">
+  <a href="index.html" class="sitebar-logo">One<span>Home</span> <small>· אתר פנימי</small></a>
+  <div class="sitebar-links">
+    <a href="index.html">בית</a>
+    <a href="vision.html">חזון העסק</a>
+    <a href="naming.html" class="active">בחירת שם</a>
+    <a href="business-plan.html">תוכנית עסקית</a>
+    <a href="products.html">רשימת מוצרים</a>
+    <a href="competitors.html">מתחרים</a>
+    <a href="prds.html">PRD-ים</a>
+    <a href="kb.html">ידע טכני</a>
+    <a href="automations.html">רעיונות לאוטומציות</a>
+    <a href="nabu-casa.html">Nabu Casa</a>
+    <a href="ohf.html">Open Home Foundation</a>
+    <a href="../customer-tracker/">מעקב לקוחות</a>
+  </div>
+</div></div>
+
+
+<header class="top">
+  <div class="top-inner">
+    <span class="eyebrow">✍️ סיעור מוחות — בתהליך</span>
+    <h1 class="page-title">בחירת שם לעסק</h1>
+    <p class="page-sub">השם הנוכחי, OneHome, פחות מתאים. כאן מנהלים את תהליך הבחירה: מה השם צריך לשדר, שדות אסוציאציה, מועמדים לפי סבבים, ומה נפסל ולמה, עד שנסכים על שם אחד.</p>
+  </div>
+</header>
+
+<nav class="chipnav"><div class="chipnav-inner">
+  <a href="#brief" class="chip"><span>🎯</span><span>מה השם צריך לשדר</span></a>
+  <a href="#criteria" class="chip"><span>✅</span><span>קריטריונים</span></a>
+  <a href="#associations" class="chip"><span>💭</span><span>אסוציאציות</span></a>
+  <a href="#round1" class="chip"><span>1️⃣</span><span>סבב 1</span></a>
+  <a href="#questions" class="chip"><span>❓</span><span>שאלות פתוחות</span></a>
+  <a href="#decision" class="chip"><span>⭐</span><span>החלטה</span></a>
+</div></nav>
+
+<main>
+
+  <section id="brief" class="block">
+    <div class="block-head">
+      <div class="block-head-left"><div class="letter-badge">🎯</div><h2>מה השם צריך לשדר</h2></div>
+      <span class="status status-draft">✎ טיוטה — לאישור</span>
+    </div>
+    <p>נגזר מ<a href="vision.html" style="text-decoration:underline">דף החזון</a>. השם לא צריך להגיד את כל אלה, אבל הוא צריך לא לסתור אף אחד מהם:</p>
+    <ul>
+      <li><strong>שירות מתמשך, לא מוצר</strong>: הליבה היא הריטיינר: מישהו ששומר על הבית לאורך זמן, לא מתקין שבא והולך.</li>
+      <li><strong>אמינות ושקט נפשי</strong>: רמת Enterprise בבית; דברים פשוט עובדים.</li>
+      <li><strong>פרטיות ומקומיות</strong>: Local-First; הבית שלך נשאר אצלך.</li>
+      <li><strong>חום ופשטות</strong>: "בלי לוותר על החום של בית"; לא גאדג'טי, לא קר וטכנולוגי.</li>
+      <li><strong>שקט ולא רעש</strong>: UX פרימיום שקט, תאורת סטטוס עדינה במקום דשבורד עמוס.</li>
+    </ul>
+    <p style="margin-top:14px"><strong>למה OneHome פחות מתאים:</strong> ממתין לגיא. השאלה הזו חשובה, כי היא אומרת לנו ממה להתרחק.</p>
+  </section>
+
+  <section id="criteria" class="block">
+    <div class="block-head">
+      <div class="block-head-left"><div class="letter-badge">✅</div><h2>קריטריונים לשם טוב</h2></div>
+      <span class="status status-draft">✎ טיוטה</span>
+    </div>
+    <table class="crit">
+      <tr><th>קריטריון</th><th>מה בודקים</th></tr>
+      <tr><td>מבחן הטלפון</td><td>אומרים אותו פעם אחת בטלפון, והשומע יודע לאיית אותו ולחפש אותו בגוגל.</td></tr>
+      <tr><td>עברית ואנגלית</td><td>עובד בשתי השפות, או לפחות לא נשמע מוזר באחת מהן.</td></tr>
+      <tr><td>ייחודיות</td><td>לא מתנגש במותג קיים בתחום הבית החכם (בארץ ובעולם), ואפשר לרשום אותו כסימן מסחר.</td></tr>
+      <tr><td>דומיין ורשתות</td><td>כתובת ‎.co.il או ‎.com פנויה (או עם תוספת קצרה), ושם משתמש פנוי באינסטגרם ובוואטסאפ עסקי.</td></tr>
+      <tr><td>מקום לגדול</td><td>לא נועל את העסק ל"חכם" או ל"דירות" בלבד; יעבוד גם כשהעסק יגדל לטכנאי שכיר.</td></tr>
+      <tr><td>שמות המסלולים</td><td>היום יש EcoHome / SafeHome / EliteHome. כדאי לבדוק איך השם החדש מתיישב עם שמות המסלולים, או אם גם הם משתנים.</td></tr>
+    </table>
+  </section>
+
+  <section id="associations" class="block">
+    <div class="block-head">
+      <div class="block-head-left"><div class="letter-badge">💭</div><h2>שדות אסוציאציה</h2></div>
+      <span class="status status-draft">✎ פתוח להוספות</span>
+    </div>
+    <p>מחסן מילים לפי כיוון. כל מילה כאן יכולה להפוך לשם, לחלק משם, או לסלוגן.</p>
+    <div class="cloud-grid">
+      <div class="cloud">
+        <div class="c-title">🛡️ שמירה ואמון</div>
+        <div class="words"><span class="w">שומר</span><span class="w">משמרת</span><span class="w">ער</span><span class="w">מגן</span><span class="w">עוגן</span><span class="w">Keeper</span><span class="w">Guardian</span><span class="w">Sentinel</span><span class="w">Halo</span></div>
+      </div>
+      <div class="cloud">
+        <div class="c-title">🤝 טיפול מתמשך (הריטיינר)</div>
+        <div class="words"><span class="w">אב בית</span><span class="w">מטפל</span><span class="w">דואג</span><span class="w">תמיד</span><span class="w">Tend</span><span class="w">Care</span><span class="w">Steward</span><span class="w">Butler</span><span class="w">Concierge</span></div>
+      </div>
+      <div class="cloud">
+        <div class="c-title">🌿 שקט ורוגע</div>
+        <div class="words"><span class="w">שקט</span><span class="w">נחת</span><span class="w">שלווה</span><span class="w">רוגע</span><span class="w">נינוח</span><span class="w">Calm</span><span class="w">Still</span><span class="w">Hush</span></div>
+      </div>
+      <div class="cloud">
+        <div class="c-title">🔥 חום של בית</div>
+        <div class="words"><span class="w">קן</span><span class="w">אח (האח הבוערת)</span><span class="w">גחלת</span><span class="w">ביתי</span><span class="w">מעון</span><span class="w">Hearth</span><span class="w">Ember</span><span class="w">Haven</span><span class="w">Abode</span></div>
+      </div>
+      <div class="cloud">
+        <div class="c-title">🔒 מקומי ופרטי</div>
+        <div class="words"><span class="w">מקומי</span><span class="w">פנימה</span><span class="w">שורש</span><span class="w">ליבה</span><span class="w">בסיס</span><span class="w">Local</span><span class="w">Core</span><span class="w">Inside</span><span class="w">Root</span></div>
+      </div>
+      <div class="cloud">
+        <div class="c-title">💡 נוכחות עדינה (תאורת סטטוס)</div>
+        <div class="words"><span class="w">אור</span><span class="w">זוהר</span><span class="w">נר תמיד</span><span class="w">דופק</span><span class="w">Glow</span><span class="w">Pulse</span><span class="w">Lumen</span><span class="w">Sense</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="round1" class="block">
+    <div class="block-head">
+      <div class="block-head-left"><div class="letter-badge">1</div><h2>סבב 1: מועמדים ראשונים</h2></div>
+      <span class="status status-hot">● ממתין לתגובה של גיא</span>
+    </div>
+    <p>רשימה רחבה בכוונה, משלושה כיוונים שונים. המטרה בסבב הזה היא לא לבחור, אלא להבין איזה <strong>כיוון</strong> מדבר אליך: עברי, אנגלי או משולב. ⭐ מסמן את המועמדים שאני הכי אוהב כרגע.</p>
+
+    <div class="group-label">כיוון א: מילה עברית</div>
+    <div class="cand-grid">
+      <div class="cand">
+        <div class="cand-head"><span class="cand-name">⭐ ביתי <small>· Beiti</small></span><span class="status status-draft">בדיון</span></div>
+        <div class="meaning">"הבית שלי", וגם "ביתי" במובן של חם ומקומי. משחק מילים שמחבר בדיוק בין חום לבין Local-First.</div>
+        <div class="pc"><b>בעד:</b> קצר, חם, עברי, קל לזכור.</div>
+        <div class="pc"><b>נגד:</b> מילה כללית, קשה לרשום כסימן מסחר ולמצוא דומיין נקי.</div>
+      </div>
+      <div class="cand">
+        <div class="cand-head"><span class="cand-name">⭐ נחת <small>· Nachat</small></span><span class="status status-draft">בדיון</span></div>
+        <div class="meaning">שביעות רצון שקטה. "בית בנחת". בדיוק התחושה שהלקוח קונה.</div>
+        <div class="pc"><b>בעד:</b> רגשי, ישראלי מאוד, סלוגן מובנה.</div>
+        <div class="pc"><b>נגד:</b> איות באנגלית לא ברור (Nachat / Nahat); "נחת" גם במובן של נחיתה.</div>
+      </div>
+      <div class="cand">
+        <div class="cand-head"><span class="cand-name">⭐ אב בית <small>· Av Bayit</small></span><span class="status status-draft">בדיון</span></div>
+        <div class="meaning">הדמות שכולם מכירים מהבניין: מישהו שדואג שהכל יעבוד, לאורך זמן. זה בדיוק מודל הריטיינר.</div>
+        <div class="pc"><b>בעד:</b> מסביר את השירות בשתי מילים, אנושי, עם חיוך.</div>
+        <div class="pc"><b>נגד:</b> עלול להישמע לא פרימיום; לא עובד באנגלית.</div>
+      </div>
+      <div class="cand">
+        <div class="cand-head"><span class="cand-name">תמיד <small>· Tamid</small></span><span class="status status-draft">בדיון</span></div>
+        <div class="meaning">כמו נר תמיד: דולק כל הזמן, לא כבה. אמינות ושירות רציף.</div>
+        <div class="pc"><b>בעד:</b> קצר, נשמע טוב בשתי השפות, מבטיח אמינות.</div>
+        <div class="pc"><b>נגד:</b> מילה נפוצה; אסוציאציה דתית קלה.</div>
+      </div>
+      <div class="cand">
+        <div class="cand-head"><span class="cand-name">משמרת <small>· Mishmeret</small></span><span class="status status-draft">בדיון</span></div>
+        <div class="meaning">מישהו תמיד במשמרת על הבית שלך. מתאים לניטור הפרואקטיבי.</div>
+        <div class="pc"><b>בעד:</b> מסביר את הערך של ניטור שוטף.</div>
+        <div class="pc"><b>נגד:</b> ארוך, נשמע כמו חברת שמירה או צבא.</div>
+      </div>
+    </div>
+
+    <div class="group-label">כיוון ב: מילה באנגלית</div>
+    <div class="cand-grid">
+      <div class="cand">
+        <div class="cand-head"><span class="cand-name">⭐ Tend <small>· טֶנְד</small></span><span class="status status-draft">בדיון</span></div>
+        <div class="meaning">לטפח, לטפל לאורך זמן (כמו גינה). "We tend your home".</div>
+        <div class="pc"><b>בעד:</b> קצר, אלגנטי, מתאר טיפול מתמשך ולא התקנה חד-פעמית.</div>
+        <div class="pc"><b>נגד:</b> לרוב הלקוחות בישראל המילה לא אומרת כלום.</div>
+      </div>
+      <div class="cand">
+        <div class="cand-head"><span class="cand-name">Hearth <small>· הארת'</small></span><span class="status status-draft">בדיון</span></div>
+        <div class="meaning">האח הבוערת, הלב של הבית. חום ומרכז.</div>
+        <div class="pc"><b>בעד:</b> חם, פרימיום, מוכר בעולם המותגים.</div>
+        <div class="pc"><b>נגד:</b> ה-th קשה בעברית; עלול להתבלבל עם Heart.</div>
+      </div>
+      <div class="cand">
+        <div class="cand-head"><span class="cand-name">Ember <small>· אמבר</small></span><span class="status status-draft">בדיון</span></div>
+        <div class="meaning">גחלת: זוהר שקט ותמידי. מתחבר לתאורת הסטטוס העדינה.</div>
+        <div class="pc"><b>בעד:</b> נשמע טוב בעברית, פרימיום ושקט.</div>
+        <div class="pc"><b>נגד:</b> קיים מותג בינלאומי (ספל חכם Ember); "אמבר" גם שם פרטי.</div>
+      </div>
+      <div class="cand">
+        <div class="cand-head"><span class="cand-name">Steward <small>· סטיוארד</small></span><span class="status status-draft">בדיון</span></div>
+        <div class="meaning">מי שמנהל ושומר על נכס בשם הבעלים. התיאור המדויק ביותר של "מנוהל".</div>
+        <div class="pc"><b>בעד:</b> מדויק עסקית.</div>
+        <div class="pc"><b>נגד:</b> בעברית מזכיר דייל; ארוך לאיות.</div>
+      </div>
+    </div>
+
+    <div class="group-label">כיוון ג: משולב או מילה מומצאת</div>
+    <div class="cand-grid">
+      <div class="cand">
+        <div class="cand-head"><span class="cand-name">שקט <small>· Shaket</small></span><span class="status status-draft">בדיון</span></div>
+        <div class="meaning">בית שקט: אין תקלות, אין רעש, אין דשבורד צועק. גם הבטחה וגם סגנון.</div>
+        <div class="pc"><b>בעד:</b> מתאר את התוצאה ולא את הטכנולוגיה.</div>
+        <div class="pc"><b>נגד:</b> מילה כללית; באנגלית לא מובן.</div>
+      </div>
+      <div class="cand">
+        <div class="cand-head"><span class="cand-name">קן <small>· Ken</small></span><span class="status status-draft">בדיון</span></div>
+        <div class="meaning">קן: בית חם ומוגן. גם "כן" בשמיעה, כלומר בית שאומר כן.</div>
+        <div class="pc"><b>בעד:</b> מילה אחת, שתי אותיות, משחק מילים.</div>
+        <div class="pc"><b>נגד:</b> Nest של Google תופס את אותה אסוציאציה בדיוק בתחום.</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="questions" class="block">
+    <div class="block-head">
+      <div class="block-head-left"><div class="letter-badge">❓</div><h2>שאלות פתוחות לגיא</h2></div>
+      <span class="status status-hot">● לסבב הבא</span>
+    </div>
+    <ul class="q-list">
+      <li><strong>מה מפריע ב-OneHome?</strong> גנרי מדי? באנגלית מדי? נשמע כמו חברת נדל"ן? (התשובה קובעת ממה להתרחק.)</li>
+      <li><strong>שפה:</strong> שם עברי, שם באנגלית, או משולב?</li>
+      <li><strong>טון:</strong> פרימיום ומאופק, או חם ועם חיוך?</li>
+      <li><strong>מה השם מדגיש:</strong> את השירות (מישהו ששומר), את התחושה (שקט, נחת), או את הבית עצמו?</li>
+      <li><strong>אילו מועמדים בסבב 1</strong> עושים לך משהו, ואילו נפסלים מיד? גם תחושת בטן היא תשובה.</li>
+    </ul>
+  </section>
+
+  <section id="decision" class="block">
+    <div class="block-head">
+      <div class="block-head-left"><div class="letter-badge">⭐</div><h2>החלטה</h2></div>
+      <span class="status status-draft">✎ טרם הוחלט</span>
+    </div>
+    <p style="margin:0">כשנגיע לשם מוסכם: בדיקת דומיין, בדיקה ברשם סימני המסחר ובדיקת רשתות, ואז עדכון האתר הפנימי, דף הנחיתה, קובץ התמחור ושמות המסלולים.</p>
+  </section>
+
+  <div class="bg-note">
+    <h3>יומן סבבים</h3>
+    <ul>
+      <li>14/10/2026: נפתח הדף. סבב 1: 11 מועמדים בשלושה כיוונים, ושדות אסוציאציה לפי ערכי החזון.</li>
+    </ul>
+  </div>
+
+</main>
+
+<footer>עודכן 14/10/2026 · סיעור מוחות פתוח, מתעדכן בכל סבב</footer>
+
+</body>
+</html>
