@@ -293,7 +293,7 @@
           <li>Alexa / Google Assistant</li>
           <li>גיבוי ענן (נשמר רק הגיבוי האחרון, ולכן לא מחליף את הגיבוי ל-R2)</li>
           <li>Webhooks</li>
-          <li><strong>חריג:</strong> TTS/STT ענני — לא דלוק כברירת מחדל. אם יש Voice PE, ברירת המחדל היא Whisper + Piper מקומיים, והענן רק בבחירה מוצהרת של הלקוח</li>
+          <li><strong>חריג:</strong> TTS/STT ענני — לא דלוק כברירת מחדל. אם יש Voice PE, ברירת המחדל היא Whisper + Piper מקומיים, והענן רק בבחירה מוצהרת של הלקוח <strong>עודכן 15/10:</strong> שליטה קולית נדחתה, ולכן כרגע לא מוסיפים Voice PE להתקנה</li>
           <li><strong>חריג:</strong> WebRTC לסטרימינג מצלמות — לא דלוק אוטומטית, רק בבחירה מוצהרת</li>
         </ul>
       </li>
@@ -305,6 +305,16 @@
       <li>bucket מבודד ב-R2 עם הרשאות משלו, וסיסמת הצפנה ייחודית ללקוח <span class="tag tag-ok">מתועד</span></li>
       <li><strong>גיבוי ראשון הצליח</strong> ל-R2 ונשמר עותק מקומי בבית <span class="tag tag-ok">מתועד</span></li>
       <li>אם יאומץ כלי ניטור צי (טרם נבחר, ראו PRD 4): מזהה ניטור ייחודי ללקוח, והגילוי על מה שיוצא מהבית לצורך ניטור מופיע במסמך הפרטיות <span class="tag tag-new">הצעה</span></li>
+    </ul>
+
+    <div class="grp">תבנית ושחזור אצל לקוח — <a href="claude/golden-backup-checklist.md" style="color:var(--brand-blue);text-decoration:none;font-weight:600">מקור: צ'ק-ליסט Golden Backup</a> <span class="tag tag-new">הצעה</span></div>
+    <p style="margin:0;font-size:13.5px">הצעדים הטכניים בטיוטה לא נבדקו עדיין על התקנה אמיתית. את ה-backup יוצרים רק מתבנית נקייה, לא מהבית של גיא.</p>
+    <ul class="chk">
+      <li><strong>נכנס לתבנית:</strong> אפליקציות קבועות (Apps), אינטגרציות שיש אצל כל לקוח, דשבורד בסיסי, Alert והאוטומציות של Watchman, Blueprints, ו-Internal URL כ-placeholder <span class="tag tag-new">הצעה</span></li>
+      <li><strong>לא נכנס לתבנית:</strong> רשתות Zigbee, Z-Wave, Thread או Matter (נוצרות מחדש אצל הלקוח), מכשירים מזווגים, חשבון Nabu Casa, משתמשים וטוקנים, פרטי WiFi ומיקום, רישומי Companion App, סודות אמיתיים, וסיסמת ההצפנה וה-bucket ב-R2 <span class="tag tag-new">הצעה</span></li>
+      <li>שם הקובץ כולל תאריך וגרסת HA. גרסת ה-HA בתבנית צריכה להיות זהה לזו שאצל הלקוח או ישנה ממנה, כי שחזור לגרסה ישנה יותר עלול להיכשל <span class="tag tag-new">הצעה</span></li>
+      <li><strong>אחרי שחזור אצל הלקוח:</strong> להחליף את משתמש התבנית, ליצור רשת Zigbee חדשה ולזווג את המכשירים, DHCP Reservation ו-Internal URL, סיסמת הצפנה ו-bucket ייחודיים וגיבוי ראשון, ובדיקת Push <span class="tag tag-new">הצעה</span></li>
+      <li>כל שינוי בתבנית נבדק קודם בבית של גיא או ב-Sandbox, ורק אחר כך נוצר golden backup חדש <span class="tag tag-new">הצעה</span></li>
     </ul>
 
     <div class="grp">חשבונות גישה ואימות דו-שלבי — <a href="claude/decision-access-credentials.md" style="color:var(--brand-blue);text-decoration:none;font-weight:600">מקור: החלטת חשבונות וסיסמאות (15/10)</a> <span class="tag tag-new">הצעה</span></div>
