@@ -307,6 +307,18 @@
       <li>אם יאומץ כלי ניטור צי (טרם נבחר, ראו PRD 4): מזהה ניטור ייחודי ללקוח, והגילוי על מה שיוצא מהבית לצורך ניטור מופיע במסמך הפרטיות <span class="tag tag-new">הצעה</span></li>
     </ul>
 
+    <div class="grp">חשבונות גישה ואימות דו-שלבי — <a href="claude/decision-access-credentials.md" style="color:var(--brand-blue);text-decoration:none;font-weight:600">מקור: החלטת חשבונות וסיסמאות (15/10)</a> <span class="tag tag-new">הצעה</span></div>
+    <ul class="chk">
+      <li><strong>חשבון התחזוקה של גיא:</strong> שם <code>admin</code> (זמני עד שיבחר שם לעסק), סיסמה אקראית וארוכה <strong>ייחודית לכל לקוח</strong> מ-Bitwarden, ו-<strong>TOTP חובה</strong> שמופעל מחדש בכל התקנה <span class="tag tag-new">הצעה</span></li>
+      <li><strong>חשבון הניהול של הלקוח:</strong> TOTP כהמלצה בלבד, בעיקר אם נרכשה גישה מרחוק. לא מכריחים, כי ל-HA אין אכיפה גורפת, ונעילה אצל מבוגרים וילדים מייצרת קריאות תמיכה <span class="tag tag-new">הצעה</span></li>
+      <li>בני בית נוספים (ילדים, מבוגרים): משתמש רגיל בלי הרשאת ניהול ובלי TOTP <span class="tag tag-new">הצעה</span></li>
+      <li><strong>סוד ה-TOTP נשמר ב-Bitwarden</strong> יחד עם הסיסמה. ל-HA אין קודי חירום, ואובדן הסוד דורש גישה לקונסולה או ל-SSH <span class="tag tag-new">הצעה</span></li>
+      <li>לא יוצרים Long-Lived Access Token בלי צורך, כי הוא עוקף TOTP לגמרי. טוקן שנוצר נמחק בסוף העבודה <span class="tag tag-new">הצעה</span></li>
+      <li>הגיבויים מוצפנים: ה-hash של הסיסמה וסוד ה-TOTP נשמרים בתוך הגיבוי <span class="tag tag-new">הצעה</span></li>
+      <li>בטבלת הלקוחות נרשם אם הופעל TOTP אצל הלקוח, ומי מחזיק את הסוד <span class="tag tag-new">הצעה</span></li>
+      <li><strong>Bitwarden הוא מנהל הסיסמאות של העסק.</strong> לכל לקוח ערך אחד: משתמש, סיסמה, TOTP, סיסמת הצפנת גיבויים ופרטי ה-bucket ב-R2. סיסמה ראשית ארוכה, 2FA על החשבון, וערכת חירום (Emergency kit) שמורה בנפרד. לא משתמשים במנהל הסיסמאות של גוגל <span class="tag tag-new">הצעה</span></li>
+    </ul>
+
     <div class="grp">התראות ובטיחות</div>
     <ul class="chk">
       <li><strong>בדיקת Push אמיתית לטלפון של הלקוח</strong>, כולל כשהוא מחוץ ל-WiFi הביתי. עובד גם בלי Nabu Casa, ולכן זה מה שהופך את "מקומי בלבד" למכירה בטוחה <span class="tag tag-ok">מתועד</span></li>
@@ -381,7 +393,7 @@
   <section id="open" class="block">
     <div class="block-head">
       <div class="block-head-left"><div class="letter-badge">H</div><h2>שאלות פתוחות להחלטה</h2></div>
-      <span class="status status-empty">❓ 7 שאלות פתוחות</span>
+      <span class="status status-empty">❓ 8 שאלות פתוחות</span>
     </div>
     <div class="qbox"><div class="qlabel">1 — מקדמה ומסלול תשלום — הצעה מ-20/09, ממתינה לבדיקה</div><p>50% מסה"כ הצעת המחיר (חבילה בסיסית + פריטים לפי חדרים, מחושב בגיליון "הצעת מחיר" ב-<a href="../pricing/OneHome_pricing_model.xlsx" style="color:var(--brand-blue);text-decoration:none;font-weight:600">OneHome_pricing_model.xlsx</a>) בחתימה, לפני הזמנת הציוד, ו-50% ביום אישור הקבלה החתום, אותו יום שמתחיל הריטיינר. הרחבות: תשלום מלא לפני הזמנת חומרה. המקדמה מוחזרת במלואה עד הזמנת הציוד. מסלול שנתי לריטיינר נדחה עד שיש נתוני שעות תמיכה. עלויות החומרה בתוכנית העסקית הן הערכות, ולכן לוודא מול <a href="../pricing/OneHome_pricing_model.xlsx" style="color:var(--brand-blue);text-decoration:none;font-weight:600">OneHome_pricing_model.xlsx</a>. ניסוח הביטול לאמת עם עו"ד, וקבלה על מקדמה עם רו"ח.</p></div>
     <div class="qbox"><div class="qlabel">2 — ההגדרה של "הבית חי" — הוחלט ✓</div><p>ההגדרה המורחבת בסעיף B אושרה, כולל ההחלטה שהריטיינר וה-SLA מתחילים באישור הקבלה החתום.</p></div>
@@ -391,6 +403,7 @@
     <div class="qbox"><div class="qlabel">6 — אחריות על עבודת ההתקנה והחומרה</div><p>לוודא מול PRD 1 מה תקופת האחריות על עבודת ההתקנה עצמה ועל החומרה, ולכתוב אותה במסמך המסירה.</p></div>
     <div class="qbox"><div class="qlabel">7 — בחירת חשמלאי ואימות תקנים</div><p>עדיין פתוח מ-PRD 1: מי החשמלאי הקבוע, ואילו משימות בפועל מחייבות רישיון. לאמת מולו לפני הלקוח הראשון.</p></div>
     <div class="qbox"><div class="qlabel">8 — UPS: חלק מהחבילה או תוספת?</div><p>ההמלצה היא UPS לכל לקוח, כי הוא מונע את רוב התקלות שאחרי הפסקת חשמל ומוריד קריאות תמיכה. צריך להחליט: לכלול בחבילה הבסיסית או למכור כתוספת, ואיזה דגם. UPS קטן עם USB (תומך NUT, מאפשר התראה) מול Mini UPS DC זול בלי חיבור נתונים. לבדוק מחירים אצל יבואנים בישראל ולעדכן ב-<a href="../pricing/OneHome_pricing_model.xlsx" style="color:var(--brand-blue);text-decoration:none;font-weight:600">OneHome_pricing_model.xlsx</a>.</p></div>
+    <div class="qbox"><div class="qlabel">9 — תחזוקה מרחוק: Tailscale, Nabu Casa או כלום</div><p>Tailscale (או Nabu Casa) פותר רק גישה לרשת, ואחריו עדיין צריך משתמש HA. Tailscale לא מופיע בתוכנית, וברירת המחדל במסמכים היא גישה מקומית בלבד. להחליט: האם תחזוקה מרחוק היא חלק מהריטיינר, האם נדרשת הסכמה מפורשת של הלקוח, האם הגישה פעילה תמיד או רק בזמן תחזוקה, וחשבון Tailscale של OneHome או של הלקוח. פירוט ב-<a href="claude/decision-access-credentials.md" style="color:var(--brand-blue);text-decoration:none;font-weight:600">החלטת חשבונות וסיסמאות</a>.</p></div>
   </section>
 
 </main>
