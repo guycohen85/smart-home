@@ -11,6 +11,6 @@ When an answer mixes Hebrew and English, start every line, heading and list item
 
 This applies to chat replies and to Hebrew content written into the repo.
 
-## מעקב התקדמות
+## מעקב משימות
 
-הקובץ `PROGRESS.md` בשורש הריפו הוא מקור האמת למשימות שבוצעו ולמשימות הבאות. בתחילת סשן קוראים אותו, ובסופו מעדכנים: מסמנים `[x]` למה שנבדק בפועל, ומוסיפים תאריך.
+דף `plan-site/progress.html` הוא מקור האמת למשימות הפרויקט: מה בתהליך ומה הושלם. הדף קצר בכוונה ומכיל רק משימות בפועל שקשורות לפרויקט או לאפליקציה. בסוף סשן מעדכנים אותו לפי מה שגיא דיווח, ומעדכנים את תאריך ה-footer.
