@@ -45,7 +45,8 @@
 ## לקחים מהניסוי הראשון (17/10, ראוטר Partner 5G)
 - אחרי יצירת השריון צריך לאתחל את Home Assistant כדי שיקלוט את הכתובת החדשה.
 - בדיקה מהירה: ping לכתובת homeassistant.local מראה את הכתובת הנוכחית.
-- עדיף שם מארח בלי נקודה בשריון (למשל HA-Green). לא נבדק אם זה משנה.
+- שם המארח בשריון (שדה Hostname בראוטר) היה homeassistant.local, כולל נקודה, והשריון עבד. אין צורך לשנות אותו.
+- אחרי שהכתובת נקלטה מעדכנים באפליקציית Home Assistant את ה-Internal URL לכתובת החדשה.
 - את ה-IPv4 בודקים ב-Settings → System → Network → Configure network interfaces.
 
 ## שאלות פתוחות

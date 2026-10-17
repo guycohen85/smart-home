@@ -157,7 +157,8 @@
       <ul style="margin:0">
         <li>אחרי יצירת השריון בראוטר ה-Green המשיך להחזיק את הכתובת הישנה. הכתובת החדשה נקלטה רק אחרי אתחול של Home Assistant.</li>
         <li>לבדיקה: <code>ping homeassistant.local</code> מראה את הכתובת הנוכחית, גם כשה-IP החדש עדיין לא נקלט.</li>
-        <li>השריון הוגדר עם שם מארח שכולל נקודה (<code>homeassistant.local</code>). לא ברור אם זה השפיע, ולכן לשריונות הבאים עדיף שם בלי נקודה, למשל <code>HA-Green</code>.</li>
+        <li>שם המארח בשריון (שדה Hostname בראוטר) היה <code>homeassistant.local</code>, כולל נקודה, והשריון עבד. כלומר הנקודה לא גרמה לבעיה, ואין צורך לשנות את השם.</li>
+        <li>אחרי שהכתובת נקלטה צריך לעדכן באפליקציית Home Assistant את ה-Internal URL לכתובת החדשה (למשל <code>http://192.168.1.150:8123</code>).</li>
         <li>ב-Settings → System → Network, כרטיס Network adapter הוא רק בחירת ממשקים לאינטגרציות. את ה-IPv4 בודקים בכרטיס Configure network interfaces.</li>
       </ul>
     </div>
