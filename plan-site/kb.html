@@ -122,7 +122,7 @@
   <section class="block">
     <div class="block-head">
       <div class="block-head-left"><div class="letter-badge">2</div><h2>אילו מכשירים משריינים להם כתובת (DHCP Reservation) ואיך מתעדים</h2></div>
-      <span class="status status-draft">✎ טיוטה — טרם נוסה בהתקנה אצל לקוח אמיתי</span>
+      <span class="status status-draft">✎ נוסה על HA Green אחד (17/10) — טרם נוסה אצל לקוח אמיתי</span>
     </div>
     <p><strong>הבעיה:</strong> מכשיר שהכתובת שלו משתנה אחרי הפסקת חשמל או הפעלה מחדש של הראוטר שובר בשקט אינטגרציה מקומית. אצל HA עצמו זה גם שובר את ה-Internal URL שהאפליקציה משתמשת בו.</p>
     <div class="idea-box">
@@ -150,6 +150,15 @@
         <li>משחזרים את התבנית ל-HA, ואז משריינים ל-HA Green כתובת לפי ה-MAC שלו ומגדירים אותה כ-Internal URL.</li>
         <li>מכבים MAC אקראי (Private Wi-Fi Address) במכשירים שמשריינים.</li>
         <li>ממלאים טבלת שריונות בתיק הלקוח: שם, MAC, IP ותפקיד.</li>
+      </ul>
+    </div>
+    <div class="idea-box">
+      <h3>מה למדנו בניסוי הראשון (17/10, ראוטר Partner 5G)</h3>
+      <ul style="margin:0">
+        <li>אחרי יצירת השריון בראוטר ה-Green המשיך להחזיק את הכתובת הישנה. הכתובת החדשה נקלטה רק אחרי אתחול של Home Assistant.</li>
+        <li>לבדיקה: <code>ping homeassistant.local</code> מראה את הכתובת הנוכחית, גם כשה-IP החדש עדיין לא נקלט.</li>
+        <li>השריון הוגדר עם שם מארח שכולל נקודה (<code>homeassistant.local</code>). לא ברור אם זה השפיע, ולכן לשריונות הבאים עדיף שם בלי נקודה, למשל <code>HA-Green</code>.</li>
+        <li>ב-Settings → System → Network, כרטיס Network adapter הוא רק בחירת ממשקים לאינטגרציות. את ה-IPv4 בודקים בכרטיס Configure network interfaces.</li>
       </ul>
     </div>
     <div class="idea-box reject">
