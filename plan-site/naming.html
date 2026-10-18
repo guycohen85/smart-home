@@ -145,24 +145,6 @@
   /* Mobile: let the top nav wrap freely; avoid sticky overlap with chip nav */
   @media (max-width: 720px) { .sitebar { position: static; } nav.chipnav { top: 0; } }
 
-  /* Name picker tool */
-  .tool-add { display:grid; grid-template-columns: 1fr 1fr auto; gap:8px; margin-top:10px; }
-  @media (max-width: 640px) { .tool-add { grid-template-columns: 1fr 1fr; } .tool-add button { grid-column: 1 / -1; } }
-  .tool-add input, .nc textarea {
-    font-family: inherit; font-size:15px; padding:10px 12px; border:1px solid var(--border); border-radius:10px; background:#fff; color: var(--ink); width:100%;
-  }
-  .tool-add input:focus, .nc textarea:focus { outline:2px solid var(--brand-blue); outline-offset:-1px; }
-  .btn {
-    font-family: inherit; font-size:14px; font-weight:700; border:1px solid var(--brand-blue); background: var(--brand-blue); color:#fff;
-    border-radius:10px; padding:9px 16px; cursor:pointer;
-  }
-  .btn.ghost { background:#fff; color: var(--brand-blue); }
-  .btn.small { font-size:12.5px; padding:5px 10px; border-radius:8px; }
-  .btn.danger { border-color:#fecaca; color:#b91c1c; background:#fff; }
-  .tool-bar { display:flex; gap:8px; flex-wrap:wrap; margin-top:14px; }
-  .tool-empty { margin-top:16px; padding:22px; border:1px dashed var(--border); border-radius:14px; text-align:center; color: var(--muted); font-size:14px; }
-  .weights { display:flex; flex-wrap:wrap; gap:6px; margin-top:8px; }
-  .weights span { font-size:12.5px; background: var(--bg); border:1px solid var(--border); border-radius:14px; padding:3px 10px; color: var(--ink-soft); }
 
   .nc { border:1px solid var(--border); border-radius:16px; padding:18px 20px; margin-top:14px; background:#fff; }
   .nc.fav { border-color: var(--brand-green); box-shadow: 0 0 0 1px var(--brand-green) inset; }
@@ -257,47 +239,19 @@
 
 <header class="top">
   <div class="top-inner">
-    <span class="eyebrow">✍️ בחירת שם — כלי עבודה</span>
+    <span class="eyebrow">✍️ בחירת שם — השראה וקריטריונים</span>
     <h1 class="page-title">בחירת שם לעסק</h1>
-    <p class="page-sub">השם הנוכחי, OneHome, מתנגש בחברות אחרות. בדף הזה יש כלי לדירוג השמות שעולים לך, השראה משמות של חברות בית חכם (מהטוב לפחות טוב), והקריטריונים. סיעור המוחות הקודם שמור בארכיון בתחתית הדף.</p>
+    <p class="page-sub">השם הנוכחי, OneHome, מתנגש בחברות אחרות. בדף הזה יש השראה משמות של חברות בית חכם (מהטוב לפחות טוב), והקריטריונים. סיעור המוחות הקודם שמור בארכיון בתחתית הדף.</p>
   </div>
 </header>
 
 <nav class="chipnav"><div class="chipnav-inner">
-  <a href="#tool" class="chip"><span>🧮</span><span>כלי הבחירה</span></a>
   <a href="#inspiration" class="chip"><span>💡</span><span>השראה מחברות</span></a>
   <a href="#criteria" class="chip"><span>✅</span><span>קריטריונים</span></a>
   <a href="#archive" class="chip"><span>🗂️</span><span>ארכיון סיעור המוחות</span></a>
 </div></nav>
 
 <main>
-
-  <section id="tool" class="block">
-    <div class="block-head">
-      <div class="block-head-left"><div class="letter-badge">🧮</div><h2>כלי לבחירת שם</h2></div>
-      <span class="status status-hot">● כלי עבודה</span>
-    </div>
-    <p>הוסף כל שם שעולה לך, ואז דרג אותו לפי הקריטריונים. הכלי מוסיף לבד בדיקות אוטומטיות: הגייה בחו"ל, אורך, צליל, ומילים כלליות. הוא גם מראה את השם במשפטים אמיתיים ובלוגו, ומשמיע אותו במבטא אמריקאי. השמות מסודרים לפי ציון, מהגבוה לנמוך.</p>
-    <p style="font-size:13.5px">משקל כל קריטריון בציון (מתוך 100):</p>
-    <div class="weights">
-      <span>ייחודיות ×3</span><span>הגייה בעברית ובאנגלית ×2</span><span>מבחן הטלפון ×2</span><span>תחושת בטן ×2</span><span>צליל רך ×1</span><span>משמעות וסיפור ×1</span><span>מקום לגדול ×1</span>
-    </div>
-
-    <form class="tool-add" id="addForm" autocomplete="off">
-      <input id="addHe" placeholder="השם בעברית (למשל: נווה)" aria-label="השם בעברית">
-      <input id="addEn" placeholder="איות באנגלית (למשל: Naveh)" aria-label="איות באנגלית" dir="ltr">
-      <button class="btn" type="submit">הוספה</button>
-    </form>
-
-    <div id="list"></div>
-
-    <div class="tool-bar">
-      <button class="btn ghost small" type="button" id="copySummary">העתקת סיכום (כדי להדביק לי בצ'אט)</button>
-      <button class="btn ghost small" type="button" id="exportJson">הורדת גיבוי</button>
-      <label class="btn ghost small" style="display:inline-flex;align-items:center">שחזור מגיבוי<input type="file" id="importJson" accept="application/json" hidden></label>
-    </div>
-    <p style="font-size:12.5px;color:var(--muted);margin:10px 0 0">השמות נשמרים רק בדפדפן הזה. כדי לא לאבד אותם, כדאי להוריד גיבוי מדי פעם.</p>
-  </section>
 
   <section id="inspiration" class="block">
     <div class="block-head">
@@ -356,7 +310,7 @@
   <section id="criteria" class="block">
     <div class="block-head">
       <div class="block-head-left"><div class="letter-badge">✅</div><h2>קריטריונים לשם טוב</h2></div>
-      <span class="status status-done">✓ הכלי מדרג לפיהם</span>
+      <span class="status status-done">✓ בסיס להערכת שמות</span>
     </div>
     <table class="crit">
       <tr><th>קריטריון</th><th>מה בודקים</th></tr>
@@ -574,7 +528,7 @@
   <section id="round3" class="block">
     <div class="block-head">
       <div class="block-head-left"><div class="letter-badge">3</div><h2>סבב 3: צליל רך ושורש עברי</h2></div>
-      <span class="status status-done">✓ נסגר: עוברים לכלי הבחירה</span>
+      <span class="status status-done">✓ נסגר</span>
     </div>
     <p><strong>מה למדנו מגיא:</strong> הצליל המועדף הוא רך ועגול, ואחריו אלגנטי ומלא. סוג השם (קיים, מומצא או צירוף) והתחושה (ביטחון, רוגע, יוקרה או חיוך) פתוחים. כל אלה מתאימים.</p>
     <p><strong>מה למדנו מהבדיקה:</strong> שמות קצרים ורכים באנגלית או בלטינית כבר תפוסים בתחום הבית החכם. בדקנו שלושה, ושלושתם נפסלו:</p>
@@ -659,228 +613,8 @@
 
 </main>
 
-<footer>עודכן 14/10/2026 · כלי עבודה לבחירת שם, הנתונים נשמרים בדפדפן</footer>
+<footer>עודכן 14/10/2026 · השראה וקריטריונים לבחירת שם</footer>
 
-<script>
-(function () {
-  var KEY = 'naming-tool-v1';
-  var CRITERIA = [
-    { k: 'uniq',  w: 3, label: 'ייחודיות', hint: 'אין מותג דומה בתחום' },
-    { k: 'pron',  w: 2, label: 'הגייה בעברית ובאנגלית', hint: 'קל לומר בשתי השפות' },
-    { k: 'phone', w: 2, label: 'מבחן הטלפון', hint: 'שומעים פעם אחת ויודעים לאיית' },
-    { k: 'gut',   w: 2, label: 'תחושת בטן', hint: 'כמה אני אוהב אותו' },
-    { k: 'sound', w: 1, label: 'צליל רך', hint: 'עגול ונעים' },
-    { k: 'story', w: 1, label: 'משמעות וסיפור', hint: 'יש מה לספר עליו' },
-    { k: 'grow',  w: 1, label: 'מקום לגדול', hint: 'לא נועל לדירות או ל"חכם"' }
-  ];
-  var MAX = CRITERIA.reduce(function (a, c) { return a + c.w * 5; }, 0);
-  var CHECKS = [
-    { k: 'google', label: 'חיפשתי בגוגל: אין חברת בית חכם בשם הזה' },
-    { k: 'domain', label: 'דומיין <bdi dir="ltr">.com</bdi> או <bdi dir="ltr">.co.il</bdi> פנוי' },
-    { k: 'tm',     label: 'בדקתי במאגר סימני המסחר' },
-    { k: 'insta',  label: 'שם משתמש פנוי באינסטגרם' },
-    { k: 'aloud',  label: 'אמרתי אותו בקול במשך 3 ימים' },
-    { k: 'people', label: 'שאלתי 3 אנשים מה הם שומעים בשם' }
-  ];
-  var STATUS = { open: 'בדיון', fav: 'מועדף', out: 'נפסל' };
-
-  var names = load();
-
-  function load() {
-    try { var raw = localStorage.getItem(KEY); return raw ? JSON.parse(raw) : []; }
-    catch (e) { return []; }
-  }
-  function save() {
-    try { localStorage.setItem(KEY, JSON.stringify(names)); } catch (e) {}
-  }
-  function esc(s) {
-    return String(s || '').replace(/[&<>"']/g, function (c) {
-      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
-    });
-  }
-  function score(n) {
-    var sum = 0, rated = 0;
-    CRITERIA.forEach(function (c) { var v = n.scores[c.k]; if (v) { sum += v * c.w; rated++; } });
-    return { pct: Math.round(sum / MAX * 100), rated: rated };
-  }
-  function display(n) { return n.he || n.en; }
-
-  // Automatic checks: heuristics only, to flag things worth a second look.
-  function flags(n) {
-    var out = [];
-    var he = n.he || '', en = (n.en || '').toLowerCase();
-    if (/[חעצץ]/.test(he) || /ch|kh|tz|'/.test(en)) out.push(['warn', 'הגייה בחו"ל: יש ח, ע או צ, שקשים לדוברי אנגלית']);
-    if (/home|smart|house|casa|bayit|beit/.test(en) || /בית|חכם/.test(he)) out.push(['warn', 'מכיל מילה כללית (Home / Smart / בית), כמו OneHome']);
-    if (!en) out.push(['info', 'חסר איות באנגלית, אז אי אפשר לבדוק צליל ואורך']);
-    if (en) {
-      var syl = (en.match(/[aeiouy]+/g) || []).length || 1;
-      if (syl <= 2) out.push(['good', 'קצר: ' + syl + (syl === 1 ? ' הברה' : ' הברות')]);
-      else if (syl === 3) out.push(['info', 'בינוני: 3 הברות']);
-      else out.push(['warn', 'ארוך: ' + syl + ' הברות']);
-      var letters = en.replace(/[^a-z]/g, '');
-      var soft = (letters.match(/[lmnvwyhaeiou]/g) || []).length;
-      var hard = (letters.match(/[kqtpgdbzxc]/g) || []).length;
-      var ratio = letters.length ? soft / letters.length : 0;
-      if (ratio >= 0.75) out.push(['good', 'צליל רך']);
-      else if (hard / (letters.length || 1) >= 0.4) out.push(['info', 'צליל חד']);
-      else out.push(['info', 'צליל מאוזן']);
-      if (/(.)\1\1/.test(letters) || /[^aeiou]{4,}/.test(letters)) out.push(['warn', 'איות לא צפוי, וזה בעייתי במבחן הטלפון']);
-    }
-    return out;
-  }
-
-  function links(n) {
-    var q = encodeURIComponent(n.en || n.he);
-    var slug = (n.en || '').toLowerCase().replace(/[^a-z0-9]/g, '');
-    var out = [
-      ['גוגל: בית חכם', 'https://www.google.com/search?q=%22' + q + '%22+smart+home'],
-      ['גוגל: בעברית', 'https://www.google.com/search?q=%22' + encodeURIComponent(n.he || n.en) + '%22+בית+חכם'],
-      ['מאגר סימני מסחר (WIPO)', 'https://branddb.wipo.int/']
-    ];
-    if (slug) {
-      out.push(['דומיין <bdi dir="ltr">.com</bdi>', 'https://www.namecheap.com/domains/registration/results/?domain=' + slug + '.com']);
-      out.push(['חיפוש <bdi dir="ltr">' + slug + '.co.il</bdi>', 'https://www.google.com/search?q=' + slug + '.co.il']);
-      out.push(['אינסטגרם', 'https://www.instagram.com/' + slug + '/']);
-    }
-    return out;
-  }
-
-  function speak(text, lang) {
-    if (!('speechSynthesis' in window) || !text) return;
-    try {
-      window.speechSynthesis.cancel();
-      var u = new SpeechSynthesisUtterance(text);
-      u.lang = lang; u.rate = 0.9;
-      window.speechSynthesis.speak(u);
-    } catch (e) {}
-  }
-
-  function render() {
-    var el = document.getElementById('list');
-    if (!names.length) {
-      el.innerHTML = '<div class="tool-empty">עדיין אין שמות. הוסף את הראשון למעלה. אפשר להוסיף גם שמות שאתה לא בטוח בהם: הדירוג יעזור להחליט.</div>';
-      return;
-    }
-    var order = names.map(function (n, i) { return { n: n, i: i, s: score(n) }; });
-    var rankStatus = { fav: 0, open: 1, out: 2 };
-    order.sort(function (a, b) {
-      return (rankStatus[a.n.status] - rankStatus[b.n.status]) || (b.s.pct - a.s.pct);
-    });
-    el.innerHTML = order.map(function (o, pos) {
-      var n = o.n, i = o.i, s = o.s, nm = esc(display(n)), en = esc(n.en), he = esc(n.he);
-      var crit = CRITERIA.map(function (c) {
-        var dots = [1, 2, 3, 4, 5].map(function (v) {
-          return '<button type="button" class="' + (n.scores[c.k] === v ? 'on' : '') + '" data-act="score" data-i="' + i + '" data-k="' + c.k + '" data-v="' + v + '" aria-label="' + c.label + ' ' + v + '">' + v + '</button>';
-        }).join('');
-        return '<div class="crit-row"><div class="cl">' + c.label + ' <small>×' + c.w + ' · ' + c.hint + '</small></div><div class="dots">' + dots + '</div></div>';
-      }).join('');
-      var checks = CHECKS.map(function (c) {
-        return '<label><input type="checkbox" data-act="check" data-i="' + i + '" data-k="' + c.k + '"' + (n.checks[c.k] ? ' checked' : '') + '>' + c.label + '</label>';
-      }).join('');
-      var fl = flags(n).map(function (f) { return '<span class="flag ' + f[0] + '">' + f[1] + '</span>'; }).join('');
-      var ln = links(n).map(function (l) { return '<a href="' + l[1] + '" target="_blank" rel="noopener">' + l[0] + '</a>'; }).join('');
-      var opts = Object.keys(STATUS).map(function (k) { return '<option value="' + k + '"' + (n.status === k ? ' selected' : '') + '>' + STATUS[k] + '</option>'; }).join('');
-      var lbl = s.rated === CRITERIA.length ? 'מתוך 100' : 'דורגו ' + s.rated + ' מתוך ' + CRITERIA.length;
-      return '<div class="nc ' + (n.status === 'fav' ? 'fav' : n.status === 'out' ? 'rejected' : '') + '">' +
-        '<div class="nc-head"><div><span class="nc-rank">' + (pos + 1) + '</span><span class="nc-title">' + nm + (n.he && n.en ? '<small dir="ltr">' + en + '</small>' : '') + '</span></div>' +
-        '<div class="nc-actions"><div class="nc-score"><div class="num">' + (s.rated ? s.pct : '–') + '</div><div class="lbl">' + lbl + '</div></div>' +
-        '<select data-act="status" data-i="' + i + '" aria-label="סטטוס">' + opts + '</select>' +
-        (n.en ? '<button type="button" class="btn ghost small" data-act="speak-en" data-i="' + i + '">השמעה באנגלית 🔊</button>' : '') +
-        (n.he ? '<button type="button" class="btn ghost small" data-act="speak-he" data-i="' + i + '">השמעה בעברית 🔊</button>' : '') +
-        '<button type="button" class="btn danger small" data-act="del" data-i="' + i + '">מחיקה</button></div></div>' +
-        '<div class="flags">' + fl + '</div>' +
-        '<div class="nc-grid"><div><h4>דירוג לפי קריטריונים</h4>' + crit + '</div>' +
-        '<div><h4>בדיקות</h4><div class="links">' + ln + '</div><div class="checks">' + checks + '</div></div></div>' +
-        '<div class="nc-grid"><div><h4>מבחן המשפט</h4><ul class="sentences">' +
-          '<li>"היה לנו פיצוץ צנרת, אבל <b>' + nm + '</b> התריע לפני שהמים הגיעו לסלון."</li>' +
-          '<li>"מי עשה לכם את הבית? <b>' + nm + '</b>. הם גם מתחזקים אותו כל חודש."</li>' +
-          '<li>"שלום, הגעתם ל<b>' + nm + '</b>, מדבר גיא."</li>' +
-          (n.en ? '<li>באנגלית:<div dir="ltr" style="text-align:right">"Your home is looked after by <b>' + en + '</b>."</div></li>' : '') +
-        '</ul></div><div><h4>איך זה נראה כלוגו</h4><div class="logo-row"><div class="logo-tile dark">' + (en || he) + '</div><div class="logo-tile light">' + (he || en) + '</div></div></div></div>' +
-        '<h4 style="margin-top:14px">הערות</h4><textarea data-act="notes" data-i="' + i + '" placeholder="מה עלה לך כשאמרת אותו? מה אמרו אנשים?">' + esc(n.notes) + '</textarea>' +
-      '</div>';
-    }).join('');
-  }
-
-  document.getElementById('addForm').addEventListener('submit', function (e) {
-    e.preventDefault();
-    var he = document.getElementById('addHe').value.trim();
-    var en = document.getElementById('addEn').value.trim();
-    if (!he && !en) return;
-    names.push({ he: he, en: en, status: 'open', scores: {}, checks: {}, notes: '', added: new Date().toISOString().slice(0, 10) });
-    document.getElementById('addHe').value = '';
-    document.getElementById('addEn').value = '';
-    save(); render();
-    document.getElementById('addHe').focus();
-  });
-
-  var list = document.getElementById('list');
-  list.addEventListener('click', function (e) {
-    var b = e.target.closest('[data-act]'); if (!b) return;
-    var n = names[+b.dataset.i]; if (!n) return;
-    var act = b.dataset.act;
-    if (act === 'score') {
-      var v = +b.dataset.v;
-      n.scores[b.dataset.k] = n.scores[b.dataset.k] === v ? 0 : v;
-      save(); render();
-    } else if (act === 'del') {
-      if (confirm('למחוק את "' + display(n) + '"?')) { names.splice(+b.dataset.i, 1); save(); render(); }
-    } else if (act === 'speak-en') {
-      speak(n.en, 'en-US');
-    } else if (act === 'speak-he') {
-      speak(n.he, 'he-IL');
-    }
-  });
-  list.addEventListener('change', function (e) {
-    var t = e.target, n = names[+t.dataset.i]; if (!n) return;
-    if (t.dataset.act === 'status') { n.status = t.value; save(); render(); }
-    else if (t.dataset.act === 'check') { n.checks[t.dataset.k] = t.checked; save(); }
-  });
-  list.addEventListener('input', function (e) {
-    var t = e.target;
-    if (t.dataset.act === 'notes') { names[+t.dataset.i].notes = t.value; save(); }
-  });
-
-  document.getElementById('copySummary').addEventListener('click', function () {
-    var lines = names.slice().sort(function (a, b) { return score(b).pct - score(a).pct; }).map(function (n) {
-      var s = score(n);
-      var done = CHECKS.filter(function (c) { return n.checks[c.k]; }).length;
-      return '- ' + display(n) + (n.he && n.en ? ' (' + n.en + ')' : '') + ': ציון ' + (s.rated ? s.pct : '–') +
-        ', ' + STATUS[n.status] + ', בדיקות ' + done + '/' + CHECKS.length + (n.notes ? '. הערות: ' + n.notes : '');
-    });
-    var text = 'מועמדים לשם העסק:\n' + (lines.join('\n') || 'אין עדיין');
-    var btn = this;
-    function done() { btn.textContent = 'הועתק ✓'; setTimeout(function () { btn.textContent = "העתקת סיכום (כדי להדביק לי בצ'אט)"; }, 1800); }
-    if (navigator.clipboard) navigator.clipboard.writeText(text).then(done, function () { prompt('העתק מכאן:', text); });
-    else prompt('העתק מכאן:', text);
-  });
-  document.getElementById('exportJson').addEventListener('click', function () {
-    var blob = new Blob([JSON.stringify(names, null, 2)], { type: 'application/json' });
-    var a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = 'naming-candidates-' + new Date().toISOString().slice(0, 10) + '.json';
-    document.body.appendChild(a); a.click(); a.remove();
-  });
-  document.getElementById('importJson').addEventListener('change', function () {
-    var f = this.files && this.files[0]; if (!f) return;
-    var r = new FileReader();
-    r.onload = function () {
-      try {
-        var data = JSON.parse(r.result);
-        if (!Array.isArray(data)) throw 0;
-        names = data.map(function (n) {
-          return { he: n.he || '', en: n.en || '', status: STATUS[n.status] ? n.status : 'open', scores: n.scores || {}, checks: n.checks || {}, notes: n.notes || '', added: n.added || '' };
-        });
-        save(); render();
-      } catch (e) { alert('הקובץ לא נראה כמו גיבוי של הכלי.'); }
-    };
-    r.readAsText(f);
-    this.value = '';
-  });
-
-  render();
-})();
-</script>
 
 </body>
 </html>
