@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OneHome — פוסט פייסבוק</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0f172a; --ink-soft: #475569; --muted: #64748b;
+    --bg: #f8fafc; --card-bg: #ffffff; --border: #e2e8f0;
+    --brand-blue: #0284c7; --brand-green: #059669;
+    --rec-bg: #ecfdf5; --rec-fg: #047857; --rec-bd:#a7f3d0;
+    --amber-bg:#fffbeb; --amber-fg:#92400e; --amber-bd:#fde68a;
+    --blue-bg:#eff6ff; --blue-bd:#bfdbfe;
+  }
+  * { box-sizing: border-box; }
+  body { margin:0; background: var(--bg); color: var(--ink); font-family:'Heebo',sans-serif; line-height:1.7; -webkit-font-smoothing:antialiased; }
+  a { color: inherit; }
+
+  .sitebar { position:sticky; top:0; z-index:60; background:#020617; border-bottom:1px solid #1e293b; }
+  .sitebar-inner { max-width: 1000px; margin:0 auto; padding: 10px 24px; display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap; }
+  .sitebar-logo { font-weight:800; font-size:15px; color:#f8fafc; text-decoration:none; display:flex; align-items:center; gap:8px; }
+  .sitebar-logo span { color:#5eead4; }
+  .sitebar-logo small { font-weight:500; color:#94a3b8; font-size:11.5px; }
+  .sitebar-links { display:flex; gap:4px; flex-wrap:wrap; }
+  .sitebar-links a { text-decoration:none; color:#cbd5e1; font-size:13.5px; font-weight:600; padding:7px 14px; border-radius:8px; transition: background .15s ease, color .15s ease; }
+  .sitebar-links a:hover { background: rgba(255,255,255,0.08); color:#fff; }
+  .sitebar-links a.active { background: rgba(94,234,212,0.15); color:#5eead4; }
+
+  header.top { background: linear-gradient(135deg, #0f172a 0%, #0c4a6e 100%); color: #fff; padding: 48px 24px 40px; }
+  .top-inner { max-width: 820px; margin: 0 auto; }
+  .eyebrow { display:inline-flex; align-items:center; gap:8px; background: rgba(255,255,255,0.12); border:1px solid rgba(255,255,255,0.25); padding:6px 14px; border-radius:20px; font-size:13px; font-weight:600; margin-bottom:16px; }
+  h1.page-title { font-size: 32px; font-weight:800; margin: 0 0 10px; }
+  h1.page-title span { color:#5eead4; }
+  .page-sub { color: #cbd5e1; font-size: 15.5px; margin:0; }
+
+  nav.chipnav { position: sticky; top:58px; z-index:50; background: rgba(248,250,252,0.92); backdrop-filter: blur(8px); border-bottom: 1px solid var(--border); padding: 12px 24px; overflow-x:auto; white-space:nowrap; }
+  nav.chipnav .chipnav-inner { max-width:820px; margin:0 auto; display:flex; gap:8px; }
+  .chip { display:inline-flex; align-items:center; gap:6px; text-decoration:none; font-size:13px; font-weight:600; color: var(--ink-soft); background:#fff; border:1px solid var(--border); border-radius:20px; padding:7px 14px; flex:0 0 auto; }
+  .chip:hover { border-color: var(--brand-blue); color: var(--brand-blue); }
+
+  main { max-width: 820px; margin: 0 auto; padding: 36px 24px 80px; }
+  .section-title-row { margin: 44px 0 6px; scroll-margin-top: 130px; }
+  .section-title-row:first-child { margin-top: 0; }
+  .section-title-row h2 { margin:0; font-size:22px; font-weight:800; }
+  .section-sub { color: var(--muted); font-size:14px; margin: 0 0 18px; }
+
+  .bottom-line { background: linear-gradient(135deg,#0f172a,#0c4a6e); color:#f1f5f9; border-radius:18px; padding:26px 28px; }
+  .bottom-line .tag { font-size:12px; color:#5eead4; font-weight:700; margin-bottom:8px; }
+  .bottom-line p { margin:0 0 10px; font-size:16px; font-weight:500; }
+  .bottom-line ul { margin:0; padding-inline-start:20px; }
+  .bottom-line li { margin-bottom:6px; font-size:15px; }
+  .bottom-line strong { color:#fff; }
+
+  .card { background: var(--card-bg); border:1px solid var(--border); border-radius:16px; padding:18px 22px; margin-bottom:12px; }
+  .card h3 { margin:0 0 6px; font-size:16.5px; font-weight:800; }
+  .card p { margin:0 0 6px; font-size:14.5px; color: var(--ink-soft); }
+  .card .lesson { margin-top:8px; background: var(--rec-bg); border:1px solid var(--rec-bd); color: var(--rec-fg); border-radius:10px; padding:8px 12px; font-size:13.5px; font-weight:600; }
+  .card .lesson.warn { background: var(--amber-bg); border-color: var(--amber-bd); color: var(--amber-fg); }
+
+  .comp-grid { display:grid; grid-template-columns: 1fr; gap:12px; }
+  @media (min-width: 720px) { .comp-grid { grid-template-columns: 1fr 1fr; } }
+  .comp-grid .card { margin-bottom:0; }
+
+  .note-box { background: var(--amber-bg); border:1px solid var(--amber-bd); border-radius:14px; padding:16px 20px; color: var(--amber-fg); font-size:14.5px; }
+  .note-box ul { margin:0; padding-inline-start:20px; }
+  .note-box li { margin-bottom:6px; }
+
+  ol.steps { margin:0; padding-inline-start:22px; }
+  ol.steps li { margin-bottom:10px; font-size:14.5px; color: var(--ink-soft); }
+  ol.steps li strong { color: var(--ink); }
+
+  /* ---- Thread ---- */
+  .post { background:#fff; border:1px solid var(--blue-bd); border-radius:16px; padding:20px 24px; margin-bottom:18px; }
+  .post .who { font-weight:800; font-size:14px; color: var(--brand-blue); margin-bottom:6px; }
+  .post h3 { margin:0 0 8px; font-size:18px; font-weight:800; }
+  .post p { margin:0 0 8px; font-size:15px; }
+  .thread { list-style:none; margin:0; padding:0; }
+  .c { background:#fff; border:1px solid var(--border); border-radius:14px; padding:12px 16px; margin-bottom:10px; }
+  .c .who { font-weight:800; font-size:13.5px; margin-bottom:2px; }
+  .c .who small { font-weight:500; color: var(--muted); font-size:12px; }
+  .c p { margin:0; font-size:14.5px; color: var(--ink-soft); white-space:pre-line; }
+  .c .mention { color: var(--brand-blue); font-weight:600; }
+  .c .attach { display:inline-block; margin-top:4px; font-size:12px; color: var(--muted); background: var(--bg); border-radius:8px; padding:2px 8px; }
+  .replies { list-style:none; margin:10px 0 0; padding:0 18px 0 0; border-right:2px solid var(--border); }
+  .replies .c { background: var(--bg); margin-bottom:8px; }
+  .c.own { border-color: var(--blue-bd); background: var(--blue-bg); }
+  .c.biz .who::after { content:"עסק בתחום"; margin-inline-start:8px; font-size:10.5px; font-weight:700; padding:1px 8px; border-radius:12px; background: var(--rec-bg); color: var(--rec-fg); border:1px solid var(--rec-bd); }
+
+  footer { text-align:center; color: var(--muted); font-size:12.5px; padding: 10px 24px 50px; }
+  @media (max-width: 640px) { h1.page-title { font-size:24px; } .replies { padding-right:10px; } }
+  @media (max-width: 720px) { .sitebar { position: static; } nav.chipnav { top: 0; } }
+</style>
+</head>
+<body>
+
+<div class="sitebar"><div class="sitebar-inner">
+  <a href="index.html" class="sitebar-logo">One<span>Home</span> <small>· אתר פנימי</small></a>
+  <div class="sitebar-links">
+    <a href="index.html">בית</a>
+    <a href="progress.html">מעקב משימות</a>
+    <a href="vision.html">חזון העסק</a>
+    <a href="naming.html">בחירת שם</a>
+    <a href="business-plan.html">תוכנית עסקית</a>
+    <a href="products.html">רשימת מוצרים</a>
+    <a href="competitors.html">מתחרים</a>
+    <a href="facebook-post.html" class="active">פוסט פייסבוק</a>
+    <a href="prds.html">PRD-ים</a>
+    <a href="kb.html">ידע טכני</a>
+    <a href="automations.html">רעיונות לאוטומציות</a>
+    <a href="nabu-casa.html">Nabu Casa</a>
+    <a href="ohf.html">Open Home Foundation</a>
+    <a href="../customer-tracker/">מעקב לקוחות</a>
+  </div>
+</div></div>
+
+<header class="top">
+  <div class="top-inner">
+    <span class="eyebrow">💬 חוכמת ההמונים · אוקטובר 2026</span>
+    <h1 class="page-title">פוסט <span>פייסבוק</span></h1>
+    <p class="page-sub">שאלתי בקבוצת פייסבוק למה כמעט אין עסקים שמתקינים Home Assistant במחיר נגיש. כאן נשמרו הפוסט, כל התגובות והמסקנות מהן.</p>
+  </div>
+</header>
+
+<nav class="chipnav"><div class="chipnav-inner">
+  <a href="#bottom-line" class="chip"><span>🎯</span><span>שורה תחתונה</span></a>
+  <a href="#players" class="chip"><span>🏢</span><span>מתחרים שעלו</span></a>
+  <a href="#lessons" class="chip"><span>💡</span><span>מסקנות לפי נושא</span></a>
+  <a href="#my-replies" class="chip"><span>✍️</span><span>הערות על התשובות שלי</span></a>
+  <a href="#caveat" class="chip"><span>⚠️</span><span>הסתייגות</span></a>
+  <a href="#next" class="chip"><span>➡️</span><span>צעדים</span></a>
+  <a href="#thread" class="chip"><span>💬</span><span>הפוסט והתגובות</span></a>
+</div></nav>
+
+<main>
+
+  <!-- ===================== ANALYSIS ===================== -->
+
+  <div id="bottom-line" class="section-title-row"><h2>🎯 השורה התחתונה</h2></div>
+  <div class="bottom-line">
+    <div class="tag">ניתוח של Claude · 31/10/2026</div>
+    <p>הבעיה שכמעט כל המגיבים מזכירים היא תמיכה ותחזוקה בלי סוף. בדיוק את זה OneHome מתכוונת למכור, כך שהפוסט מאשש את הרעיון. אבל עלו בו גם שני דברים שמחייבים לעדכן את התוכנית:</p>
+    <ul>
+      <li><strong>מתחרים:</strong> יש בארץ אנשים שכבר מוכרים תמיכה במנוי. זה סותר את מה שהיה כתוב <a href="competitors.html">בדף המתחרים</a>, שלפיו "אף אחד לא מוכר ניטור ותחזוקה כשירות מתמשך".</li>
+      <li><strong>רווחיות:</strong> השאלה הקשה היא לא אם צריך תמיכה. השאלה היא אם אפשר לתת אותה ב-160 ₪ לחודש ועדיין להרוויח.</li>
+    </ul>
+  </div>
+
+  <div id="players" class="section-title-row"><h2>🏢 מתחרים חדשים שעלו בפוסט</h2></div>
+  <p class="section-sub">נוספו גם <a href="competitors.html#facebook">לדף המתחרים</a>. הנתונים הם מה שהם כתבו על עצמם, ועדיין לא נבדקו.</p>
+  <div class="comp-grid">
+    <div class="card">
+      <h3>ליאור אסרף (<bdi>Lior Asraf</bdi>)</h3>
+      <p>הקים עסק לאחרונה. מציע מנוי תמיכה, בנק שעות או התקנה בלבד, ומבצע עדכונים למנויים.</p>
+      <div class="lesson warn">המתחרה הכי קרוב למודל של OneHome, יותר מ-Homeii.</div>
+    </div>
+    <div class="card">
+      <h3>מושיקו פאר (<bdi>Moshiko Peer</bdi>)</h3>
+      <p>אומר שיש לו מעל 200 מערכות. עובד בעיקר עם עסקים, משרדים, מסעדות ומוזיאונים, ובבתים בעיקר עם KNX. שינויים חינם בשנה הראשונה, ואחר כך דמי שירות חודשיים. הלקוח לא יכול לשנות לבד.</p>
+    </div>
+    <div class="card">
+      <h3>אלי אוחנה (<bdi>Eli Ohana</bdi>), ריטק</h3>
+      <p>משלב Home Assistant עם בינה מלאכותית, ונמצא במדרג. לדבריו מי שלא עובד עם HA ובינה מלאכותית לא יהיה בתחום בעוד עשור.</p>
+    </div>
+    <div class="card">
+      <h3>חברה של <bdi>SkilledRhino</bdi></h3>
+      <p>חברה עם 20 שנות ניסיון שכתבה קוד משלה. ממוקמת ביוקרה, לא במחיר נגיש.</p>
+    </div>
+    <div class="card">
+      <h3>משתתף אנונימי 418</h3>
+      <p>לא עסק אלא אדם פרטי. הקים חמישה בתים בתשלום לפי שעה, בטווח של 5,000–15,000 ₪, ממש בטווח של OneHome. מייעץ ללקוחות כבר משלב השיפוץ.</p>
+    </div>
+  </div>
+
+  <div id="lessons" class="section-title-row"><h2>💡 מה למדנו, לפי נושא</h2></div>
+
+  <div class="card">
+    <h3>תמיכה ויציבות</h3>
+    <p>רוב המגיבים חושבים שזו מערכת "plug &amp; pray" שדורשת תמיכה אינסופית. לעומתם, <bdi>SkilledRhino</bdi> ואיתמר טוענים שעם חומרה מתאימה ובלי עדכונים פזיזים המערכת יציבה.</p>
+    <div class="lesson">הדרך לתמחר במחיר נגיש היא לעבוד עם חומרה מוגדרת מראש, חבילות קבועות ומדיניות עדכונים מבוקרת. התאמות אישיות בלי גבול הן מה שמייקר.</div>
+  </div>
+
+  <div class="card">
+    <h3>רשת</h3>
+    <p>ארז כתב שרוב התקלות הן בעיות רשת, ו-<bdi>AwareOwl</bdi> הציע להשתמש בראוטר משנה וכתובות IP קבועות.</p>
+    <div class="lesson">כדאי שהרשת תהיה חלק מההתקנה, ואולי גם מקור הכנסה נוסף.</div>
+  </div>
+
+  <div class="card">
+    <h3>הרחבת השירותים</h3>
+    <p>יבגני (20 שנה בתחום) טוען שלעסק שעושה רק Home Assistant אין עתיד, ושהכסף בא מתקשורת, אודיו-וידאו ומצלמות.</p>
+    <div class="lesson">כדאי לשקול שירותים נלווים כמו רשת ומצלמות, שגם ככה מתחברות ל-Home Assistant.</div>
+  </div>
+
+  <div class="card">
+    <h3>עלות ההתקנה</h3>
+    <p>רן הזכיר שעיקר העלות הוא עבודת החשמלאי, במיוחד כשצריך להשחיל חוט אפס.</p>
+    <div class="lesson">ערוץ השיפוצים והבנייה החדשה חשוב יותר ממה שחשבנו. המשתתף האנונימי מייעץ ללקוחות כבר משלב השיפוץ.</div>
+  </div>
+
+  <div class="card">
+    <h3>תו תקן</h3>
+    <p>דורון ואליהו כתבו שרכיבים עם תו תקן ישראלי יקרים, ושחובבי DIY קונים מעליאקספרס.</p>
+    <div class="lesson">כדאי לבדוק אילו רכיבים חייבים תו תקן. זה גם יתרון מול חובבים וגם עלות שצריך להכניס לתמחור.</div>
+  </div>
+
+  <div class="card">
+    <h3>שוכרים</h3>
+    <p>שימי כתב שמי שגר בשכירות לא ירצה להשקיע ואז לפרק.</p>
+    <div class="lesson">אפשר לשקול חבילה בלי חיווט שהשוכר לוקח איתו כשהוא עובר דירה, או פשוט להחריג שוכרים מקהל היעד.</div>
+  </div>
+
+  <div class="card">
+    <h3>נעילת ספק</h3>
+    <p>אסף כתב על Control4 שגובה "על כל פיפס", ועמיר אמר שרוב המערכות הן "חשמל שנשלט מרחוק" בלי תמיכה.</p>
+    <div class="lesson">זה מחזק את הבטחת OneHome לא לנעול את הלקוח.</div>
+  </div>
+
+  <div class="card">
+    <h3>בינה מלאכותית</h3>
+    <p>סרגיי, אלי, וגם מי שמשתמש ב-MCP של Antigravity, אומרים שבינה מלאכותית מדבגת ומתקנת.</p>
+    <div class="lesson">הזדמנות: להשתמש בזה בתוך OneHome כדי לקצר את זמן התמיכה לכל לקוח.</div>
+    <div class="lesson warn">איום: לקוח טכני יחסית יגיד "קלוד יעשה לי את זה" ויוותר על הריטיינר.</div>
+  </div>
+
+  <div class="card">
+    <h3>נכונות לשלם מנוי</h3>
+    <p>מגיב בשם <bdi>AwareOwl</bdi> כתב שקשה לשכנע לקוח לשלם אפילו 6$ לחודש על Nabu Casa.</p>
+    <div class="lesson warn">זה הסיכון המרכזי של המודל, וצריך לבדוק אותו מול לקוחות אמיתיים.</div>
+  </div>
+
+  <div id="my-replies" class="section-title-row"><h2>✍️ שתי הערות על התשובות שלי בפוסט</h2></div>
+  <div class="note-box">
+    <ul>
+      <li><strong>מחיר:</strong> כתבתי 3,000–15,000 ₪, אבל <a href="business-plan.html">בתוכנית</a> נקודת ההתחלה היא 6,600 ₪. צריך להחליט איזה מספר אומרים בפומבי.</li>
+      <li><strong>ריטיינר:</strong> כתבתי שתמיכה תהיה "כמו להזמין חשמלאי לביקור", כלומר תשלום לפי ביקור. בתוכנית הליבה היא ריטיינר חודשי. אם אציע גם תשלום לפי ביקור, בדומה לליאור אסרף, צריך להוסיף את זה לתמחור.</li>
+    </ul>
+  </div>
+
+  <div id="caveat" class="section-title-row"><h2>⚠️ הסתייגות חשובה</h2></div>
+  <div class="card">
+    <p>רוב המגיבים בקבוצה הם חובבי Home Assistant ומתקינים. לכן הפוסט מראה איך הצד שמציע את השירות רואה את השוק, ופחות מה לקוח לא טכני מוכן לשלם. התגובות "תעשה לבד" באות מאנשים שבכל מקרה לא היו לקוחות.</p>
+  </div>
+
+  <div id="next" class="section-title-row"><h2>➡️ צעדים מומלצים</h2></div>
+  <div class="card">
+    <ol class="steps">
+      <li><strong>עדכון</strong> דף המתחרים: להוסיף את חמשת השחקנים ולתקן את הטענה ש"אף אחד לא מציע ריטיינר". <em>בוצע ב-31/10.</em></li>
+      <li><strong>שיחה</strong> עם ליאור אסרף ועם המשתתף האנונימי 418. שניהם הזמינו לשאול, ושניהם יודעים כמה שעות תמיכה לקוח צורך בפועל. זה בדיוק המספר שחסר לתוכנית.</li>
+      <li><strong>הוספה</strong> של בנק שעות כמסלול שלישי בתמחור, לצד הריטיינר.</li>
+      <li><strong>הגדרה</strong> של מדיניות עדכונים: עדכון מתעכב כמה שבועות, נבדק על בית ניסוי ורק אז מגיע ללקוחות.</li>
+      <li><strong>בדיקה</strong> אילו רכיבים חייבים תו תקן ישראלי ומה זה עושה למחיר.</li>
+      <li><strong>ראיונות</strong> עם 3–5 בעלי בתים לא טכניים, על הנכונות לשלם מנוי.</li>
+    </ol>
+  </div>
+
+  <!-- ===================== THREAD ===================== -->
+
+  <div id="thread" class="section-title-row"><h2>💬 הפוסט והתגובות</h2></div>
+  <p class="section-sub">הטקסט נשמר כפי שהופיע בפייסבוק, כולל שגיאות הקלדה. 29 תגובות ו-20 תשובות. תגובות של גיא מסומנות בכחול.</p>
+
+  <div class="post">
+    <div class="who">גיא כהן (<bdi>Guy Cohen</bdi>)</div>
+    <h3>למה כמעט אין עסקים שמתקינים Home Assistant במחיר נגיש?</h3>
+    <p>בשנת 2026 לרוב הבתים בישראל עדיין אין בית חכם, ואפילו לא משהו בסיסי, וחברות שמוכרות מערכות כאלה גובות עשרות ואפילו מאות אלפי שקלים.</p>
+    <p>מדוע לדעתכם כמעט אין עסקים שמציעים התקנת Home Assistant במחיר נגיש? אם אתם מכירים כאלה, אשמח לשמות.</p>
+    <p>מהן לדעתכם הבעיות הגדולות בפועל שמונעות מחברות כאלה לקום, למשל תמיכה, עדכונים, אחריות או אמינות?</p>
+    <p>האם יש מישהו שניסה בעבר להקים עסק כזה ויכול לשתף בניסיון שלו?</p>
+  </div>
+
+  <ul class="thread">
+
+    <li class="c">
+      <div class="who"><bdi>SunnyShark336</bdi></div>
+      <p>לדעתי הבעיה הגדולה זה תמיכה..אבל יש חברות ואנשים שמתקינים.</p>
+    </li>
+
+    <li class="c">
+      <div class="who"><bdi>Yanir Tzabary</bdi></div>
+      <p>דווקא יש לא מעט.</p>
+    </li>
+
+    <li class="c">
+      <div class="who"><bdi>PeacefulOlive7902</bdi></div>
+      <p>יש ... אין הרבה אבל כי אנשים עושים איתך חוזה לכל החיים וכל תקופה קוראים לך</p>
+    </li>
+
+    <li class="c">
+      <div class="who"><bdi>ScenicBlueberry7828</bdi></div>
+      <p>כי זו מערכת שדורשת תמיכה אינסופית. תמיד משהו משתנה מפסיק לעבוד אז מה תעשה? תשלם שרות בכל פעם? מי שלא מבין שלא יתקין זה לא plug and play</p>
+      <ul class="replies">
+        <li class="c">
+          <div class="who"><bdi>Amir Broshi</bdi></div>
+          <p><span class="mention"><bdi>ScenicBlueberry7828</bdi></span> זה plug &amp; pray</p>
+        </li>
+        <li class="c">
+          <div class="who"><bdi>Sergey Livergant Adv</bdi></div>
+          <p><span class="mention"><bdi>Amir Broshi</bdi></span> ממש ככה
+אבל יש קלוד</p>
+        </li>
+        <li class="c">
+          <div class="who"><bdi>Amir Broshi</bdi></div>
+          <p><span class="mention"><bdi>Sergey Livergant Adv</bdi></span> קצת מזכיר את הבדיחה של מה ההבדל בין סקס בתשלום לסקס בחינם. שסקס בחינם עולה הרבה יותר.</p>
+        </li>
+        <li class="c">
+          <div class="who"><bdi>Avi Avi</bdi></div>
+          <p><span class="mention"><bdi>Sergey Livergant Adv</bdi></span> אז שקלוד יתקין גם, זו מערכת שצריך לבנות לבד ולתחזק, לא קשה אבל זה גם לא כמו להפעיל אייפון</p>
+        </li>
+      </ul>
+    </li>
+
+    <li class="c">
+      <div class="who"><bdi>Evgeni Galperin</bdi></div>
+      <p>כעוסק בתחום כבר שני עשורים, אין עתיד כלכלי לחברה שתעשה רק הום אסיסטנט.
+זה גימיק נחמד אך לא מודול עסקי שיכול להניב תוצאות לעתיד.</p>
+      <ul class="replies">
+        <li class="c">
+          <div class="who"><bdi>Benny Gafanovich</bdi></div>
+          <p><span class="mention"><bdi>Evgeni Galperin</bdi></span>
+למה? ובהשוואה לאיזה מערכות אחרות שכן הגיוניות עסקית?</p>
+        </li>
+        <li class="c">
+          <div class="who"><bdi>Evgeni Galperin</bdi></div>
+          <p><span class="mention"><bdi>Benny Gafanovich</bdi></span> לשאר המערכות שקיימות בשוק ולפתרונות הנלווים שחברות אלו מציעות כגון תקשורת, אודיו וידאו ומצלמות אבטחה.</p>
+        </li>
+        <li class="c">
+          <div class="who"><bdi>Benny Gafanovich</bdi></div>
+          <p><span class="mention"><bdi>Evgeni Galperin</bdi></span>
+תקשורת אני לא בטוח, אבל 100% אפשר לנהל מצלמות דרך ha.
+השאלה היא אם אתה מתכוון שצריך לתת שירותים של מצלמות ותקשורת בשביל להצליח, שזה לא בדיוק בית חכם.
+או שחובה נגיד לעשות גם ha וגם knx וגם מערכות אחרות שאני לא מכיר שהן כן לבית חכם</p>
+        </li>
+        <li class="c">
+          <div class="who"><bdi>Sergey Livergant Adv</bdi></div>
+          <p><span class="mention"><bdi>Evgeni Galperin</bdi></span> לha יש פתרונות לזה</p>
+        </li>
+      </ul>
+    </li>
+
+    <li class="c">
+      <div class="who">איתמר רא</div>
+      <p>אני מתקין מערכות כאלו.
+כל עוד שלא מעדכנים את המערכת היא מאוד יציבה.
+אם עדכנת ולא סידרת את הדברים אחרי. אכן זה לעיתין יוצר בעיות.</p>
+    </li>
+
+    <li class="c biz">
+      <div class="who"><bdi>SkilledRhino🦏</bdi></div>
+      <p>כשותף בחברה עם מעל 20 שנות ניסיון ומומחיות במערכות בית חכם, אנחנו כן מספקים את השירות הזה - אבל מחיר נגיש זה לא משהו שאתה יכול לתת על מערכת שכמעט הכל אפשרי לעשות איתה -
+יש לנו קודים ספיציפיים שכתבנו שפותחות אפשרויות לא סטנדרטיות במערכת שהלקוחות שלנו מקבלים , והסיבה שחברות רבות לא עושות את זה זה לא התמיכה כי אם עובדים נכון ועם חומרה שמתאימה לדרישות של המערכת אז אין יותר מדי שירות . העניין הוא שאפשר לחבר הכל .. ואם תיקח כל אחד מהחברים פה ותשאל אותו באמת כמה זמן הוא מושקע במערכת מבחינת שעות , ותכפיל את זה במספר שמרני יחסית לשעת מתכנת אתה לא תקבל מחיר נגיש.</p>
+    </li>
+
+    <li class="c">
+      <div class="who"><bdi>Shimi Goldenberg</bdi></div>
+      <p>הבעיה הכי גדולה זה לקנות בית במדינה, לא תמיכה, לא מוצרים ולא תקנים ולא כלום.
+מי שגר בשכירות זה באסה להשקיע כסף וזמן ואז לפרק.</p>
+    </li>
+
+    <li class="c">
+      <div class="who"><bdi>Amir Dekel</bdi></div>
+      <p>הום אסיסטנט (ולא רק) זו מערכת שדורשת תמיכה אינסופית.
+רוב המערכות שחברות מתקינות היום זה לא בית חכם, זה חשמל שנשלט מרחוק, ממותג כאילו חכם, 0 תמיכה לאחר התקנה כי בדרך כלל זו מערכת סגורה.</p>
+    </li>
+
+    <li class="c">
+      <div class="who"><bdi>Dima Zlotnyk</bdi></div>
+      <p>זאת לא מערכת שמתאימה לכל אחד
+מי שמספיק טכני יכול להגדיר הכל לבד
+מי שלא - עדיף שיחפש חלופות אחרות</p>
+    </li>
+
+    <li class="c">
+      <div class="who"><bdi>DeterminedTurkey8220</bdi></div>
+      <p>למה אין זהב במחיר נגיש ?
+המחיר נגזר מעלות חומרה + שעות עבודה + רווח = מחיר לא נגיש.
+אגב כל מערכת שתיקח לבית חכם תיהיה במחיר לא נגיש.
+קרסטרון הום , קונטרול 4 וכו .
+מאותה סיבה בדיוק.
+בכל אחת מהמערכות חלוקת העלות היא שונה , כמו כן היכולות / יתרונות /חסרונות. אבל שורה תחתונה זה גימיק יקר (כן גימיק).
+אלא אם כן , וכאן אתה יכול לחתוך את העלות בשני שליש לפחות . אתה עושה הכל לבד.
+וזה לא מסובך בכלל.
+לך על האפשרות הזאת רק תרוויח. יהיה לך כל מה שאתה רוצה במערכת במחיר מאוד נגיש ונוח.</p>
+    </li>
+
+    <li class="c">
+      <div class="who"><bdi>EmeraldKangaroo8341</bdi></div>
+      <p>הום אסיסטנט נבנתה סביב תפיסה של DIY לקהל יעד שאוהב להתעסק בזה בידיים, וכל החויה שלו לא מייעדת לשימוש צרכני טיפוסי שמצפה למשהו פשוט ויציב.
+בנוסף לזה מדובר בתוכנה קוד פתוח ללא אקוסיסטם סגור של חומרה, שמנסה לעבוד עם ציוד שלא תוכנן לעבוד איתה.</p>
+    </li>
+
+    <li class="c">
+      <div class="who"><bdi>Eliyahu Zinger</bdi></div>
+      <p>אני משער
+כי הרכיבים עם תו תקן יקרים(אם יש כאלה בכלל שנותנים מענה להכל) .
+וזה לא באמת plug &amp; play
+כי הצרכים משתנים.</p>
+    </li>
+
+    <li class="c">
+      <div class="who"><bdi>Tzahi Arnon</bdi></div>
+      <p>בגלל שהם לא רוצים להתעסק עם שטויות. זה בעיקר שימושי לבתים גדולים. חוצמזה, בשביל זה קיימות מערכות מוכנות כך שלא צריך לקסטם כל פיצ'ר ולסבך עניינים. כל העניין של hone assistant זה שזה מבוסס open source ואתה כמשתמש פרטי יכול לבנות מוצרים מאפס. בעלי עסקים לא מעוניינים להתעסק עם כל הנ''ל. זה סתם כאב ראש אחד גדול מבחינתם.</p>
+    </li>
+
+    <li class="c biz">
+      <div class="who"><bdi>Lior Asraf</bdi></div>
+      <p>בדיוק הקמתי כזה בעקבות החוסר- מוזמן להתייעץ ולשאול.
+לדעתי פשוט כי זה לא מוכר וכי יש מלא אופציות ולא כל אחד יודע לייצב את המערכת לשימוש תקין.
+אני מספק שירות במספר מסלולים - מנוי תמיכה/בנק שעות/התקנה בלבד כך שזה מתאים לכולם.
+ניהול כלים נכון מאפשר שליטה מלאה ויציבה.
+אני מספק פתרונות למכשירים שהמתקינים טוענים שאי אפשר לבצע ולכן זה משמעותי.
+עדכונים ושינויים מבוצעים למנויים אלא אם כן יש עדכון אבטחה משמעותי.
+מי שבוחר בהתקנה בלבד יכול לרכוש בנק שעות או לשלם פר שעת עבודה בהתאם.</p>
+    </li>
+
+    <li class="c">
+      <div class="who"><bdi>Sergey Livergant Adv</bdi></div>
+      <p>אחרי התקנה צריך רק לממשק לקלוד.</p>
+    </li>
+
+    <li class="c biz">
+      <div class="who"><bdi>Eli Ohana</bdi></div>
+      <p>יש לא מעט. אני ביניהם. מוזמן לחפש אותי במדרג ויש לנו גם אחלה אתר. אני אישית מאמין שמי שלא עובד עם ha בשילוב עם ai לא יהיה בתחום עוד עשור. אלי, ריטק פתרונות טכנולוגיים.</p>
+    </li>
+
+    <li class="c">
+      <div class="who"><bdi>Erez Zuler</bdi></div>
+      <p>תחשוב כמה עבודה יש בזה, התקנה, קינפוג, תמיכה ואח"כ תקלות שרובן הן בעיות רשת.
+מי ישלם את זה?
+מה זה מחיר נגיש ליום עבודה של בעל מקצוע?</p>
+      <ul class="replies">
+        <li class="c own">
+          <div class="who"><bdi>Guy Cohen</bdi></div>
+          <p><span class="mention"><bdi>Erez Zuler</bdi></span> אני מניח בין 3000 ל 15,000 התקנה תלוי בצרכים, ואז אם יש בעיות או תמיכה אז המחיר הוא בערך כמו שאתה מזמין חשמלאי או איש מקצוע אחר לביקור או משהו כזה</p>
+        </li>
+        <li class="c">
+          <div class="who"><bdi>AwareOwl3828</bdi></div>
+          <p><span class="mention"><bdi>Erez Zuler</bdi></span> הבעיה המרכזית היא איך לשכנע את הלקוח לשלם מידי חודש 6 דולר למנוי כאסא נאבו , אם יש לך לקוח שמוכן לשלם עניין התמיכה די קל אפשר לעשות את זה מחשבון שירות שהלקוח יאפשר לך וזה חשבון שאין לך אפשרות לשלוט בבית או לראות היסטוריית פעילות או למחוק זה נטו חשבון שאתה רק יכול לזהות את התקלות ולתקן . מבחינת רשת אפשר להקצות כתובות כבועות בראוטר ועדיף שיהיה ראוטר משנה עם סיסמה ושם משתמש שונים כך בכל שינוי או שדרוג ההתעסקות תהיה בראוטר ולא בשרת</p>
+        </li>
+        <li class="c">
+          <div class="who"><bdi>Sergey Livergant Adv</bdi></div>
+          <p><span class="mention"><bdi>Erez Zuler</bdi></span> זה מגיע מותקן ולא ביוקר, אם זה מה שמדאיג אותך אז הגעת לכתובת לא נכונה.</p>
+        </li>
+      </ul>
+    </li>
+
+    <li class="c">
+      <div class="who"><bdi>Moshiko Peer</bdi></div>
+      <p>מה זה מחיר נגיש תגדיר ?</p>
+      <ul class="replies">
+        <li class="c own">
+          <div class="who"><bdi>Guy Cohen</bdi></div>
+          <p><span class="mention"><bdi>Moshiko Peer</bdi></span> אני מניח שזה תלוי לפי הצרכים, בערך 3000 עד 15,000 ולא כמו ששמעתי שזה באיזורים של 30,000 עד 300,000</p>
+        </li>
+        <li class="c">
+          <div class="who">משתתף אנונימי 418 <small>(<bdi>Anonymous participant 418</bdi>)</small></div>
+          <p><span class="mention"><bdi>Guy Cohen</bdi></span> אני לא עוסק בתחום.
+אבל יצא לי להרים כבר 5 בתים חכמים לאנשים שממש ביקשו יפה.
+לכולם ייעצתי עוד משלב השיפוץ /בניה.
+ביקורים במהלך העבודה של החשמלאי.
+התקנת מחשב, מערך גיבויים, גישה מרחוק וכו.
+חיבור רכיבים, בניית אוטומציות.
+בניית דטשבורדים שמוקרנים קבוע בטלוויזיות במטבח/סלון.
+המחיר? לפי שעת עבודה.
+נע בין 5000 עד 15,000
+מההתחלה ועד הסוף.
+תלוי כמה הבנאדם טכני ואני יכול ללמד אותו שימשיך לבד.
+אז עסקים? אין..
+אבל אנשים פרטיים, יש..</p>
+        </li>
+      </ul>
+    </li>
+
+    <li class="c">
+      <div class="who"><bdi>Oshri Azulay</bdi></div>
+      <p>תיוג: <span class="mention"><bdi>Tamir Tal</bdi></span></p>
+    </li>
+
+    <li class="c biz">
+      <div class="who"><bdi>Moshiko Peer</bdi></div>
+      <p>הכל תלוי מה רוצים ואיך השרות
+לדוגמא מערכות שאני מתקין ללקוח הם בחזוקה מלא שלי
+ולקוח לא יכול להשתמש כ לקוח DIY אני עושה את כל הפרויקט ונותן תמיכה
+יש לי כבר מעל 200 מערכות מותקנות</p>
+      <ul class="replies">
+        <li class="c own">
+          <div class="who"><bdi>Guy Cohen</bdi></div>
+          <p><span class="mention"><bdi>Moshiko Peer</bdi></span> ואת הכל אתה מבצע ב home assistant? זאת אומרת שאפילו אם הוא רוצה להוסיף מנורה הוא צריך לשלם לך על העבודה והוא לא יכול לעשות בעצמו?
+אפשר לשאול מה הטווח מחירים? ממוצע</p>
+        </li>
+        <li class="c">
+          <div class="who"><bdi>Moshiko Peer</bdi></div>
+          <p><span class="mention"><bdi>Guy Cohen</bdi></span> בגדול אני עושה יותר תעשייה משרדים, מסעדות, מוזיאונים, ועוד.
+שם זה שונה
+בתים יש לי גם אבל אין שינויים משמעותיים לרוב זה מערכות קוויות של KNX ובחלק מהם יש גם מתגי זיגבי
+אז אין יותר מידי שינויים
+ושנה ראשונה שינויים חינם
+אחרי יש דמי שירות ותחזוקה חודשיים</p>
+        </li>
+      </ul>
+    </li>
+
+    <li class="c">
+      <div class="who"><bdi>Asaf Alfandary</bdi></div>
+      <p>חברות לרוב רוצות מוצר מוכן ובעל תמיכה אין להם את הזמן את הכוח את הכסף ואת העובדים להתמודד עם דברים שאין להם תמיכה … ובנוסף אין רווח מכירה כשהם לוקחים מוצר שהוא בחינם ... אבל כשהוא עולה הרבה הם מרוויחים עליו הרבה, פשוט …
+מה שבטוח שאני בחיים לא יקנה מוצר כמו contol1 שעל כל פיפס מבקשים כסף כי זה פלאגים בתשלום ואפשר אפשרויות נעול ובגדול פתרון רע…אבל למתקינים רווח נקי</p>
+    </li>
+
+    <li class="c">
+      <div class="who"><bdi>Doron Sa</bdi></div>
+      <p>הרכיבים עם תו תקן ישראלי יקרים וההתקנה יקרה, לא משתלם לעשות את זה בזול. אתה תפסיד כסף.
+מי שעושה עצמאית אצלו בבית מזמין מעליאקספרס ולא איכפת לו מהתקנות.</p>
+    </li>
+
+    <li class="c">
+      <div class="who"><bdi>Ido Beker</bdi></div>
+      <p>התקנה זה במחיר סביר,
+בניית אוטומציות וחומרה עולה כסף</p>
+    </li>
+
+    <li class="c">
+      <div class="who"><bdi>LivelyCapybara8385</bdi></div>
+      <p>חייב להגיד לך, שבעבר באמת הייתי משועבד ומחפש כל דבר קטן לתקן, וקנפוגים ובאגים וכו'. מאז שחיברתי את ה MCP של אנטיגרביטי של גוגל להום אסיסטנט החיים הפכו קלים, הוא מדבג הכל, מתקן הכל ובעיקר חוסך לי טונות של עצבים ושעות. תנסה גם</p>
+      <ul class="replies">
+        <li class="c">
+          <div class="who"><bdi>Adir Peleg</bdi></div>
+          <p><span class="mention"><bdi>LivelyCapybara8385</bdi></span> מה השם של הפלאגין
+האם יש אחד גם בשביל ה chat gpt ?</p>
+        </li>
+        <li class="c">
+          <div class="who"><bdi>LivelyCapybara8385</bdi></div>
+          <p>באנטי גרביטי אתה פשוט אומר לו שאתה רוצה להתחבר להום אסיסטנט, הוא מבקש ממך ליצור טוקן, אתה מדביק לו ונגמר הסיפור. ממש משחק ילדים.</p>
+        </li>
+      </ul>
+    </li>
+
+    <li class="c">
+      <div class="who"><bdi>Elad Edri</bdi></div>
+      <p>אין אמא ואבא בארץ, אין יבוא מסודר , המון עדכונים שיוצאים כל שני וחמישי ולכן אינטגרטורים מעדיפים לעבוד עם מערכות בקרה גדולות כמו c4,rti,crestron וכד'</p>
+      <ul class="replies">
+        <li class="c">
+          <div class="who"><bdi>Moshiko Peer</bdi></div>
+          <p><span class="mention"><bdi>Elad Edri</bdi></span> שטויות אני אומר לך יש לי יותר מ 200 מערכות מותקנות שאתה יודע מה אתה עושה אתה לא צריך אף אחד</p>
+        </li>
+        <li class="c">
+          <div class="who"><bdi>Moshiko Peer</bdi></div>
+          <p><span class="mention"><bdi>Elad Edri</bdi></span> קונטרול 4</p>
+          <span class="attach">צורפה תמונה עם טקסט</span>
+        </li>
+      </ul>
+    </li>
+
+    <li class="c">
+      <div class="who"><bdi>Ran Akiva</bdi></div>
+      <p>לדעתי העלות לא נובעת מהמערכת בית חכם איזה שלא תבחר אלא מההתקנה עצמה.
+תעשה ניסוי, תזמין חשמלאי רק לחבר 10 מתגים חכמים. אם יש תשתית מוכנה הוא ייקח 150-300 לפחות כמו חיבור של שקע חשמל או התקנת גוף תאורה.
+אם אין תשתית וצריך להשחיל חוט אפס ופאזה לכל מפסק העלות כמובן תעלה.
+וזה רק 10 מפסקים. ברוב הבתים תצטרך הרבה יותר וזה רק העבודה עוד לפני עלות הרכיבים ולפני חיבור והתקנתה של מערכת בית חכם</p>
+      <ul class="replies">
+        <li class="c">
+          <div class="who">משתתף אנונימי 418 <small>(<bdi>Anonymous participant 418</bdi>)</small></div>
+          <p>כל כך לא מסכים איתך...
+עלות התקנה, עם כמעט 100 אחוז רווח.
+משלמים לך עך הידע, ולא על מסך קקמייקה שיבאת מסין.
+אפשר לשלב תשלום חודשי עבור תחזוקה.
+או לפי בנק שעות עבודה.
+אחלה מודל עיסקי.
+שמחזיק בכיף אותך, ועוד עובד.
+הכל שאלה עד כמה אתה מיומן, יעיל, ועובד מהר.</p>
+        </li>
+      </ul>
+    </li>
+
+    <li class="c">
+      <div class="who"><bdi>Tom Mustaki</bdi></div>
+      <p>יש שתי סיבות, אולי יותר:
+אין חברה קפיטליסטית (כמו אורקל) מאחורי הום אסיסטנט - לאף אחד לא אכפת משורת הרווח, העיקר שזה מגניב.
+המוצר לא מייצר ערך יוצא דופן מבחינה תפעולית ולא מתאים לארגונים גדולים.</p>
+    </li>
+
+    <li class="c">
+      <div class="who"><bdi>Oran Cohen</bdi></div>
+      <p>הבעיה בשירות ובתחזוקה</p>
+    </li>
+
+  </ul>
+
+</main>
+
+<footer>נשמר 31/10/2026 · הפוסט והתגובות כפי שהודבקו, והניתוח של Claude</footer>
+</body>
+</html>
