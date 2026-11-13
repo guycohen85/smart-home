@@ -274,7 +274,7 @@
     </div>
     <p>הפריטים מרוכזים כאן מההחלטות הקיימות. פריט שמסומן <span class="tag tag-new">הצעה</span> הוא הוספה חדשה.</p>
 
-    <div class="grp">רשת וגישה מקומית — <a href="claude/decision-network-access.md" style="color:var(--brand-blue);text-decoration:none;font-weight:600">מקור: החלטת Network Access</a></div>
+    <div class="grp">רשת וגישה מקומית — <a href="notes/decision-network-access.md" style="color:var(--brand-blue);text-decoration:none;font-weight:600">מקור: החלטת Network Access</a></div>
     <ul class="chk">
       <li><strong>לוודא שאין AP/Client Isolation בראוטר.</strong> הפריט הכי קריטי — ההגדרה שבאמת חוסמת גישה מקומית ותקשורת בין מכשירים <span class="tag tag-ok">מתועד</span></li>
       <li><strong>רשת שטוחה אחת</strong> כברירת מחדל; VLAN רק ללקוחות מיוחדים (ההגדרה של "מיוחד" עדיין פתוחה ב-PRD 1, סעיף H) <span class="tag tag-ok">מתועד</span></li>
@@ -309,7 +309,7 @@
       <li>אם יאומץ כלי ניטור צי (טרם נבחר, ראו PRD 4): מזהה ניטור ייחודי ללקוח, והגילוי על מה שיוצא מהבית לצורך ניטור מופיע במסמך הפרטיות <span class="tag tag-new">הצעה</span></li>
     </ul>
 
-    <div class="grp">תבנית ושחזור אצל לקוח — <a href="claude/golden-backup-checklist.md" style="color:var(--brand-blue);text-decoration:none;font-weight:600">מקור: צ'ק-ליסט Golden Backup</a> <span class="tag tag-new">הצעה</span></div>
+    <div class="grp">תבנית ושחזור אצל לקוח — <a href="notes/golden-backup-checklist.md" style="color:var(--brand-blue);text-decoration:none;font-weight:600">מקור: צ'ק-ליסט Golden Backup</a> <span class="tag tag-new">הצעה</span></div>
     <p style="margin:0;font-size:13.5px">הצעדים הטכניים בטיוטה לא נבדקו עדיין על התקנה אמיתית. את ה-backup יוצרים רק מתבנית נקייה, לא מהבית של גיא.</p>
     <ul class="chk">
       <li><strong>נכנס לתבנית:</strong> אפליקציות קבועות (Apps), אינטגרציות שיש אצל כל לקוח, דשבורד בסיסי, Alert והאוטומציות של Watchman, Blueprints, ו-Internal URL כ-placeholder <span class="tag tag-new">הצעה</span></li>
@@ -319,7 +319,7 @@
       <li>כל שינוי בתבנית נבדק קודם בבית של גיא או ב-Sandbox, ורק אחר כך נוצר golden backup חדש <span class="tag tag-new">הצעה</span></li>
     </ul>
 
-    <div class="grp">חשבונות גישה ואימות דו-שלבי — <a href="claude/decision-access-credentials.md" style="color:var(--brand-blue);text-decoration:none;font-weight:600">מקור: החלטת חשבונות וסיסמאות (15/10)</a> <span class="tag tag-new">הצעה</span></div>
+    <div class="grp">חשבונות גישה ואימות דו-שלבי — <a href="notes/decision-access-credentials.md" style="color:var(--brand-blue);text-decoration:none;font-weight:600">מקור: החלטת חשבונות וסיסמאות (15/10)</a> <span class="tag tag-new">הצעה</span></div>
     <ul class="chk">
       <li><strong>חשבון התחזוקה של גיא:</strong> שם <code>admin</code> (זמני עד שיבחר שם לעסק), סיסמה אקראית וארוכה <strong>ייחודית לכל לקוח</strong> מ-Bitwarden, ו-<strong>TOTP חובה</strong> שמופעל מחדש בכל התקנה <span class="tag tag-new">הצעה</span></li>
       <li><strong>חשבון הניהול של הלקוח:</strong> TOTP כהמלצה בלבד, בעיקר אם נרכשה גישה מרחוק. לא מכריחים, כי ל-HA אין אכיפה גורפת, ונעילה אצל מבוגרים וילדים מייצרת קריאות תמיכה <span class="tag tag-new">הצעה</span></li>
@@ -396,7 +396,7 @@
       <li><strong>ראוטר של הלקוח.</strong> כל checklist הרשת מניח שאפשר להיכנס להגדרות הראוטר ולשנות DHCP Reservation ו-AP Isolation. אם הראוטר של ספק האינטרנט מגביל את זה, ההתקנה נתקעת — לבדוק בסקר הבית, לפני החתימה.</li>
       <li><strong>חשמלאי.</strong> כמעט כל התקנה תלויה בזמינות שלו (ראו PRD 1, סעיף G). עיכוב שלו מעכב את כל התהליך.</li>
       <li><strong>Nabu Casa דורש מהלקוח לפתוח חשבון ולשלם בעצמו.</strong> לקוח לא-טכני עלול להיתקע בפתיחת חשבון או בתשלום. הסיבה שגיא מלווה בזמן ההתקנה, בנוכחותו.</li>
-      <li><strong>המודל זמני.</strong> Nabu Casa אישרו שתוכנית מתקינים בפיתוח, בלי תאריכים ובלי תמחור (ראו <a href="claude/decision-network-access.md" style="color:var(--brand-blue);text-decoration:none;font-weight:600">מסמך ההחלטה</a>). לכן שלב Nabu Casa בנוי כמודול נפרד ב-checklist.</li>
+      <li><strong>המודל זמני.</strong> Nabu Casa אישרו שתוכנית מתקינים בפיתוח, בלי תאריכים ובלי תמחור (ראו <a href="notes/decision-network-access.md" style="color:var(--brand-blue);text-decoration:none;font-weight:600">מסמך ההחלטה</a>). לכן שלב Nabu Casa בנוי כמודול נפרד ב-checklist.</li>
       <li><strong>הפסקות חשמל.</strong> בלי UPS, כל הפסקה מפילה את HA והרשת, ועלולה להשחית את מסד ההיסטוריה ולגרום לקריאות תמיכה מיותרות. eMMC של ה-Green אמין יותר מכרטיס SD, אבל לא מחסן. ראו פריטי החוסן ב-checklist, סעיף D.</li>
       <li><strong>קיבולת של אדם אחד.</strong> אין עדיין SOP להעברה לטכנאי שכיר. המסמך הזה הוא הצעד הראשון בכיוון.</li>
     </ul>
@@ -415,7 +415,7 @@
     <div class="qbox"><div class="qlabel">6 — אחריות על עבודת ההתקנה והחומרה</div><p>לוודא מול PRD 1 מה תקופת האחריות על עבודת ההתקנה עצמה ועל החומרה, ולכתוב אותה במסמך המסירה.</p></div>
     <div class="qbox"><div class="qlabel">7 — בחירת חשמלאי ואימות תקנים</div><p>עדיין פתוח מ-PRD 1: מי החשמלאי הקבוע, ואילו משימות בפועל מחייבות רישיון. לאמת מולו לפני הלקוח הראשון.</p></div>
     <div class="qbox"><div class="qlabel">8 — UPS: חלק מהחבילה או תוספת?</div><p>ההמלצה היא UPS לכל לקוח, כי הוא מונע את רוב התקלות שאחרי הפסקת חשמל ומוריד קריאות תמיכה. צריך להחליט: לכלול בחבילה הבסיסית או למכור כתוספת, ואיזה דגם. UPS קטן עם USB (תומך NUT, מאפשר התראה) מול Mini UPS DC זול בלי חיבור נתונים. לבדוק מחירים אצל יבואנים בישראל ולעדכן ב-<a href="../pricing/OneHome_pricing_model.xlsx" style="color:var(--brand-blue);text-decoration:none;font-weight:600">OneHome_pricing_model.xlsx</a>.</p></div>
-    <div class="qbox"><div class="qlabel">9 — תחזוקה מרחוק: Tailscale, Nabu Casa או כלום</div><p>Tailscale (או Nabu Casa) פותר רק גישה לרשת, ואחריו עדיין צריך משתמש HA. Tailscale לא מופיע בתוכנית, וברירת המחדל במסמכים היא גישה מקומית בלבד. להחליט: האם תחזוקה מרחוק היא חלק מהריטיינר, האם נדרשת הסכמה מפורשת של הלקוח, האם הגישה פעילה תמיד או רק בזמן תחזוקה, וחשבון Tailscale של OneHome או של הלקוח. פירוט ב-<a href="claude/decision-access-credentials.md" style="color:var(--brand-blue);text-decoration:none;font-weight:600">החלטת חשבונות וסיסמאות</a>.</p></div>
+    <div class="qbox"><div class="qlabel">9 — תחזוקה מרחוק: Tailscale, Nabu Casa או כלום</div><p>Tailscale (או Nabu Casa) פותר רק גישה לרשת, ואחריו עדיין צריך משתמש HA. Tailscale לא מופיע בתוכנית, וברירת המחדל במסמכים היא גישה מקומית בלבד. להחליט: האם תחזוקה מרחוק היא חלק מהריטיינר, האם נדרשת הסכמה מפורשת של הלקוח, האם הגישה פעילה תמיד או רק בזמן תחזוקה, וחשבון Tailscale של OneHome או של הלקוח. פירוט ב-<a href="notes/decision-access-credentials.md" style="color:var(--brand-blue);text-decoration:none;font-weight:600">החלטת חשבונות וסיסמאות</a>.</p></div>
   </section>
 
 </main>

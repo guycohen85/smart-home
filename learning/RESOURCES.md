@@ -52,7 +52,7 @@
 - `plan-site/nabu-casa.html` — השוואת 7 השירותים של Nabu Casa Cloud, כולל מקורות ל-nabucasa.com/pricing ו-support.nabucasa.com.
 - `plan-site/ohf.html` — Open Home Foundation, הפרויקטים הנלווים (ESPHome, HACS, ESP Web Tools, Improv Wi-Fi, microWakeWord ועוד), מקור: openhomefoundation.org.
 - `plan-site/kb.html` — פתרון תקלות רשת אמיתיות (mDNS, AP Isolation, DHCP Reservation) שכבר עלו בעבודה.
-- `plan-site/claude/golden-backup-checklist.md` — טיוטת התהליך לשכפול התקנה בין לקוחות; טעון אימות בפועל.
+- `plan-site/notes/golden-backup-checklist.md` — טיוטת התהליך לשכפול התקנה בין לקוחות; טעון אימות בפועל.
 - `plan-site/automations.html` — קטלוג רעיונות אוטומציה, ישמש כתרגילים מעשיים במסלול ה-full-stack.
 
 ## Wisdom (Communities)

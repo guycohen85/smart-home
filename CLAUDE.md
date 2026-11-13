@@ -1,16 +1,32 @@
-# OneHome — smart-home workspace
+# CLAUDE.md
 
-Planning and learning workspace for OneHome, a managed smart-home service built on local Home Assistant. Most content is in Hebrew (RTL).
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## Language and alignment
+# סקירה
 
-When an answer mixes Hebrew and English, start every line, heading and list item with a Hebrew word, and only then use the English term. A line that opens with an English word renders left-to-right and breaks the RTL alignment; opening with Hebrew fixes it automatically.
+סביבת תכנון ולמידה של OneHome, שירות בית חכם מנוהל המבוסס על Home Assistant מקומי. רוב התוכן בעברית (RTL).
+המטרה העיקרית של גיא היא לבנות עסק לבית חכם סביב Home Assistant, וכל משימה נבחנת לפי התרומה לכך.
+הריפו הוא דפי HTML סטטיים שמוגשים דרך GitHub Pages, בלי build ובלי בדיקות.
 
-- Good: `קובץ CLAUDE.md נטען בכל סשן`
-- Bad: `CLAUDE.md נטען בכל סשן`
+# עברית ויישור RTL
 
-This applies to chat replies and to Hebrew content written into the repo.
+כשתשובה מערבבת עברית ואנגלית, כל שורה, כותרת ופריט ברשימה פותחים במילה עברית, ורק אחריה המונח באנגלית. שורה שנפתחת במילה באנגלית מוצגת משמאל לימין ושוברת את היישור.
 
-## מעקב משימות
+- טוב: `קובץ CLAUDE.md נטען בכל סשן`
+- רע: `CLAUDE.md נטען בכל סשן`
 
-דף `plan-site/progress.html` הוא מקור האמת למשימות הפרויקט: מה בתהליך ומה הושלם. הדף קצר בכוונה ומכיל רק משימות בפועל שקשורות לפרויקט או לאפליקציה. בסוף סשן מעדכנים אותו לפי מה שגיא דיווח, ומעדכנים את תאריך ה-footer.
+הכלל חל על תשובות בצ'אט ועל תוכן בעברית שנכתב לריפו.
+
+# מעקב משימות
+
+הדף `plan-site/progress.html` הוא מקור האמת למשימות הפרויקט: מה בתהליך ומה הושלם. הדף קצר בכוונה ומכיל רק משימות בפועל שקשורות לפרויקט או לאפליקציה. בסוף סשן מעדכנים אותו לפי מה שגיא דיווח, ומעדכנים את תאריך ה-footer.
+
+# פרטיות
+
+GitHub Pages מגיש את כל הריפו, ולכן אסור לשמור בו נתוני לקוחות אמיתיים, סודות או נתיבים מקומיים של גיא.
+
+# הפניות
+
+- תכנון העסק, החלטות והמשך: `plan-site/` ו-`plan-site/notes/`. לכל הדפים תפריט ניווט משותף שמועתק בכל דף, ודף חדש מחייב עדכון שלו בכולם.
+- גיליון הלקוחות ופקודות הבנייה שלו: `customer-tracker/README.md`.
+- שיעורי הלמידה: `learning/CLAUDE.md`.
