@@ -3,6 +3,5 @@ Thumbs.db
 desktop.ini
 ~$*
 
-# Real customer data must never be committed (GitHub Pages serves the whole repo)
-customer-tracker/real/
+# Customer data must never be committed (GitHub Pages serves the whole repo). It lives in the private Sheet.
 *_REAL*

@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 # סקירה
 
-סביבת תכנון ולמידה של OneHome, שירות בית חכם מנוהל המבוסס על Home Assistant מקומי. רוב התוכן בעברית (RTL).
+סביבת הלמידה ודף הנחיתה של Smart Home (לשעבר OneHome), שירות בית חכם מנוהל המבוסס על Home Assistant מקומי. רוב התוכן בעברית (RTL).
 המטרה העיקרית של גיא היא לבנות עסק לבית חכם סביב Home Assistant, וכל משימה נבחנת לפי התרומה לכך.
 הריפו הוא דפי HTML סטטיים שמוגשים דרך GitHub Pages, בלי build ובלי בדיקות.
 
@@ -19,7 +19,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 # מעקב משימות
 
-הדף `plan-site/progress.html` הוא מקור האמת למשימות הפרויקט: מה בתהליך ומה הושלם. הדף קצר בכוונה ומכיל רק משימות בפועל שקשורות לפרויקט או לאפליקציה. בסוף סשן מעדכנים אותו לפי מה שגיא דיווח, ומעדכנים את תאריך ה-footer.
+מעקב המשימות של העסק נמצא ב-Todoist, ותמונת המצב בדף "מעקב משימות" באתר התכנון (https://claude.ai/artifact/BYxqPJnjGRDEDZVPk16E91). מהריפו הזה אין גישה לאתר, ולכן לא מעדכנים אותו מכאן. עדכונים לאתר נעשים מ-Claude (claude.ai).
 
 # פרטיות
 
@@ -27,6 +27,8 @@ GitHub Pages מגיש את כל הריפו, ולכן אסור לשמור בו נ
 
 # הפניות
 
-- תכנון העסק, החלטות והמשך: `plan-site/` ו-`plan-site/notes/`. לכל הדפים תפריט ניווט משותף שמועתק בכל דף, ודף חדש מחייב עדכון שלו בכולם.
-- גיליון הלקוחות ופקודות הבנייה שלו: `customer-tracker/README.md`.
+- תכנון העסק, PRD-ים, החלטות ומדריכים: אתר התכנון ב-artifact (https://claude.ai/artifact/BYxqPJnjGRDEDZVPk16E91). עבר מ-`plan-site/` ב-16/11/2026. מקור האמת לתוכן העסקי.
+- מודל התמחור: גיליון (https://claude.ai/artifact/VzgKAu1LAQHLB67wzcwXPV). עבר מ-`pricing/`.
+- מעקב לקוחות: גיליון פרטי (https://claude.ai/artifact/CZXcd8TDazRNasi9C7tKkG). עבר מ-`customer-tracker/`. נתוני לקוחות לא נכנסים לריפו.
 - שיעורי הלמידה: `learning/CLAUDE.md`.
+- דף הנחיתה: `landing-page/`.

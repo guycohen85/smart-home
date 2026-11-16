@@ -1,6 +1,6 @@
 # משאבים ל-Home Assistant / OneHome
 
-מקורות אמינים ללמידה. ידע לשיעורים נשאב מכאן ומתוך `plan-site` (הידע הפנימי שגיא כבר צבר) — לא מזיכרון כללי.
+מקורות אמינים ללמידה. ידע לשיעורים נשאב מכאן ומתוך אתר התכנון (הידע הפנימי שגיא כבר צבר) — לא מזיכרון כללי.
 
 ## Knowledge — כלליים (Home Assistant)
 
@@ -45,15 +45,15 @@
 - [Awesome Home Assistant (frenck/awesome-home-assistant)](https://github.com/frenck/awesome-home-assistant)
   רשימה אצורה (curated) של add-ons, dashboards, blueprints ואינטגרציות — מקום טוב לחפש פתרון לפני שבונים אחד מאפס.
 
-## Knowledge — ספציפי ל-OneHome (כבר נחקר על ידי גיא, ב-`plan-site`)
+## Knowledge — ספציפי ל-Smart Home (כבר נחקר על ידי גיא, באתר התכנון: https://claude.ai/artifact/BYxqPJnjGRDEDZVPk16E91)
 
 המקורות האלה כבר מתועדים ומאומתים בעבודה הפנימית של גיא — משמשים כידע ראשוני לשיעורים על Nabu Casa, Open Home Foundation, ורשת:
 
-- `plan-site/nabu-casa.html` — השוואת 7 השירותים של Nabu Casa Cloud, כולל מקורות ל-nabucasa.com/pricing ו-support.nabucasa.com.
-- `plan-site/ohf.html` — Open Home Foundation, הפרויקטים הנלווים (ESPHome, HACS, ESP Web Tools, Improv Wi-Fi, microWakeWord ועוד), מקור: openhomefoundation.org.
-- `plan-site/kb.html` — פתרון תקלות רשת אמיתיות (mDNS, AP Isolation, DHCP Reservation) שכבר עלו בעבודה.
-- `plan-site/notes/golden-backup-checklist.md` — טיוטת התהליך לשכפול התקנה בין לקוחות; טעון אימות בפועל.
-- `plan-site/automations.html` — קטלוג רעיונות אוטומציה, ישמש כתרגילים מעשיים במסלול ה-full-stack.
+- דף `nabu-casa.html` — השוואת 7 השירותים של Nabu Casa Cloud, כולל מקורות ל-nabucasa.com/pricing ו-support.nabucasa.com.
+- דף `ohf.html` — Open Home Foundation, הפרויקטים הנלווים (ESPHome, HACS, ESP Web Tools, Improv Wi-Fi, microWakeWord ועוד), מקור: openhomefoundation.org.
+- דף `kb.html` — פתרון תקלות רשת אמיתיות (mDNS, AP Isolation, DHCP Reservation) שכבר עלו בעבודה.
+- דף "צ'ק-ליסט Golden Backup" (תחת "החלטות ומסמכים") — טיוטת התהליך לשכפול התקנה בין לקוחות; טעון אימות בפועל.
+- דף `automations.html` — קטלוג רעיונות אוטומציה, ישמש כתרגילים מעשיים במסלול ה-full-stack.
 
 ## Wisdom (Communities)
 
